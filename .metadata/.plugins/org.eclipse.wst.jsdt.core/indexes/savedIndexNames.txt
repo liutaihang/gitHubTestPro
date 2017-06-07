@@ -1,7 +1,0 @@
-INDEX VERSION 1.3+D:\gitHubTestPro\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-926012871.index
-468168504.index
-851780859.index
-1923704439.index
-4080578050.index
-3368513751.index
