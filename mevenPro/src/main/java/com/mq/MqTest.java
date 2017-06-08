@@ -54,4 +54,8 @@ public class MqTest {
 		byte[] bytes = MqTest.converTobyte(new Tree("╧еки", new BigDecimal(100), "кийВ"));
 		System.out.println(bytes);
 	}
+	
+	public void counts(){
+		System.out.println("11");
+	}
 }
