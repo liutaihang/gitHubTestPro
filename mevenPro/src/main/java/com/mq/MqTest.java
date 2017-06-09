@@ -5,10 +5,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+
+import po.Tree;
 
 public class MqTest {
 	public static final String queueName = "test";
@@ -33,7 +36,7 @@ public class MqTest {
 		}
 	}
 	
-	public byte[] converTobyte(Object obj) throws IOException{
+	public static byte[] converTobyte(Object obj) throws IOException{
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		ObjectOutputStream object = new ObjectOutputStream(stream);
 		object.writeObject(obj);
@@ -41,9 +44,18 @@ public class MqTest {
 		return bytes;
 	}
 	
-	public Object converToObj(byte[] bytes) throws IOException, ClassNotFoundException{
+	public static Object converToObj(byte[] bytes) throws IOException, ClassNotFoundException{
 		ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
 		ObjectInputStream object = new ObjectInputStream(stream);
 		return object.readObject();
+	}
+	
+	public static void main(String[] args) throws IOException {
+		byte[] bytes = MqTest.converTobyte(new Tree("╧еки", new BigDecimal(100), "кийВ"));
+		System.out.println(bytes);
+	}
+	
+	public void counts(){
+		System.out.println("11");
 	}
 }
