@@ -2,6 +2,8 @@ package com;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Component;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -9,7 +11,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mq.MqTest;
-
+@Component
 public class MongoTest {
 	
 	@Resource

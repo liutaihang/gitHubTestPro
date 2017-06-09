@@ -2,6 +2,9 @@ package com.consumer;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.SerializationUtils;
+
+import com.alibaba.fastjson.JSON;
 import com.mq.MqTest;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -28,14 +31,17 @@ public class Consumer {
 //		channel.queueDelete(MqTest.queueName);
 //		channel.queueBind(MqTest.queueName, "test_topic", MqTest.queueName);
 		
-		channel.basicConsume(MqTest.queueName, ack, consumer);
+		channel.basicConsume("communication_queue", ack, consumer);
 		System.err.println("wait message ......");
 		while(true){
 			try {
 				QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+				Object obj = MqTest.converToObj(delivery.getBody());
+				obj = JSON.parseObject(com.alibaba.dubbo.common.json.JSON.json(obj));
 //				String message = new String(delivery.getBody());
-				Tree message = (Tree) MqTest.converToObj(delivery.getBody());
-				System.out.println(message);
+//				Object obj = MqTest.converToObj(delivery.getBody());
+//				Tree message = (Tree) MqTest.converToObj(delivery.getBody());
+				System.out.println(obj);
 			} catch (ShutdownSignalException e) {
 				e.printStackTrace();
 			} catch (ConsumerCancelledException e) {
