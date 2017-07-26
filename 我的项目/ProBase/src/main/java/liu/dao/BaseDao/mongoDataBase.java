@@ -1,7 +1,8 @@
-package liu.dao.mongo.BasePro;
+package liu.dao.BaseDao;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -11,7 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.WriteResult;
 
 /**
  * mongodb-base_dao
@@ -24,7 +30,7 @@ public class mongoDataBase<T> {
 	private Class<T> classType;
 	
     @SuppressWarnings("unchecked")
-	public mongoDataBase() {
+    protected mongoDataBase() {
     	Type superClass = this.getClass().getGenericSuperclass();
 		// 获取参数泛型的类
 		if (superClass instanceof ParameterizedType) {
@@ -32,21 +38,21 @@ public class mongoDataBase<T> {
 		}
 	}
     
-    public long count(Query query, String collectionName){
+    protected long count(Query query, String collectionName){
     	return Template.count(query, collectionName);
     }
     
-    public T save(T t){
+    protected T save(T t){
     	isAnnotation(t.getClass());
     	Template.save(t, getCollectionName(t.getClass()));
     	return t;
     }
     
-    public List<T> list(Query query){
+    protected List<T> list(Query query){
     	return Template.find(query, classType);
     }
     
-    public List<T> findAll(){
+    protected List<T> findAll(){
     	return Template.findAll(classType);
     }
     
@@ -77,6 +83,27 @@ public class mongoDataBase<T> {
     	}
     }
 
+    protected long update(T t){
+		Field idField = hasID(classType);
+		Object id = null;
+		try {
+			idField.setAccessible(true);
+			id = idField.get(t);
+		} catch (IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+			System.err.println("更新时对象id不能为空");
+		}
+
+		isAnnotation(t.getClass());
+		BasicDBObject basicDBObject = new BasicDBObject("_id", id);
+
+		Update update = buildBaseUpdate(t, classType, new Update());
+
+		WriteResult result = Template.updateFirst(new BasicQuery(basicDBObject), update, classType);
+
+		return result == null ? 0 : result.getN();
+	}
+    
     /**
      * 判断是否有@Id字段
      * @param clazz
@@ -103,5 +130,43 @@ public class mongoDataBase<T> {
     		return hasID(clazz);
     	}
     	return null;
+	}
+	
+	private Update buildBaseUpdate(T t, Class<?> clazz, Update update){
+
+		
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			if (field.getName().equals("_id")) {
+				continue;
+			}
+			if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers())) {
+				continue;
+			}
+
+			field.setAccessible(true);
+			// 过滤 STATIC 和 FINAL 修饰的属性
+			if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers())) {
+				continue;
+			}
+			Object value = null;
+			try {
+				value = field.get(t);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+				System.err.println("构建更新失败");
+			}
+			if (value != null) {
+				update.set(field.getName(), value);
+			}
+		}
+
+		// 需要考虑父类
+		while (null != clazz.getSuperclass()) {
+			clazz = clazz.getSuperclass();
+			buildBaseUpdate(t, clazz, update);
+		}
+
+		return update;
 	}
 }
