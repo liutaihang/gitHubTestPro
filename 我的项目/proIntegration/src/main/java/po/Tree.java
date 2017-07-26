@@ -8,12 +8,18 @@ public class Tree implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 3869114665034422949L;
-	private int id;	//唯一标识
+	private int Tid;	//唯一标识
 	private String name;	//名字
 	private BigDecimal price;	//加个
 	private String type;	//类型
+	private Animal animal;
 	
-	
+	public Animal getAnimal() {
+		return animal;
+	}
+	public void setAnimal(Animal animal) {
+		this.animal = animal;
+	}
 	public Tree() {
 		super();
 	}
@@ -23,11 +29,11 @@ public class Tree implements Serializable{
 		this.price = price;
 		this.type = type;
 	}
-	public int getId() {
-		return id;
+	public int getTid() {
+		return Tid;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setTid(int id) {
+		this.Tid = id;
 	}
 	public String getName() {
 		return name;
@@ -49,7 +55,8 @@ public class Tree implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Tree [id=" + id + ", name=" + name + ", price=" + price + ", type=" + type + "]";
+		return "Tree [id=" + Tid + ", name=" + name + ", price=" + price + ", type=" + type + "]";
 	}
+	
 	
 }
