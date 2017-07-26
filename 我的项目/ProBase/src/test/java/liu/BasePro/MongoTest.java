@@ -18,7 +18,7 @@ public class MongoTest extends BaseTest{
 	PeopleDao dao;
 	@Test
 	public void mongotest(){
-		People people = new People("name", "sex", new Like("type", "name"));
+		People people = new People("name", "sex", new Like("type", "name")); 
 		System.out.println(dao.save(people));
 	}
 	public static void main(String[] args) {
