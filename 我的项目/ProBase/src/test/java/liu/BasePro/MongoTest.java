@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.junit.Test;
 
 import liu.dao.mongo.PeopleDao;
+import liu.dao.mysqldao.BookDao;
 import liu.po.Like;
 import liu.po.People;
 
@@ -16,6 +17,10 @@ public class MongoTest extends BaseTest{
 
 	@Resource
 	PeopleDao dao;
+	
+	@Resource
+	BookDao bookdao;
+	
 	@Test
 	public void mongotest(){
 		People people = new People("name", "sex", new Like("type", "name")); 
@@ -29,4 +34,10 @@ public class MongoTest extends BaseTest{
 		map.put("attachment", "loanApplyDianRong.getDianRongAttachment()");
 		System.out.println(map.toString());
 	}
+	
+	@Test
+	public void mysqltest(){
+		System.out.println(bookdao.findAll().get(0));
+	}
+	
 }

@@ -30,6 +30,7 @@
       <param-name>contextConfigLocation</param-name>
       <param-value>
       	classpath:application.xml
+      	classpath:mysql_config.xml
       </param-value>
   </context-param>
   <listener>
