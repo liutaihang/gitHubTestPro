@@ -1,5 +1,7 @@
 package liu.dao.mongo;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import liu.dao.BaseDao.mongoDataBase;
@@ -12,5 +14,12 @@ public class PeopleDao extends mongoDataBase<People>{
 		return super.save(people);
 	}
 
+	public long remove(People people){
+		return super.remove(people, people.getId());
+	}
 
+	public List<People> findAll(){
+		return super.findAll();
+	}
+	
 }

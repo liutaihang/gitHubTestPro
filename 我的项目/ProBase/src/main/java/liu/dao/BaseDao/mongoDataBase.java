@@ -13,6 +13,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.BasicQuery;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -40,6 +41,11 @@ public class mongoDataBase<T> {
     
     protected long count(Query query, String collectionName){
     	return Template.count(query, collectionName);
+    }
+    
+    protected long remove(T t, String id){
+    	Query query = new Query(Criteria.where("id").is(id));
+    	return Template.remove(query, t.getClass()).getN();
     }
     
     protected T save(T t){

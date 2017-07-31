@@ -3,6 +3,18 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
   <display-name>Archetype Created Web Application</display-name>
   
+  <context-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>
+	      	classpath:application.xml
+	      	classpath:mysql_config.xml
+      </param-value>
+  </context-param>
+  
+  <listener>
+      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
   <filter>
 		<filter-name>Set Character Encoding</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -10,8 +22,13 @@
 			<param-name>encoding</param-name>
 			<param-value>utf8</param-value>
 		</init-param>
-	</filter>
+  </filter>
   
+  <filter-mapping>
+	<filter-name>Set Character Encoding</filter-name>
+  	<url-pattern>*.do</url-pattern>
+  </filter-mapping>
+
   
   <servlet>
       <servlet-name>rest</servlet-name>
@@ -24,16 +41,14 @@
       <url-pattern>*.do</url-pattern>
   </servlet-mapping>
   
+  <error-page>
+  	<error-code>500</error-code>
+  	<location>/err.html</location>
+  </error-page>
   
-  
-  <context-param>
-      <param-name>contextConfigLocation</param-name>
-      <param-value>
-      	classpath:application.xml
-      	classpath:mysql_config.xml
-      </param-value>
-  </context-param>
-  <listener>
-      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
+
+	 <!-- 加载log4j配置文件 -->
+	 <listener>
+	  <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	 </listener>
 </web-app>

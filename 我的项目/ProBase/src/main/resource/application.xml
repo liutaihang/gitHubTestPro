@@ -17,6 +17,8 @@
 	<context:annotation-config/>
 
 	<context:component-scan base-package="liu.dao"/>
+	<context:component-scan base-package="liu.service"/>
+	<context:component-scan base-package="liu.manager"/>
 	
 	
 	<!--properties配置文件 -->

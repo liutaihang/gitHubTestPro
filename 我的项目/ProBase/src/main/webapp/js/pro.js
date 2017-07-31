@@ -5,7 +5,7 @@ $(document).ready(function(){
 		var pathname = window.document.location.pathname;
 		var num = header.indexOf(pathname);
 		console.info("0.0 " + header + "\n" + pathname + "\n" + num + "  " + header.substring(num+1));
-		var url = 'send.do';
+		var url = 'people/findAll.do';
 		console.info(url);
 		$.ajax({
 		    url:url,
