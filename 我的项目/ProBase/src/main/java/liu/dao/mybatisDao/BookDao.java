@@ -1,4 +1,4 @@
-package liu.dao.mysqldao;
+package liu.dao.mybatisDao;
 
 import java.util.List;
 

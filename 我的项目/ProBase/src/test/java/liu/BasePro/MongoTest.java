@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import org.junit.Test;
 
 import liu.dao.mongo.PeopleDao;
-import liu.dao.mysqldao.BookDao;
+import liu.dao.mybatisDao.BookDao;
 import liu.manager.PeopleManager;
 import liu.po.Like;
 import liu.po.People;
