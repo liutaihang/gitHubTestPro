@@ -46,6 +46,6 @@
 		<!-- 注入sqlSessionFactory -->
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
 		<!-- 给出需要扫描Dao接口包 -->
-		<property name="basePackage" value="liu.dao.mysqldao" />
+		<property name="basePackage" value="liu.dao" />
 	</bean>
 </beans>

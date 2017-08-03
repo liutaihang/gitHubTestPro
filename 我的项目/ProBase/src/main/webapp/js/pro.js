@@ -5,7 +5,7 @@ $(document).ready(function(){
 		var pathname = window.document.location.pathname;
 		var num = header.indexOf(pathname);
 		console.info("0.0 " + header + "\n" + pathname + "\n" + num + "  " + header.substring(num+1));
-		var url = 'people/findAll.do';
+		var url = 'people/tests.do';
 		console.info(url);
 		$.ajax({
 		    url:url,
@@ -22,7 +22,7 @@ $(document).ready(function(){
 		        console.log('发送前')
 		    },*/
 		    success:function(data,status){
-		    	console.log('发送后')
+		    	console.log('发送后');
 		    	console.log(data,status);
 		    	console.log(data.name);
 		    	$(".font").html(data.name);
