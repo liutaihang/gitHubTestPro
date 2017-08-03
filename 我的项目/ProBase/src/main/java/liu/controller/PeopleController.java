@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 
 import liu.dao.mybatisDao.BookDao;
+import liu.dao.mybatisDao.DaoBook;
 import liu.manager.PeopleManager;
 import liu.po.People;
 
@@ -31,6 +32,9 @@ public class PeopleController{
 	
 	@Resource
 	private BookDao dao;
+	
+//	@Resource
+//	private DaoBook book;
 	
 	@RequestMapping(value = "/findAll", method = RequestMethod.GET)
 	public void findAll(HttpServletResponse response, HttpServletRequest request) throws IOException{
@@ -62,7 +66,7 @@ public class PeopleController{
 		
 		PrintWriter out = response.getWriter();
 		JSONObject obj = new JSONObject();
-		obj.put("data", dao.findAll());
+//		obj.put("data", dao.findAll().add(book.getAll().get(0)));
 		logger.info(obj.toJSONString());
 		out.print(obj);
 	}

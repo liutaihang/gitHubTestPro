@@ -10,14 +10,14 @@ import org.springframework.stereotype.Repository;
 import liu.po.Book;
 
 @Repository
-public interface BookDao {
+public abstract class DaoBook {
 
-	
 	@Select("select * from book")
 	@Results({
 		@Result(column = "bookId",property = "bookId"),
 		@Result(column = "name", property = "name"),
 		@Result(column = "number", property = "number")
 	})
-	public List<Book> findAll();
+	public abstract List<Book> getAll();
+	
 }

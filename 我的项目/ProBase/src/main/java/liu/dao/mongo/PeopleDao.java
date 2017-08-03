@@ -19,6 +19,7 @@ public class PeopleDao extends mongoDataBase<People>{
 	}
 
 	public List<People> findAll(){
+		System.out.println("测试");
 		return super.findAll();
 	}
 	
