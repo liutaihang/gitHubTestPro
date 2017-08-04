@@ -12,13 +12,15 @@
     "
 	default-autowire="byType">
 	<bean id="springAopTest" class="liu.aop.SpringAopTest"></bean>
+	<bean id="Other" class="liu.dao.Other"></bean>
+	
 	<aop:aspectj-autoproxy/>
 	
 	<!-- <aop:config>
 		<aop:aspect ref="springAopTest">
-			<aop:before method="beforeTest" pointcut="execution(* liu.dao.mongo.PeopleDao.findAll(..))"/>
-			<aop:after-returning method="afterTest" pointcut="execution(* liu.dao.mongo.PeopleDao.findAll(..))"/>
-			<aop:around method="aroundTest" pointcut="execution(* liu.dao.mongo.PeopleDao.findAll(..))"/>
+			<aop:before method="beforeTest" pointcut="execution(* liu.dao.BaseDao.mongoDataBase.findAll(..))"/>
+			<aop:after-returning method="afterTest" pointcut="execution(* liu.dao.BaseDao.mongoDataBase.findAll(..))"/>
+			<aop:around method="aroundTest" pointcut="execution(* liu.dao.BaseDao.mongoDataBase.findAll(..))"/>
 		</aop:aspect>
 	</aop:config> -->
 </beans>

@@ -3,8 +3,10 @@ package liu.BasePro;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -13,7 +15,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import liu.aop.SpringAopTest;
-import liu.aop.TestAop;
+import liu.aop.BeforeTestAdvice;
+import liu.dao.Other;
 import liu.dao.mongo.PeopleDao;
 import liu.dao.mybatisDao.BookDao;
 import liu.dao.mybatisDao.DaoBook;
@@ -33,17 +36,18 @@ public class MongoTest extends BaseTest{
 //	@Resource
 //	DaoBook daoBook;
 	
-//	@Resource
-//	PeopleManager manager;
+	@Resource
+	PeopleManager manager;
 	
 	@Test
-	public void mongotest(){
+	public void mongotest() throws InterruptedException{
 //		People [id=5979a4c1acf1b3f514764507, name=name, sex=sex, like=Like [type=type, name=name]]
 		People people = new People("name", "sex", new Like("type", "name")); 
 		people.setId("5979a4c1acf1b3f514764507");
 //		System.out.println(dao.save(people));
+
 		System.out.println(dao.findAll());
-		
+
 //		System.out.println(new TestAop().setString("something"));
 	}
 	public static void main(String[] args) throws ParseException, InterruptedException {
@@ -61,8 +65,10 @@ public class MongoTest extends BaseTest{
 //		System.out.println(bean);
 		
 		ApplicationContext context = new ClassPathXmlApplicationContext("application.xml");
-		PeopleDao dao = (PeopleDao) context.getBean("peopleDao");
-		System.out.println(dao.findAll());
+		Other dao = (Other) context.getBean("Other");
+		dao.say(Thread.currentThread().getClass().getName() + "." + Thread.currentThread().getName());
+		
+		System.out.println();
 	}
 	
 	@Test

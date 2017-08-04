@@ -1,39 +1,55 @@
 package liu.BasePro;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import javax.swing.*;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+public class AppTest implements Runnable{
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+	private String name;
+	private Integer num;
+	private Integer num1;
+	public AppTest(String name, Integer num, Integer num1) {
+		this.name = name;
+		this.num = num;
+		this.num1 = num1;
+	}
+	
+	@Override
+	public void run() {
+			new Count().count(num, num1, name);
+	}
    
+	public static void main(String[] args) {
+		new Thread(new AppTest("t1", 10, 0)).start();
+		new Thread(new AppTest("t2", 20, 0)).start();
+		
+		new Thread(new Runnable() {
+			public void run() {
+					new Count().count( 30, 0,"t3");
+			}
+		}).run();
+		Thread thread = new myrunable(new AppTest("my", 40, 0));
+		thread.setName("name");
+		thread.run();
+	}
+}
+
+class Count{
+	public synchronized void count(Integer num, Integer num1, String name){
+			System.out.println(name + "[" + (num + num1 + Math.random()*10) + "]" + Thread.currentThread().getName());
+	}
+}
+
+class myrunable extends Thread{
+	public myrunable(Runnable runnable) {
+		super(runnable);
+	}
+	
+	@Override
+	public void run() {
+		System.out.println("my---|");
+		super.run();
+	}
 }
