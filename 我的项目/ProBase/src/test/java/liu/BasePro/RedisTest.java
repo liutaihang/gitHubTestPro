@@ -29,7 +29,7 @@ public class RedisTest {
 		ShardedJedisPool jedisPool = new ShardedJedisPool(poolConfig, shards);
 		ShardedJedis jedis = jedisPool.getResource();
 		
-		
+		jedis.expire("", 1000);
 //		System.out.println(jedis.set("newKey", "value"));
 		System.out.println(jedis.hgetAll("DEAD_MESSAGE").get("sss7988"));
 	}

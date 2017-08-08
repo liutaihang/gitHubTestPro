@@ -2,7 +2,6 @@ package liu.constant;
 
 public class Constant {
 
-	public static class Page{
 
 		/**
 		 * 分页查询总条数 key
@@ -13,5 +12,10 @@ public class Constant {
 		 * 分页查询返回数据 key
 		 */
 		public static final String RESULT_DATA = "data";
-	}
+		
+		public static final String USER_NAME = "userName";
+		
+		public static final String PASS_WORD = "pwd";
+		
+		public static final String USER_INFO = "userInfo";
 }

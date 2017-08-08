@@ -1,6 +1,7 @@
 package liu.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -27,15 +28,20 @@ public class TestFilter implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest request2 = (HttpServletRequest) request;
-		System.out.println(request2.getLocalName() + ":" + request2.getLocalPort() + request2.getContextPath());
-//		System.out.println(session.getServletContext().getContextPath());
+		System.out.println(request2.getLocalName() + ":" + request2.getLocalPort() + request2.getContextPath() + "/doFilter");
 		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		System.out.println(session.getServletContext().getContextPath());
+		HttpSession session = request2.getSession(false);
+		if(session != null){
+			System.out.println(format.format(session.getCreationTime()) + "---" + session.getAttribute("name"));
+		}
 		chain.doFilter(request, response);
 		
 	}
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		System.out.println(config.getFilterName() + config.getServletContext().getContextPath());
+		System.out.println(config.getFilterName() + config.getServletContext().getContextPath() + "init");
 	}
 }

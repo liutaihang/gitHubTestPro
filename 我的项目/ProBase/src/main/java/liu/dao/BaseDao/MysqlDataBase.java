@@ -13,15 +13,17 @@ import java.util.Map.Entry;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.*;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Example;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Page;
 
-import liu.constant.Constant.Page;
-import liu.po.IBasePO;
+import liu.constant.Constant;
 
 public class MysqlDataBase<T extends Serializable, S extends Serializable> {
 
@@ -295,10 +297,10 @@ public class MysqlDataBase<T extends Serializable, S extends Serializable> {
 		Map<String, Object> results = new HashMap<String, Object>();
 
 		int count = this.findByHQLResultCount(hql, params);
-		results.put(liu.constant.Constant.Page.RESULT_COUNT, count);
+		results.put(Constant.RESULT_COUNT, count);
 
 		List<T> objs = this.findByHQLResultMore(hql, params, pageNo, pageSize);
-		results.put(Page.RESULT_DATA, objs);
+		results.put(Constant.RESULT_DATA, objs);
 
 		return results;
 	}

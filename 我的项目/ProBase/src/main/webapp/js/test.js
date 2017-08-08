@@ -1,4 +1,7 @@
-var index = function test(){
-	var num = 0;
+var index ;
+
+function count(mas, mas1){
+	var num = mas + mas1;
+	index = num;
 	return num;
 }
