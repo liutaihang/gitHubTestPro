@@ -16,16 +16,26 @@
 			color: fuchsia;
 		}
 	</style>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$(".button").mousedown(function(){
+			$("#pwd").attr("type","text")
+		});
+		$(".button").mouseup(function(){
+			$("#pwd").attr("type","password")
+		});
+	});
+	</script>
 </head>
 <body>
 <nav class="navbar navbar-inverse" role="navigation">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">菜鸟教程</a>
+			<a class="navbar-brand" href="#name">菜鸟教程</a>
 		</div>
 		<div class="collapse navbar-collapse" id="example-navbar-collapse">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="#">第一个</a></li>
+				<li class="active"><a href="#account">第一个</a></li>
 				<li><a href="#">第二个</a></li>
 				<li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -71,19 +81,20 @@
 		
 	<button id="submit" class="btn">start</button>
 		<table border="2" class="container">
-			<tr id="tr1"><th>12312</th></tr>
-			<tbody>
-				<tr><td>1</td></tr>
-			</tbody>
+			<tr id="tr1"><th>123</th><th>123</th></tr>
+			
 		</table>
 	</div>
 </form>
 <div id="qrcode">
+	<input type="text" id="getval"/> <button id="send">点击更换验证码</button>
 </div>
 <fieldset>
-	<legend>1</legend>
+	<legend></legend>
+	<input id="name" type="text" placeholder="姓名">
+	<input id="account" type="text" placeholder="账号">
+	<input id="pwd" type="password" placeholder="密码"><button class="button">显示密码</button>
 </fieldset>
-<input type="text" id="getval"/> <button id="send">点击更换验证码</button>
 <script>
     window.onload =function(){
         var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -122,14 +133,11 @@
 	}
 </style>
 <script type="text/javascript">
-	function start(){
-		$("#tr1").append("<th>标题</th>");
-	}
 
 	$(document).ready(
 		function(){
 			for(var i = 0; i < 10; i++){
-				$("#tr1").append("<th>标题</th>");
+				/* $("#tr1").append("<th>标题</th>"); */
 			}
 	});
 	$(document).ready(
