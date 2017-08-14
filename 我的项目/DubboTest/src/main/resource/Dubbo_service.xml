@@ -12,8 +12,7 @@
         ">  
    
     <!-- 具体的实现bean -->  
-    <bean id="demoService" class="com.DubboTest.DemoServiceImpl" />  
-    
+    <bean id="testInterface" class="com.DubboTest.impl.TestInterfaceImpl" />  
     <!-- 提供方应用信息，用于计算依赖关系 -->  
     <dubbo:application name="xixi_provider"  />
    
@@ -27,6 +26,6 @@
     <dubbo:protocol name="dubbo" port="20880" />  
    
     <!-- 声明需要暴露的服务接口 -->  
-    <dubbo:service interface="com.DubboTest.DemoService" ref="demoService" />  
+    <dubbo:service interface="liu.common.TestInterface" ref="testInterface" />  
       
 </beans> 
