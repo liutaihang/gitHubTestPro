@@ -12,11 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.alibaba.fastjson.JSONObject;
+
 import liu.constant.Constant;
 import liu.dao.BaseDao.RedisDataBase;
 import liu.po.UserInfo;
 
 @Controller
+@RequestMapping("login")
 public class LoginController {
 
 	@RequestMapping(value = "/lg", method = RequestMethod.GET)
@@ -25,6 +28,12 @@ public class LoginController {
 		String name = null;
 		if(session == null){
 			session = request.getSession();
+			if(user.getPassword().equals("password") && user.getAcount().equals("account")){
+				session.setAttribute("token", user.getPassword() + user.getAcount());
+			}else{
+				response.getWriter().print("密码或账户错误!");
+				return "redirect:findAll.html";
+			}
 			session.setAttribute("name", user.getName());
 		}else{
 			name = session.getAttribute("name").toString();
@@ -34,18 +43,19 @@ public class LoginController {
 		return "redirect:login.html";
 	}
 	
-	private Map<String, Object> copayProperty(UserInfo user){
-		Map<String, Object> maps = new HashMap<>();
-		maps.put(Constant.USER_NAME, user.getName());
-		maps.put("acount", user.getAcount());
-		maps.put("createTime", user.getCreateTime().getTime());
-		maps.put(Constant.PASS_WORD, user.getPassword());
-		maps.put("sex", user.getSex());
-		maps.put("updateTime", user.getUpdateTime());
+	private static Map<String, String> copayProperty(UserInfo user){
+		Map<String, String> maps = new HashMap<>();
+		
+		JSONObject obj = new JSONObject();
+		obj.put("user", user);
+		maps.put(user.getName(), obj.toJSONString());
 		return maps;
 	}
 	
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
+		RedisDataBase base = new RedisDataBase();
+		Map str = LoginController.copayProperty(new UserInfo("xiao", "xixi", "123123", "1", 23));
+		System.out.println(base.setTimeOut("user_info", str, 30));
+		System.out.println(base.hmget("user_info", "data"));
 	}
 }

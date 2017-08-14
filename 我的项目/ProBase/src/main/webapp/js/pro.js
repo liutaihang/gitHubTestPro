@@ -1,3 +1,9 @@
+(function($){
+  $.isBlank = function(obj){
+    return(!obj || $.trim(obj) === "");
+  };
+})(jQuery);
+
 $(document).ready(function(){
 	var button = $("#submit");
 	button.click(function(){

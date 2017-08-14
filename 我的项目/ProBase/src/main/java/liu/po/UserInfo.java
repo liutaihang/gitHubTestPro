@@ -41,6 +41,16 @@ public class UserInfo extends BasePo{
 	public void setAge(Integer age) {
 		this.age = age;
 	}
-	
+	public UserInfo(String name, String acount, String password, String sex, Integer age) {
+		super();
+		this.name = name;
+		this.acount = acount;
+		this.password = password;
+		this.sex = sex;
+		this.age = age;
+	}
+	public UserInfo() {
+		super();
+	}
 	
 }

@@ -4,8 +4,8 @@ import java.lang.reflect.Method;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.SourceLocation;
 /**
@@ -32,7 +32,7 @@ public class SpringAopTest {
 		System.out.println("后置增强" + "【" + point.getKind() + "】" + location.getWithinType().newInstance());
 	}
 	
-//	@Around("justtest()")
+	@Around("justtest()")
 	public void aroundTest(JoinPoint point) throws Throwable{
 		Class c = point.getTarget().getClass();
 		Method []methods = c.getMethods();
@@ -55,7 +55,7 @@ public class SpringAopTest {
 		return mt;
 	}
 	
-//	@Pointcut("execution(* *.say(..)")
+	@Pointcut("execution(* *.getAll(..)")
 	public void justtest(){
 	}
 }

@@ -5,14 +5,30 @@
 <title>login</title>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
 <script type="text/javascript" src="js/test.js"></script>
 <script type="text/javascript">
+	
+	
+
 	$(document).ready(function (){
 		$(".row").click(function(){
-			count(12, 23);
-			console.info(index);
+			console.info(index(12,12) + "ss");
 		});
+		
+		document.getElementById("btn")["onclick"] = function(e){
+			var mWorker = new Worker("js/test.js");
+			
+			mWorker.onmessage = function(event){
+				console.log(event + "ss")
+			}
+			
+			mWorker.addEventListener("message", function (event) {
+				  console.log("Worker said : " + event.data);
+			}, false);
+			
+			mWorker.postMessage("my frist worker!");
+		};
 	});
 	
 	x = -1;
@@ -44,12 +60,13 @@
 	});
 	}
 	
-	
+	function showpwd(){
+			$("div[name='password']").attr("")
+	}
 </script>
 </head>
 <body>
-	<form action="login/lg.do" method="get" class="container">
-	</form>
+	<form action="login/lg.do" method="post" class="container">
 	<div class="container">
 		<div class="row">
 			level 1 row 1
@@ -61,14 +78,19 @@
 				<div class="span6">
 					<span class="hours">0</span>时：<span class="minute">0</span>分：<span class="second">0</span>秒
 				</div>
-					<input id="hours" type="text" size="4" placeholder="修改时">时：
-					<input id="minute" type="text" size="4" placeholder="修改分">分：
-					<input id="second" type="text" size="4" placeholder="修改秒">秒：
-					<button name="btn" class="button">修改</button>
+					<p>时：<input id="hours" type="text" size="4" placeholder="修改时"/></p>
+					<p>分：<input id="minute" type="text" size="4" placeholder="修改分"/></p>
+					<p>秒：<input id="second" type="text" size="4" placeholder="修改秒"/></p>
+					<button id="btn" class="button">修改</button>
 			<!-- </div> -->
 		</div>
+		<div class="navbar-fixed-bottom">
+			<input type="text" class="search-query" placeholder="account" name="account"/>
+			<input type="password" class="search-query" placeholder="password" name="password"/>
+		</div>
 	</div>
-	<a href="lg.do?name=name" class="button">登录</a>
+	<a href="lg.do?name=name"><button class="btn" type="submit">登录</button></a>
+	</form>
 </body>
 
 <style>
