@@ -16,13 +16,13 @@
 	<!-- 注解 -->
 	<context:annotation-config/>
 
-	<context:component-scan base-package="liu.dao"/>
+	<context:component-scan base-package="liu.dao.mongo"/>
 	<context:component-scan base-package="liu.service"/>
 	<context:component-scan base-package="liu.manager"/>
 	
 	<!--properties配置文件 -->
 	<!-- <context:property-placeholder location="classpath:mongo.properties" /> -->
-	<mongo:mongo replica-set="192.168.0.113:27017">
+	<mongo:mongo replica-set="192.168.0.108:27017">
 		<mongo:options
          connections-per-host="50"
          threads-allowed-to-block-for-connection-multiplier="50"

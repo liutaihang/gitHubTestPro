@@ -53,8 +53,10 @@ public class PeopleController{
 
 	private void pring(Map<String, Object> maps){
 		List<People> lists = (List<People>) maps.get("data");
-		for (People people : lists) {
-			System.out.println(people);
+		if(lists != null){
+			for (People people : lists) {
+				System.out.println(people);
+			}
 		}
 	}
 	

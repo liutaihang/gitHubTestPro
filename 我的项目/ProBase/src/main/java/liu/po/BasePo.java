@@ -2,13 +2,18 @@ package liu.po;
 
 import java.util.Date;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Column;
+import javax.persistence.Id;
 
 public class BasePo {
 
 	@Id
 	private String id;
+	
+	@Column(name = "createTime")
 	private Date createTime;
+
+	@Column(name = "updateTime")
 	private Date updateTime;
 	public String getId() {
 		return id;

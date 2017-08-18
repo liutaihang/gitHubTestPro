@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -18,6 +20,7 @@ import redis.clients.jedis.ShardedJedisPool;
 
 @SuppressWarnings("resource")
 public class RedisTest {
+	@SuppressWarnings({ "unchecked", "unused" })
 	public static void main(String[] args) throws IOException {
 		
 		JedisPoolConfig poolConfig = new JedisPoolConfig();
@@ -31,14 +34,63 @@ public class RedisTest {
 		shards.add(jedisShardInfo);
 		ShardedJedisPool jedisPool = new ShardedJedisPool(poolConfig, shards);
 		ShardedJedis jedis = jedisPool.getResource();
+		for (Map<String, String> map : setSome()) {
+			System.out.println(jedis.hmset(map.get("infoSeqNo") + map.get("userid"), map));
+		}
+		
 //		jedis.expire("", 1000);
 //		System.out.println(jedis.set("newKey", "value"));
 		byte [] byt = serialize("laiyongche_LYC_AUTH_ONLINE_USER_NAME_this");
-		System.out.println(jedis.exists(serialize("laiyongche_LYC_AUTH_ONLINE_USER_NAME_this")));
+//		System.out.println(jedis.exists(serialize("laiyongche_LYC_AUTH_ONLINE_USER_NAME_this")));
 		
 		Object ob = deserialize(jedis.get(serialize("laiyongche_LYC_AUTH_ONLINE_USER_NAME_this")), Object.class);
 		
-		System.out.println(jedis.hgetAll("DEAD_MESSAGE").get("sss7988") + ob);
+//		System.out.println(jedis.hgetAll("DEAD_MESSAGE").get("sss7988") + ob);
+	}
+	
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static List<Map> setSome(){
+			Map poster = new HashMap();  
+	        poster.put("userid", "user001");  
+	        poster.put("userName", "Lily");  
+	        poster.put("infoSeqNo", "INFO20150815");  
+	        poster.put("postTime", "2015-08-15 20:26:30");  
+	        poster.put("info", "今天很开心");  
+	        poster.put("infoId", "info001");  
+	          
+	        Map respondent1 = new HashMap();  
+	        respondent1.put("userid", "user002");  
+	        respondent1.put("userName", "Tom");  
+	        respondent1.put("infoSeqNo", "INFO20150815");  
+	        respondent1.put("answerTime", "2015-08-15 20:28:40");  
+	        respondent1.put("info", "是吗");  
+	        respondent1.put("replyTarget", "user001");  
+	        respondent1.put("infoId", "info002");  
+	          
+	        Map respondent2 = new HashMap();  
+	        respondent2.put("userid", "user003");  
+	        respondent2.put("userName", "Kay");  
+	        respondent2.put("infoSeqNo", "INFO20150815");  
+	        respondent2.put("answerTime", "2015-08-15 20:30:27");  
+	        respondent2.put("info", "她肯定很开心啦，因为……");  
+	        respondent2.put("replyTarget", "user002");  
+	        respondent2.put("infoId", "info003");  
+	          
+	        Map respondent3 = new HashMap();  
+	        respondent3.put("userid", "user001");  
+	        respondent3.put("userName", "Lily");  
+	        respondent3.put("infoSeqNo", "INFO20150815");  
+	        respondent3.put("answerTime", "2015-08-15 20:38:40");  
+	        respondent3.put("info", "恩，今天去玩了");  
+	        respondent3.put("replyTarget", "user003");  
+	        respondent3.put("infoId", "info004");  
+	        List<Map> lists = new ArrayList<>();
+	        lists.add(poster);
+	        lists.add(respondent3);
+	        lists.add(respondent2);
+	        lists.add(respondent1);
+	        return lists;
 	}
 	
 

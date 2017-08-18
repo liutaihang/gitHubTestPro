@@ -12,6 +12,10 @@
 	
 
 	$(document).ready(function (){
+		
+//		var xmlhttp = new XMLHttpRequest();
+//		xmlhttp.open("GET", "login.do", false);
+		
 		$(".row").click(function(){
 			console.info(index(12,12) + "ss");
 		});
@@ -66,31 +70,56 @@
 </script>
 </head>
 <body>
-	<form action="login/lg.do" method="post" class="container">
-	<div class="container">
-		<div class="row">
-			level 1 row 1
-			<!-- <div class="row">
-				level 2 row 2 -->
-				<div class="span6"  style="background: red">
-					level 3 row 2				
-				</div>
-				<div class="span6">
-					<span class="hours">0</span>时：<span class="minute">0</span>分：<span class="second">0</span>秒
-				</div>
-					<p>时：<input id="hours" type="text" size="4" placeholder="修改时"/></p>
-					<p>分：<input id="minute" type="text" size="4" placeholder="修改分"/></p>
-					<p>秒：<input id="second" type="text" size="4" placeholder="修改秒"/></p>
-					<button id="btn" class="button">修改</button>
-			<!-- </div> -->
+<div class="page-header">
+	
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span2" style="background: white;height: 500px">
+			
+		</div>		
+		<div class="span8" style="background: gray;height: 500px">
+			<form action="login/lg.do" method="post" class="container">
+			<div class="container">
+				<table class="table-bordered table-hover">
+					<tr>
+						<td height="50px;">
+							<input type="text" class="search-query" placeholder="account" name="account"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="password" class="search-query" placeholder="password" name="password"/>
+						</td>
+					</tr>
+				</table>
+				<code>
+					<a href="lg.do?name=name">
+						<button class="btn-primary btn-small" style="border-radius : 10px" type="submit">登录</button>
+					</a>
+				</code>
+			</div>
+			</form>
 		</div>
-		<div class="navbar-fixed-bottom">
-			<input type="text" class="search-query" placeholder="account" name="account"/>
-			<input type="password" class="search-query" placeholder="password" name="password"/>
+		
+		<img alt="" src="">
+		<div class="span2">
+			<div class="row">
+					<div class="span6">
+						level 3 row 2				
+					</div>
+					<div class="span6">
+						<span class="hours">0</span>时：<span class="minute">0</span>分：<span class="second">0</span>秒
+					</div>
+						<p>时：<input id="hours" type="text" size="4" placeholder="修改时"/></p>
+						<p>分：<input id="minute" type="text" size="4" placeholder="修改分"/></p>
+						<p>秒：<input id="second" type="text" size="4" placeholder="修改秒"/></p>
+						<button id="btn" class="button">修改</button>
+			</div>
 		</div>
-	</div>
-	<a href="lg.do?name=name"><button class="btn" type="submit">登录</button></a>
-	</form>
+	</div>	
+</div>
+	
 </body>
 
 <style>

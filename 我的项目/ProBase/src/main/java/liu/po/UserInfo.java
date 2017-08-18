@@ -1,14 +1,33 @@
 package liu.po;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.io.Serializable;
 
-@Document
-public class UserInfo extends BasePo{
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "user_info")
+public class UserInfo extends BasePo implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5711221365567470136L;
+
+	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "account")
 	private String acount;
+	
+	@Column(name = "password")
 	private String password;
+	
+	@Column(name = "sex")
 	private String sex;
+	
+	@Column(name = "age")
 	private Integer age;
 	
 	public String getName() {

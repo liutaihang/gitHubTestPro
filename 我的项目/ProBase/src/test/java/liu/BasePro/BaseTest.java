@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:application.xml", "classpath:mysql_config.xml" })
+@ContextConfiguration(locations = { "classpath:mysql_config.xml", "classpath:application.xml" })
 public class BaseTest {
 	public static Logger logger = LoggerFactory.getLogger(BaseTest.class);
 }

@@ -1,7 +1,13 @@
 package liu.po;
 
-public class Book {
+import java.io.Serializable;
 
+public class Book implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3833059620715195676L;
 	private long bookId;
 	private String name;
 	private int number;

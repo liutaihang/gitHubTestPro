@@ -1,6 +1,9 @@
 package liu.aop;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -8,6 +11,9 @@ import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
 import liu.dao.Other;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.Response;
 /**
  * demo 
  */
@@ -31,14 +37,15 @@ public class BeforeTestAdvice implements MethodBeforeAdvice,AfterReturningAdvice
 		System.out.println(object + method.getClass().getName() + "." + method.getName() + "()  after");
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		ProxyFactory factory = new ProxyFactory();
-		factory.setTarget(new Other());
+		factory.setTarget(new redisT());
 //		factory.addAdvice(new BeforeTestAdvice());
 		factory.addAdvice(new AroundTestAdvice());
 		
-		Other other = (Other) factory.getProxy();
-		other.say(factory.getClass().getName());
+		redisT other = (redisT) factory.getProxy();
+//		other.redizz();
+		other.redizzz();
 	}
 }
 
@@ -46,17 +53,38 @@ public class BeforeTestAdvice implements MethodBeforeAdvice,AfterReturningAdvice
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		before(invocation);
+		long curr = System.currentTimeMillis();
+		before(invocation, curr);
 		Object result = invocation.proceed();
-		after(invocation);
+		after(invocation, curr);
 		
 		return result;
 	}
-	 private void before(MethodInvocation invocation){
-		 System.out.println(invocation.getMethod().getName() + "()   before");
+	 private void before(MethodInvocation invocation, long curr){
+		 System.out.println(invocation.getMethod().getName() + "()   before >>time>" + curr);
 	 }
 	 
-	 private void after(MethodInvocation invocation){
-		 System.out.println(invocation.getMethod().getName() + "()   after");
+	 private void after(MethodInvocation invocation, long curr){
+		 long last = System.currentTimeMillis();
+		 System.out.println(invocation.getMethod().getName() + "()   after" + (last - curr));
+	 }
+ }
+
+ class redisT{
+	 public void redizz() throws IOException{
+		 Jedis jedis = new Jedis("127.0.0.1", 6379);
+		 Response<Map<String, String>> res = null;
+		 Response<List<String>> res1 = null;
+		 Response<String> res2 = null;
+		 Pipeline pipeline = jedis.pipelined();
+		 pipeline.select(1);
+		 res2 = pipeline.get("TEL_ACTIVITY");
+		 pipeline.close();
+		 System.out.println(res2.get());
+	 }
+	 public void redizzz() throws IOException{
+		 Jedis jedis = new Jedis("127.0.0.1", 6379);
+		 jedis.select(1);
+		 System.out.println(jedis.get("TEL_ACTIVITY"));
 	 }
  }
