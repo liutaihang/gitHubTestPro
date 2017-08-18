@@ -12,7 +12,7 @@ public class DubboTest {
     public static void main( String[] args ){
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("Customer_serviceImpl.xml");
         TestInterface testInterface = (TestInterface) context.getBean("testInterface");
-        testInterface.saySomething("dubboCustomer");
-        System.out.println(testInterface.getList());
+        System.err.println(testInterface.saySomething("dubboCustomer"));
+        System.err.println(testInterface.getList());
     }
 }
