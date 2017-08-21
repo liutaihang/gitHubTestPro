@@ -8,10 +8,12 @@ import org.hibernate.SessionFactory;
 //import org.hibernate.cfg.Configuration;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.HibernatePro.liu.po.Person;
 
 @Repository
+@Transactional
 public class TestDao extends DaoH<Person>{
 
 	public static void main(String[] args) {
