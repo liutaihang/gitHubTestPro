@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface TestInterface {
 
-	public void saySomething(String content);
+	public String saySomething(String content);
 	
 	public List<?> getList();
 }
