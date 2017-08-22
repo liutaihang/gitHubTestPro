@@ -12,13 +12,14 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import liu.dao.hibernate.HibernateDao;
 import liu.dao.mongo.PeopleDao;
 import liu.dao.mybatisDao.BookDao;
 import liu.dao.mybatisDao.DaoBook;
 import liu.po.Book;
 import liu.po.Like;
 import liu.po.People;
-import liu.po.UserInfo;
+import liu.po.msq.UserInfo;
 
 
 public class MongoTest extends BaseTest{
@@ -26,17 +27,17 @@ public class MongoTest extends BaseTest{
 	@Resource
 	PeopleDao dao;
 	
-	@Resource
-	BookDao bookdao;
-	
-	@Resource
-	DaoBook daoBook;
+//	@Resource
+//	BookDao bookdao;
+//	
+//	@Resource
+//	DaoBook daoBook;
 	
 //	@Resource
 //	PeopleManager manager;
 	
-//	@Resource
-//	HibernateDao h1;
+	@Resource
+	HibernateDao h1;
 	
 	@Test
 	public void mongotest() throws InterruptedException{
@@ -50,12 +51,16 @@ public class MongoTest extends BaseTest{
 //		System.out.println(new TestAop().setString("something"));
 	}
 	public static void main(String[] args){
-//		ClassPathXmlApplicationContext
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("hibernate-config.xml");
+		HibernateDao hibernateDao = (HibernateDao) context.getBean("hibernateDao");
+		UserInfo user = new UserInfo("name", "account", "pwd", "男", 21);
+		hibernateDao.add(user);
+		System.out.println(user);
 	}
 	
 	@Test
 	public void mysqltest(){
-		System.out.println(bookdao.findAll());
+//		System.out.println(bookdao.findAll());
 //		List<Book> list = daoBook.getAll();
 //		System.out.println(list);
 	}
@@ -77,6 +82,6 @@ public class MongoTest extends BaseTest{
 	
 	@Test
 	public void hiber(){
-//		System.out.println(h1.add(new UserInfo("s", "sd", "sds", "man", 21)).getId());
+		System.out.println(h1.getByid(1));
 	}
 }

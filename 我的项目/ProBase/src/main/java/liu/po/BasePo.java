@@ -2,23 +2,24 @@ package liu.po;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@MappedSuperclass
 public class BasePo {
 
 	@Id
-	private String id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 	
 	@Column(name = "createTime")
 	private Date createTime;
 
 	@Column(name = "updateTime")
 	private Date updateTime;
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public Date getCreateTime() {

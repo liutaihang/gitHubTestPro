@@ -1,10 +1,12 @@
-package liu.po;
+package liu.po.msq;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import liu.po.BasePo;
 
 @Entity
 @Table(name = "user_info")

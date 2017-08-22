@@ -16,7 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import liu.constant.Constant;
 import liu.dao.BaseDao.RedisDataBase;
-import liu.po.UserInfo;
+import liu.po.msq.UserInfo;
 
 @Controller
 @RequestMapping("login")

@@ -22,6 +22,7 @@ import liu.dao.mybatisDao.BookDao;
 import liu.dao.mybatisDao.DaoBook;
 import liu.manager.PeopleManager;
 import liu.po.People;
+import liu.po.msq.Animal;
 
 @RestController
 @RequestMapping(value = "people")
@@ -61,7 +62,7 @@ public class PeopleController{
 	}
 	
 	@RequestMapping(value = "/tests")
-	public void tests(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public void tests(HttpServletRequest request, HttpServletResponse response, Animal animal) throws IOException{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/json");
@@ -69,7 +70,9 @@ public class PeopleController{
 		PrintWriter out = response.getWriter();
 		JSONObject obj = new JSONObject();
 //		obj.put("data", dao.findAll().add(book.getAll().get(0)));
+		obj.put("data", animal);
 		logger.info(obj.toJSONString());
 		out.print(obj);
+		System.out.println(animal.getEnvironment());
 	}
 }

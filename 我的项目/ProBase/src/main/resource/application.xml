@@ -45,4 +45,5 @@
 	</bean>
 	
 	<import resource="Aop.xml"/>
+	<import resource="hibernate-config.xml"/>
 </beans>

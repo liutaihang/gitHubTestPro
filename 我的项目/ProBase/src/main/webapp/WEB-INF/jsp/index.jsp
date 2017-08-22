@@ -73,9 +73,9 @@
 <h1><a class="font" href="htmlT/Consumer.html">跳转</a></h1>
 </body>
 <script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/test.js"></script>
-	<script type="text/javascript" src="js/pro.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/js/test.js"></script>
+	<script type="text/javascript" src="/js/pro.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
 		var div2 = $("#d2");var div3 = $("#d3");

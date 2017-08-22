@@ -5,20 +5,22 @@
 <title>login</title>
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="css/bootstrap.min.css">
 <script type="text/javascript" src="js/test.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css">
 <script type="text/javascript">
+	
 	
 	
 
 	$(document).ready(function (){
-		
 //		var xmlhttp = new XMLHttpRequest();
 //		xmlhttp.open("GET", "login.do", false);
 		
-		$(".row").click(function(){
-			console.info(index(12,12) + "ss");
+		$("#btn").click(function(){
+		//	al(document.getElementById("main").childNodes.length);
+		//	console.info(document.getElementById("main").childNodes);
 		});
+		
 		
 		document.getElementById("btn")["onclick"] = function(e){
 			var mWorker = new Worker("js/test.js");
@@ -32,7 +34,7 @@
 			}, false);
 			
 			mWorker.postMessage("my frist worker!");
-		};
+		}; 
 	});
 	
 	x = -1;
@@ -58,51 +60,129 @@
 	}
 	
 	function btcli(){
-		$(".button").click(function(){
+		$("button").click(function(){
 		console.info($("#hours").val() + ":" + $("#minute").val() + ":" + $("#second").val());
-		console.info($(".button").html() + "ss");
+		console.info($("button").html() + "ss");
+		$("input").each(function(){
+			console.log("[" + $(this).text() + "]");
+		});
 	});
 	}
 	
 	function showpwd(){
 			$("div[name='password']").attr("")
 	}
+	btcli();
 </script>
+
+<style type="text/css">
+	input[type|=button] {
+		
+	}
+	th{
+		font-size: 15px;
+	}
+	
+	div[class|=span2]{
+		border:groove;
+		border-radius:20px;
+	}
+	div[class|=span7]{
+		border:outset;
+		border-radius:20px;
+	}
+</style>
 </head>
 <body>
 <div class="page-header">
-	
+	<h1>标题</h1>
 </div>
-<div class="container-fluid">
+<div class="container-fluid" id="main">
 	<div class="row-fluid">
-		<div class="span2" style="background: white;height: 500px">
-			
+		<div class="span2" style="background: white;height: 500px;">
+		<div class="modal-header" style="font-family: sans-serif;font-size: x-large;color: gray;">
+			添加新的物种
+		</div>
+		
+		<table class="table">
+			<tr>
+				<td>
+					种类：
+				</td>
+				<td>
+					<input type="text" name="type">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					名称：
+				</td>
+				<td>
+					<input type="text" name="name">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					习性：
+				</td>
+				<td>
+					<textarea style="max-width: 210px;max-height: 50px;" cols="2" rows="2" name="habit"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					食物：
+				</td>
+				<td>
+					<input type="text" name="food">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					所在地：
+				</td>
+				<td>
+					<input type="text" name="place">
+				</td>
+			</tr>
+		</table>
+		<button name="add" class="btn btn-primary pull-center" style="width: 80px;">添加</button>
 		</div>		
-		<div class="span8" style="background: gray;height: 500px">
+		<div class="span7" style="background: ;height: 500px">
 			<form action="login/lg.do" method="post" class="container">
 			<div class="container">
-				<table class="table-bordered table-hover">
-					<tr>
-						<td height="50px;">
-							<input type="text" class="search-query" placeholder="account" name="account"/>
-						</td>
+				<div class="modal-header">
+					<input type="text" placeholder="this wudou" width="60px;"/>
+					<input type="text" placeholder="account" name="account"/>
+					<input type="password" placeholder="password" name="password"/>
+					<input type="button" width="50px;" value="search">
+				</div>
+				<div class="modal-header">
+					表格					
+				</div>
+				<table class="table">
+					<tr height="40px;" style="background-color: #F3F3F3">
+						<th>种类</th>
+						<th>名称</th>
+						<th>习性</th>
+						<th>食物</th>
+						<th>生活环境</th>
 					</tr>
-					<tr>
-						<td>
-							<input type="password" class="search-query" placeholder="password" name="password"/>
-						</td>
-					</tr>
+					<tbody class="target">
+						<tr>
+							<td>s</td>
+							<td>s</td>
+							<td>d</td>
+							<td>s</td>
+							<td>d</td>
+						</tr>
+					</tbody>
+					
 				</table>
-				<code>
-					<a href="lg.do?name=name">
-						<button class="btn-primary btn-small" style="border-radius : 10px" type="submit">登录</button>
-					</a>
-				</code>
 			</div>
 			</form>
 		</div>
 		
-		<img alt="" src="">
 		<div class="span2">
 			<div class="row">
 					<div class="span6">
@@ -119,6 +199,9 @@
 		</div>
 	</div>	
 </div>
+<div>
+
+</div>
 	
 </body>
 
@@ -132,6 +215,20 @@
 <script type="text/javascript">
 	countMinute();
 	countSecond();
-	btcli();
+	
+	$("button[name|='add']").click(function(){
+		name = $("input[name='name']").val();
+		type = $("input[name='type']").val();
+		habit = $("textarea[name='habit']").val();
+		food = $("input[name='food']").val();
+		environment = $("input[name='place']").val();
+		if(!$.isBlank(name) && !$.isBlank(type) && !$.isBlank(habit) && !$.isBlank(food) && !$.isBlank(environment)){
+			console.log(
+					"name:[" + name + "]-|type:[" + name + "]-|habit:[" + habit + "]-|food:[" + food + "]-|place:[" + environment + "]"
+			);
+			A(name, type, habit, food, environment);
+		}
+		foreach();
+	});
 </script>
 </html>
