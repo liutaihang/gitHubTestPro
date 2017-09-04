@@ -26,6 +26,7 @@ test = function(){
 
 
 A = function(name, type, habit, food, environment){
+	console.log("name : " + name);
 	$.ajax({
 		url:"animal/add.do",
 		type:"POST",
@@ -46,37 +47,42 @@ A = function(name, type, habit, food, environment){
 	});
 }
 
-$.ajax({
-	url:"animal/findAll.do",
-	type:"POST",
-	async:true,
-//	data:{
-//		name : name,
-//		type : type,
-//		habit : habit,
-//		food : food,
-//		environment : environment
-//	},
-	dataType:'json',
-	success:function(data,status){
-		console.info(data);
-		console.log(status);
-		foreach(data);
-	}
-	
-});
+findAll = function(){
+		$.ajax({
+		url:"animal/findAll.do",
+		type:"POST",
+		async:true,
+	//	data:{
+	//		name : name,
+	//		type : type,
+	//		habit : habit,
+	//		food : food,
+	//		environment : environment
+	//	},
+		dataType:'json',
+		success:function(data,status){
+			console.info(data);
+			console.log(status);
+			foreach(data);
+		}
+		
+	});
+}
+
 foreach = function(data){
-//	console.log($(".target").html("<tr><td>" +  + "</td>" +
-//										"<td>"+ +"</td>" +
-//										"<td>" + + "</td>" +
-//										"<td>" + + "</td>" +
-//										"<td>" + + "</td>" +
-//									"</tr>"));
-	console.log(data.data.data.length);
-	console.log($(".target").html("<tr><td>type</td>" +
-										"<td>name</td>" +
-										"<td>habit</td>" +
-										"<td>food</td>" +
-										"<td>palce</td>" +
-									"</tr>"));
+	console.log(data != undefined && data != "");
+	if(data != undefined && data != ""){
+		console.log(data.data.data[0].environment);
+		content = "";
+		for (var int = 0; int < data.data.data.length; int++) {
+			content += "<tr>" +
+							"<td>" + data.data.data[int].environment + "</td>" +
+							"<td>" + data.data.data[int].food + "</td>" +
+							"<td>" + data.data.data[int].habit + "</td>" +
+							"<td>" + data.data.data[int].name + "</td>" +
+							"<td>" + data.data.data[int].type + "</td>" +
+						"</tr>"
+		};
+		$(".target").html(content);
+	}
 }

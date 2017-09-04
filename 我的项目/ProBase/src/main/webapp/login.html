@@ -215,6 +215,7 @@
 <script type="text/javascript">
 	countMinute();
 	countSecond();
+	findAll();
 	
 	$("button[name|='add']").click(function(){
 		name = $("input[name='name']").val();
@@ -227,8 +228,15 @@
 					"name:[" + name + "]-|type:[" + name + "]-|habit:[" + habit + "]-|food:[" + food + "]-|place:[" + environment + "]"
 			);
 			A(name, type, habit, food, environment);
+			$("input[name='name']").val("");
+			$("input[name='type']").val("");
+			$("textarea[name='habit']").val("");
+			$("input[name='food']").val("");
+			$("input[name='place']").val("");
+		}else{
+			alert("so so!");
 		}
-		foreach();
+		findAll();
 	});
 </script>
 </html>

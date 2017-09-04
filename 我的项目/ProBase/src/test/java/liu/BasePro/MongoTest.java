@@ -56,6 +56,7 @@ public class MongoTest extends BaseTest{
 		UserInfo user = new UserInfo("name", "account", "pwd", "男", 21);
 		hibernateDao.add(user);
 		System.out.println(user);
+		
 	}
 	
 	@Test
