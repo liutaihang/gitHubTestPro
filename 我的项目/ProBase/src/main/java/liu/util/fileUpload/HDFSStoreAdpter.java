@@ -1,7 +1,4 @@
 package liu.util.fileUpload;
-/*     */ 
-/*     */ import com.lyc.store.FileStoreException;
-/*     */ import com.lyc.store.util.PropertiesFileUtil;
 /*     */ import java.io.File;
 /*     */ import java.io.FileInputStream;
 /*     */ import java.io.FileNotFoundException;
@@ -13,6 +10,7 @@ package liu.util.fileUpload;
 /*     */ import java.net.URISyntaxException;
 /*     */ import java.util.ArrayList;
 /*     */ import java.util.List;
+
 /*     */ import org.apache.commons.configuration.ConfigurationException;
 /*     */ import org.apache.commons.lang3.ArrayUtils;
 /*     */ import org.apache.commons.lang3.StringUtils;
@@ -26,6 +24,10 @@ package liu.util.fileUpload;
 /*     */ import org.apache.hadoop.io.compress.CompressionCodecFactory;
 /*     */ import org.slf4j.Logger;
 /*     */ import org.slf4j.LoggerFactory;
+
+/*     */ 
+/*     */ import com.lyc.store.FileStoreException;
+/*     */ import com.lyc.store.util.PropertiesFileUtil;
 /*     */ 
 /*     */ 
 /*     */ 
