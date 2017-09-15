@@ -22,7 +22,7 @@
 	
 	<!--properties配置文件 -->
 	<!-- <context:property-placeholder location="classpath:mongo.properties" /> -->
-	<mongo:mongo replica-set="192.168.0.108:27017">
+	<mongo:mongo replica-set="192.168.0.104:27017">
 		<mongo:options
          connections-per-host="50"
          threads-allowed-to-block-for-connection-multiplier="50"

@@ -107,5 +107,9 @@ public class LoginController {
 			sets.add("" + tmp);
 		}
 		System.out.println(System.currentTimeMillis() - b + "|" + sets.size());
+		
+		
+		String str = "123321l123";
+		System.out.println(str.substring(0, str.lastIndexOf("l")));
 	}
 }
