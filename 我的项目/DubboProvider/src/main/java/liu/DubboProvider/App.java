@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import liu.common.TestInterface;
+
 /**
  * Hello world!
  *
