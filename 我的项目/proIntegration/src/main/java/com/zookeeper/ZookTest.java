@@ -65,7 +65,6 @@ public class ZookTest {
             this.connectedLatch = connectedLatch;
         }
 
-        @Override
         public void process(WatchedEvent event) {
             if (event.getState() == KeeperState.SyncConnected) {
                 connectedLatch.countDown();
