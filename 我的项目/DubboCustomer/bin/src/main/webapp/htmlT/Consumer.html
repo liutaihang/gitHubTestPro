@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="../css/bootstrap.css"/>
+
+<style type="text/css">
+	.row{
+		height: 100px;
+		background-color: gray;
+	}
+	textarea{
+		max-width: 100%;
+	}
+	.btn2{
+		width: 80px;
+		height: 40px;
+		background-color: gray;
+		border-radius: 10px;
+	}
+</style>
+<meta charset="UTF-8">
+<title>consumer</title>
+</head>
+<body>
+<nav class="navbar navbar-inverse" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">菜鸟教程</a>
+		</div>
+		<div class="collapse navbar-collapse" id="example-navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#">第一个</a></li>
+				<li><a href="#">第二个</a></li>
+				<li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    Java <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">jmeter</a></li>
+                    <li><a href="#">EJB</a></li>
+                    <li><a href="#">Jasper Report</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">分离的链接</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">另一个分离的链接</a></li>
+                </ul>
+            </li>
+			</ul>
+			
+			<ul class="nav navbar-nav navbar-right"> 
+	            <li><a href="#"><span class="glyphicon glyphicon-user"></span> 注册</a></li> 
+	            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li> 
+	        </ul> 
+		</div>
+	</div>
+</nav>
+
+	<div class="container">
+		<div class="row">
+			<h1><a href="Producer.html">消息框</a></h1>
+		</div>		
+	</div>
+	<div class="container">
+		<div class="row" style="background-color: white;">
+			<input type="checkbox" checked="checked" value="num">
+			<label>num</label> 
+		</div>
+		<span style=" font-family: cursive; font-weight: bold;font-size: x-large;">消息列表</span>
+		<!-- <textarea class="content" readonly="readonly" rows="10px" required="required" 
+			style="background-color: #ECFFFF; border-radius:10px; width: 100%;">
+		</textarea> -->
+		
+		<div class="content" style="width: 100%; height: 300px;  overflow:scroll; width:100%; height:400px;
+			background-color: #ECFFFF; border-radius:10px; border: inset; margin-bottom: 10px; padding-left: 10px">
+		</div>
+		
+		<textarea class="send" style="display: block;border-radius:3px; width: 100%" placeholder="输入需要发送的消息"></textarea>
+		<button class="btn" style="margin-top: 10px; float: right;margin-right: 50px">submit</button>
+		<button onclick="getMessage()" class="btn2" style="margin-top: 10px; float: left;margin-right: 100px;">获取</button>
+	</div>
+</body>
+
+<script type="text/javascript">
+var str = window.location.href;
+
+	$(document).ready(function(){
+		$("div").css("border-radius","10px");
+	});
+
+	$(".btn").click(function(){
+		var str = window.location.href;
+		console.info(str);
+		console.info(str.substring(0, str.indexOf(str.split("/", 5)[4], 1)));
+		//window.location.href = str.substring(0, str.indexOf(str.split("/", 5)[4], 1));
+		console.info(window.location.href);
+		send();
+	});
+	
+	var num = 0;
+	function send(){
+		var url = "send.do";
+		var content = $(".send").val();
+		console.info("*-*" + content + "*/*");
+		if(content == ""){
+			$(".send").attr("placeholder","输入需要发送的消息");
+			return;
+		}
+		if($.trim(content) != ""){
+			var times = new Date();
+			var message = "message"+num;
+			var hour = "time"+num;
+			var timer = "" + times.getFullYear()+"/"+(times.getMonth()+1)+"/"+times.getDate()+" "+ times.getHours()+":"+times.getMinutes();
+			$(".content").append("<span class='"+hour+"'>" +timer+ "</span><br><span class='"+message+"'>" + content+ "</span><br><br>");
+			$(".send").val("");
+		}
+		console.info($(".content").html());
+		console.info($("."+message).html());
+		console.info($("."+hour).html());
+		ajaxMethod($("."+hour).html(),$("."+message).html(), url);
+		++num;
+	}
+	
+	function ajaxMethod(time, message, url){
+		
+		$.ajax({
+			 	url:str.substring(0, str.indexOf(str.split("/", 5)[4], 1)) + url,
+			    type:'GET', //GET
+			    data:{
+			        "time":time,"sendMessage":message,"queue":"test","isUse":"1"
+			    },  
+			    async:true,    //或false,是否异步
+			   // dataType:'json',
+			  	success:function(obj){
+			    	//alert("1");
+			    	obj = JSON.parse(obj);
+			    	console.info(obj);
+			    	$(".content").append("<span style='float: right; display: inline;margin-right: 50px' class='hour'>" +obj.data.time+ "</span><br><span style='display: inline;float: right; margin-right: 100px' class='message'>" + obj.data.sendMessage+ "</span><br><br>");
+			    }
+		});
+	}
+	
+	function getMessage(){
+		var url = "consumer.do";
+		ajaxMethod("", "", url);
+	}
+</script>
+</html>
