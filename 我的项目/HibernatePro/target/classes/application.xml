@@ -44,7 +44,7 @@
     <!-- 配置一个事务管理器 -->  
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
         <property name="sessionFactory" ref="sessionFactory"/> 
-        <property name="nestedTransactionAllowed" value="true"/> 
+        <property name="nestedTransactionAllowed" value="true"/>
     </bean>  
     
       <tx:annotation-driven transaction-manager="transactionManager" order="1"/>
