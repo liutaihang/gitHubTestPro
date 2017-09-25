@@ -1,21 +1,28 @@
 package com.HibernatePro.liu.po;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "person")
-public class Person {
+public class Person implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5241607584534827471L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer Id;
-	
+
 	@Column(name = "sex")
 	private Integer sex;
-	
+
 	@Column(name = "age")
 	private Integer age;
-	
+
 	@Column(name = "province")
 	private String province;
 
@@ -66,6 +73,5 @@ public class Person {
 	public String toString() {
 		return "Person [Id=" + Id + ", sex=" + sex + ", age=" + age + ", province=" + province + "]";
 	}
-	
-	
+
 }
