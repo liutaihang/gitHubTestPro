@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.authDao.RoleDao">
+
+	<resultMap type="Role" id="RoleResult">
+		<result property="id" column="id"/>
+		<result property="roleName" column="roleName"/>
+		<result property="nickName" column="nickName"/>
+	</resultMap>
+	
+	<select id="findByUserId" parameterType="Integer" resultType="Integer">
+		select role_id from t_role_user where user_id=#{userId}
+	</select>
+	
+	<select id="findByIds" parameterType="Integer" resultType="String">
+		select roleName from t_role where id in
+		<foreach  item="item" collection="sIds" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</select>
+	
+	<insert id="addRole" useGeneratedKeys="true" keyProperty="id" parameterType="Role">
+		insert into t_role(roleName, nickName)
+		values(#{roleName,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="delRoles" parameterType="Integer">
+		delete from t_role where id in
+		<foreach  item="item" collection="ids" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</delete>
+	
+	<select id="findAll" resultMap="RoleResult">
+		select * from t_role
+	</select>
+	<select id="getByUserId" parameterType="Integer" resultMap="RoleResult">
+		SELECT * FROM t_role WHERE id in (select role_id from t_role_user where user_id=#{userId})
+	</select>
+	
+	
+	
+	<!-- RolePermission  mapper -->
+	<update id="updateRolePerm" parameterType="RolePermission">
+		 update t_role_permission 
+	    <set >
+	      <if test="RoleId != null" >
+	        RoleId = #{RoleId},
+	      </if>
+	      <if test="PermId != null" >
+	        PermId = #{PermId},
+	      </if>
+	    </set>
+	    where id = #{id}
+	</update>
+	
+	<insert id="addRolePerm" useGeneratedKeys="true" keyProperty="id" parameterType="RolePermission">
+		insert into t_role_permission (roleId, permissionId)
+		values(#{roleId}, #{permissionId})
+	</insert>
+	
+	<delete id="delRolePerms" parameterType="Integer">
+		delete from t_role_permission where roleId in 
+		<foreach  item="item" collection="ids" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</delete>
+	
+	<delete id="delRolePermByRoleid" parameterType="Integer">
+		delete from t_role_permission where roleId = #{roleId}
+	</delete>
+	
+	<select id="getUserIds" parameterType="Integer" resultType="Integer">
+		select * from t_role_user where user_id = #{userId}
+	</select>
+	
+	<select id="getUserByRoleId" parameterType="Integer" resultMap="RoleResult" >
+		select * from t_role_user where role_id = #{roleId}
+	</select>
+</mapper> 

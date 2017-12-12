@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>归集通管理平台</title>
+    <link href="lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet"/>
+    <link rel="stylesheet" id="mylink"/>
+    <script src="lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="lib/ligerUI/js/ligerui.all.js" type="text/javascript"></script>
+    <script src="lib/jquery.cookie.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="icon/iconfont.css">
+    <script src="lib/json2.js" type="text/javascript"></script>
+    <!-- <script src="indexdata.js" type="text/javascript"></script> -->
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="icon" href="img/head.png" type="image/x-icon"/>
+    <script type="text/javascript">
+        var tab = null;
+        var accordion = null;
+        var tree = null;
+        var tabItems = [];
+        var local = window.location.href;
+        var head = local.substring(0, local.indexOf(local.split("/", 5)[4], 1));
+        var url = local.substring(0, local.indexOf(local.split("/", 5)[4], 1)) + "user/menuList.do";
+        $(function () {
+            //布局
+            $("#layout1").ligerLayout({
+                leftWidth: 190,
+                height: '100%',
+                heightDiff: -34,
+                space: 4,
+                onHeightChanged: f_heightChanged,
+                onLeftToggle: function () {
+                    tab && tab.trigger('sysWidthChange');
+                },
+                onRightToggle: function () {
+                    tab && tab.trigger('sysWidthChange');
+                }
+            });
+
+            var height = $(".l-layout-center").height();
+
+            //Tab
+            tab = $("#framecenter").ligerTab({
+                height: height,
+                showSwitchInTab: true,
+                showSwitch: true,
+                onAfterAddTabItem: function (tabdata) {
+                    tabItems.push(tabdata);
+                    saveTabStatus();
+                },
+                onAfterRemoveTabItem: function (tabid) {
+                    for (var i = 0; i < tabItems.length; i++) {
+                        var o = tabItems[i];
+                        if (o.tabid == tabid) {
+                            tabItems.splice(i, 1);
+                            saveTabStatus();
+                            break;
+                        }
+                    }
+                },
+                onReload: function (tabdata) {
+                    var tabid = tabdata.tabid;
+                    addFrameSkinLink(tabid);
+                }
+            });
+
+            //面板
+            $("#accordion1").ligerAccordion({
+                height: height - 24, speed: null
+            });
+
+            $(".l-link").hover(function () {
+                $(this).addClass("l-link-over");
+            }, function () {
+                $(this).removeClass("l-link-over");
+            });
+
+            //初始化菜单参数
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: {},
+                dataType: "json",
+                success: function (data) {
+                    console.info(data);
+                    var indexData = data.data;
+                    //树
+                    $("#tree1").ligerTree({
+                        data: indexData,
+                        checkbox: false,
+                        slide: false,
+                        nodeWidth: 120,
+                        btnClickToToggleOnly:false,
+                        attribute: ['nodename', 'url'],
+                        render: function (a) {
+                            if (!a.isnew) return a.text;
+                            return '<a href="' + a.url + '" target="_blank">' + a.text + '</a>';
+                        },
+                        onSelect: function (node) {
+                            if (!node.data.url) return;
+                            if (node.data.isnew) {
+                                return;
+                            }
+                            var tabid = $(node.target).attr("tabid");
+                            if (!tabid) {
+                                tabid = new Date().getTime();
+                                $(node.target).attr("tabid", tabid)
+                            }
+                            f_addTab(tabid, node.data.text, node.data.url);
+                        }
+
+
+                    });
+
+                    function openNew(url) {
+                        var jform = $('#opennew_form');
+                        if (jform.length == 0) {
+                            jform = $('<form method="post" />').attr('id', 'opennew_form').hide().appendTo('body');
+                        } else {
+                            jform.empty();
+                        }
+                        jform.attr('action', url);
+                        jform.attr('target', '_blank');
+                        jform.trigger('submit');
+                    }
+
+                    tab = liger.get("framecenter");
+                    accordion = liger.get("accordion1");
+                    tree = liger.get("tree1");
+                    $("#pageloading").hide();
+
+                    css_init();
+                    pages_init();
+                },
+                error: function () {
+
+                }
+            });
+        });
+
+        function f_heightChanged(options) {
+            if (tab)
+                tab.addHeight(options.diff);
+            if (accordion && options.middleHeight - 24 > 0)
+                accordion.setHeight(options.middleHeight - 24);
+        }
+
+        function f_addTab(tabid, text, url) {
+            tab.addTabItem({
+                tabid: tabid,
+                text: text,
+                url: url,
+                callback: function () {
+                    addFrameSkinLink(tabid);
+                }
+            });
+        }
+
+        function addFrameSkinLink(tabid) {
+            var prevHref = getLinkPrevHref(tabid) || "";
+            var skin = getQueryString("skin");
+            if (!skin) return;
+            skin = skin.toLowerCase();
+            attachLinkToFrame(tabid, prevHref + skin_links[skin]);
+        }
+
+        var skin_links = {
+            "aqua": "lib/ligerUI/skins/Aqua/css/ligerui-all.css",
+            "gray": "lib/ligerUI/skins/Gray/css/all.css",
+            "silvery": "lib/ligerUI/skins/Silvery/css/style.css",
+            "gray2014": "lib/ligerUI/skins/gray2014/css/all.css"
+        };
+
+        function pages_init() {
+            var tabJson = $.cookie('liger-home-tab');
+            if (tabJson) {
+                var tabitems = JSON2.parse(tabJson);
+                for (var i = 0; tabitems && tabitems[i]; i++) {
+                    f_addTab(tabitems[i].tabid, tabitems[i].text, tabitems[i].url);
+                }
+            }
+        }
+
+        function saveTabStatus() {
+            // $.cookie('liger-home-tab', JSON2.stringify(tabItems));
+        }
+
+        function css_init() {
+            var css = $("#mylink").get(0), skin = getQueryString("skin");
+            $("#skinSelect").val(skin);
+            $("#skinSelect").change(function () {
+                if (this.value) {
+                    location.href = "index.htm?skin=" + this.value;
+                } else {
+                    location.href = "index.htm";
+                }
+            });
+
+
+            if (!css || !skin) return;
+            skin = skin.toLowerCase();
+            $('body').addClass("body-" + skin);
+            $(css).attr("href", skin_links[skin]);
+        }
+
+        function getQueryString(name) {
+            var now_url = document.location.search.slice(1), q_array = now_url.split('&');
+            for (var i = 0; i < q_array.length; i++) {
+                var v_array = q_array[i].split('=');
+                if (v_array[0] == name) {
+                    return v_array[1];
+                }
+            }
+            return false;
+        }
+
+        function attachLinkToFrame(iframeId, filename) {
+            if (!window.frames[iframeId]) return;
+            var head = window.frames[iframeId].document.getElementsByTagName('head').item(0);
+            var fileref = window.frames[iframeId].document.createElement("link");
+            if (!fileref) return;
+            fileref.setAttribute("rel", "stylesheet");
+            fileref.setAttribute("type", "text/css");
+            fileref.setAttribute("href", filename);
+            head.appendChild(fileref);
+        }
+
+        function getLinkPrevHref(iframeId) {
+            if (!window.frames[iframeId]) return;
+            var head = window.frames[iframeId].document.getElementsByTagName('head').item(0);
+            var links = $("link:first", head);
+            for (var i = 0; links[i]; i++) {
+                var href = $(links[i]).attr("href");
+                if (href && href.toLowerCase().indexOf("ligerui") > 0) {
+                    return href.substring(0, href.toLowerCase().indexOf("lib"));
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div id="pageloading"></div>
+<div id="topmenu" class="l-topmenu">
+    <div class="l-topmenu-logo"><h1>归集通管理平台 </h1>v1.1.1</div>
+
+    <div class="l-topmenu-welcome">
+        <a href="#" class="l-link2" target="_blank">您好 ，欢迎使用归集通管理平台</a>
+        <a href="index.htm" class="l-link2"><i class="iconfont icon-shouye-copy-copy-copy"></i><b> 首页</b></a>
+        <a href="#" onclick="checkOut()" class="l-link2" target="_Self"><i class="iconfont icon-tuichu"></i><b>
+            退出</b></a>
+
+    </div>
+</div>
+<script type="text/javascript">
+    function checkOut() {
+        var local = window.location.href;
+        var a = $("a[target='_Self']");
+        //访问地址
+        var str = local.substring(0, local.indexOf(local.split("/", 5)[4], 1));
+        console.info(a.html());
+        a.attr("href", str + "user/loginout.do");
+        console.info("hostname:" + local.hostname + "\n host" + local.host + "\n port" + local.port + "\n href" + local.href);
+        //alert(str);
+    }
+</script>
+
+<div id="layout1" style="width:99.2%; margin:0 auto; margin-top:4px; ">
+    <div position="left" title="系统菜单" id="accordion1">
+        <ul id="tree1" style="margin-top:3px;"></ul>
+    </div>
+    <div position="center" id="framecenter">
+        <div tabid="home" title="我的主页" style="height:300px">
+            <iframe frameborder="0" name="home" id="home" src="welcome.jsp"></iframe>
+        </div>
+    </div>
+
+
+</div>
+<div style="display:none"></div>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>权限页面</title>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/test.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script type="text/javascript">
+	
+	
+	
+
+	/* $(document).ready(function (){
+//		var xmlhttp = new XMLHttpRequest();
+//		xmlhttp.open("GET", "login.do", false);
+		
+		$("#btn").click(function(){
+		//	al(document.getElementById("main").childNodes.length);
+		//	console.info(document.getElementById("main").childNodes);
+		});
+		
+		
+		document.getElementById("btn")["onclick"] = function(e){
+			var mWorker = new Worker("js/test.js");
+			
+			mWorker.onmessage = function(event){
+				console.log(event + "ss")
+			}
+			
+			mWorker.addEventListener("message", function (event) {
+				  console.log("Worker said : " + event.data);
+			}, false);
+			
+			mWorker.postMessage("my frist worker!");
+		}; 
+	}); */
+	
+	x = -1;
+	y = -1;
+	h = -1;
+	function countSecond(){
+		x = x + 1;
+		z = x % 60;
+		$(".second").html(z);
+		setTimeout("countSecond()", 1000);
+	}
+	function countMinute(){
+		y = y + 1;
+		z = y % 60;
+		$(".minute").html(z);
+		
+		if(z == 0){
+			h = h + 1;
+			o = h % 24;
+			$(".hours").html(o);
+		}
+		setTimeout("countMinute()", 60000);
+	}
+	
+	function btcli(){
+		$("button").click(function(){
+		console.info($("#hours").val() + ":" + $("#minute").val() + ":" + $("#second").val());
+		console.info($("button").html() + "ss");
+		$("input").each(function(){
+			console.log("[" + $(this).text() + "]");
+		});
+	});
+	}
+	
+	function showpwd(){
+			$("div[name='password']").attr("")
+	}
+	btcli();
+</script>
+
+<style type="text/css">
+	th{
+		font-size: 15px;
+	}
+	
+	div[class|=span2]{
+		border:groove;
+		border-radius:20px;
+	}
+	div[class|=span7]{
+		border:outset;
+		border-radius:20px;
+	}
+	textarea {
+		width:90%;max-width: 210px;max-height: 50px; 
+	}
+</style>
+</head>
+<body>
+<div class="page-header">
+	<h1>权限资源列表</h1>
+</div>
+<div class="container-fluid" id="main">
+	<div class="row-fluid">
+		<div class="span2" style="background: white;height: 500px;">
+		<div class="modal-header" style="font-family: sans-serif;font-size: x-large;color: gray;">
+			添加新的权限
+		</div>
+		
+		<table class="table" >
+			<tr>
+				<td>
+					描述
+				</td>
+				<td>
+					<textarea  rows="2" name="description"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					权限串
+				</td>
+				<td>
+					<textarea  rows="2" name="permission"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					地址
+				</td>
+				<td>
+					<textarea rows="2" name="url"></textarea>
+				</td>
+			</tr>
+		</table>
+		<button name="add" class="btn btn-primary pull-center" style="width: 80px;">添加</button>
+		</div>		
+		<div class="span7" style="background: ;height: 500px">
+			<form action="login/lg.do" method="post" class="container">
+			<div class="container">
+				<div class="modal-header">
+					<input type="text" placeholder="this wudou" width="60px;"/>
+					<!-- <input type="text" placeholder="account" name="account"/>
+					<input type="password" placeholder="password" name="password"/> -->
+					<input type="button" width="50px;" value="search">
+				</div>
+				<div class="modal-header">
+					<table class="table" style="width: 50%">
+					<tr height="40px;" style="background-color: #F3F3F3">
+						<th>描述</th>
+						<th>权限串</th>
+						<th>地址</th>
+					</tr>
+					<tbody class="target">
+						<tr>
+							<td>s</td>
+							<td>s</td>
+							<td>d</td>
+						</tr>
+					</tbody>
+					
+				</table>			
+				</div>
+			</div>
+			</form>
+		</div>
+		
+		<div class="span2">
+			<!-- <div class="row">
+					<div class="span6">
+						level 3 row 2				
+					</div>
+					<div class="span6">
+						<span class="hours">0</span>时：<span class="minute">0</span>分：<span class="second">0</span>秒
+					</div>
+						<p>时：<input id="hours" type="text" size="4" placeholder="修改时"/></p>
+						<p>分：<input id="minute" type="text" size="4" placeholder="修改分"/></p>
+						<p>秒：<input id="second" type="text" size="4" placeholder="修改秒"/></p>
+						<button id="btn" class="button">修改</button>
+			</div> -->
+			<button onclick="sys('访问外部系统')">访问</button>
+		</div>
+	</div>	
+</div>
+<div>
+
+</div>
+	
+</body>
+
+<style>
+	span{
+		font-family: fantasy;
+		font-size: xx-large;
+		font-style: inherit;
+	}
+</style>
+<script type="text/javascript">
+	countMinute();
+	countSecond();
+	findAll();
+	
+	$("button[name|='add']").click(function(){
+		url = $("textarea[name='url']").val();
+		description = $("textarea[name='description']").val();
+		permission = $("textarea[name='permission']").val();
+		/* food = $("input[name='food']").val();
+		environment = $("input[name='place']").val(); */
+		// && !$.isBlank(food) && !$.isBlank(environment)
+		console.log(
+					"description:[" + description + "]-|url:[" + url + "]-|permission:[" + permission + "]"
+			);
+		if(!$.isBlank(url) && !$.isBlank(permission) && !$.isBlank(description)){
+			A(url, permission, description);
+		}else{
+			alert("数据不完整，请填写完整！");
+		}
+		setTimeout(findAll(), 1000);
+	});
+	
+	function sys(data){
+		var local = window.location.href;
+		var url = local.substring(0, local.indexOf(local.split("/", 5)[4], 1)) + "user/sys.do";
+		console.info(data);
+		$.ajax({
+			url:url,
+			type:"POST",
+			data:{
+				"service":"getUserInfo"
+			},
+			success:function(data){
+				console.info(data);
+			}
+		});
+	}
+	
+</script>
+</html>

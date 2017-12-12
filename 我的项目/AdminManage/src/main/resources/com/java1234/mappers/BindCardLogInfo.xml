@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.businessDao.BindCardLogInfoDao">
+
+	<resultMap type="com.java1234.entity.business.BindCardLogInfo" id="bindCardLogInfo">
+		<id property="id" column="id"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="cardId" column="CARD_ID"/>
+		<result property="userRealName" column="USER_REAL_NAME"/>
+		<result property="bankNo" column="CARD_NO"/>
+		<result property="phoneNo" column="PHONE_NO"/>
+		<result property="status" column="STATE"/>
+		<result property="respCode" column="RESP_CODE"/>
+		<result property="respDesc" column="RESP_DESC"/>
+		<result property="acceptDate" column="ACCEPT_DATE"/>
+		<result property="refId" column="REF_ID"/>
+		<result property="bankName" column="BANK_NAME"/>
+	</resultMap>
+	
+	<select id="bindCardLogSearch" resultMap="bindCardLogInfo">
+		select 
+		card.USER_ID,
+		card.CUSTOMER_NM AS USER_REAL_NAME,
+		card.CERTIF_ID AS CARD_ID,
+		card.PHONE_NO,
+		card.CARD_NO,
+		trade.STATE,
+		trade.RESP_CODE,
+		trade.RESP_DESC,
+		trade.ACCEPT_DATE,
+		trade.REF_ID,
+		cardbin.BANK_NAME
+		from t_cashier_trade_card_query card
+		join t_cashier_trade trade on trade.trade_id = card.trade_id
+		left join td_s_cardbin cardbin on LEFT(card.CARD_ID,cardbin.BIN_LEN) = cardbin.CARD_BIN
+		where
+			<if test="bankName != null and bankName != ''">cardbin.BANK_NAME = #{bankName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">card.PHONE_NO = #{phoneNo} and </if>
+			<if test="createTimeStart != null and createTimeEnd != null and createTimeStart != '' and createTimeEnd != ''">
+				str_to_date(trade.ACCEPT_DATE,'%Y-%m-%d %H:%i:%s') between #{createTimeStart} and #{createTimeEnd} and 
+			</if>
+			<if test="realName != null and realName != ''">card.CUSTOMER_NM = #{realName} and </if>
+			<if test="cardId != null and cardId != ''">card.CERTIF_ID = #{cardId} and </if>
+			<if test="bankNo != null and bankNo != ''">card.CARD_NO = #{bankNo} and </if>
+			<if test="status != null and status != ''">trade.STATE = #{status} and </if>
+			1=1 order by ACCEPT_DATE desc limit #{startNo},#{pageSize}
+	</select>
+	
+	<select id="getBindCardLogInfoTotal" resultType="Integer">
+		select 
+		count(card.user_id)
+		from t_cashier_trade_card_query card
+		join t_cashier_trade trade on trade.trade_id = card.trade_id
+		left join td_s_cardbin cardbin on LEFT(card.CARD_ID,cardbin.BIN_LEN) = cardbin.CARD_BIN
+		where
+			<if test="bankName != null and bankName != ''">cardbin.BANK_NAME = #{bankName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">card.PHONE_NO = #{phoneNo} and </if>
+			<if test="createTimeStart != null and createTimeEnd != null and createTimeStart != '' and createTimeEnd != ''">
+				str_to_date(trade.ACCEPT_DATE,'%Y-%m-%d %H:%i:%s') between #{createTimeStart} and #{createTimeEnd} and 
+			</if>
+			<if test="realName != null and realName != ''">card.CUSTOMER_NM = #{realName} and </if>
+			<if test="cardId != null and cardId != ''">card.CERTIF_ID = #{cardId} and </if>
+			<if test="bankNo != null and bankNo != ''">card.CARD_NO = #{bankNo} and </if>
+			<if test="status != null and status != ''">trade.STATE = #{status} and </if>
+			1=1
+	</select>
+	
+	<select id="exportBindCardLog" resultMap="bindCardLogInfo">
+		select 
+		card.USER_ID,
+		card.CUSTOMER_NM AS USER_REAL_NAME,
+		card.CERTIF_ID AS CARD_ID,
+		card.PHONE_NO,
+		card.CARD_NO,
+		trade.STATE,
+		trade.RESP_CODE,
+		trade.RESP_DESC,
+		trade.ACCEPT_DATE,
+		trade.REF_ID,
+		cardbin.BANK_NAME
+		from t_cashier_trade_card_query card
+		join t_cashier_trade trade on trade.trade_id = card.trade_id
+		left join td_s_cardbin cardbin on LEFT(card.CARD_ID,cardbin.BIN_LEN) = cardbin.CARD_BIN
+		where
+			<if test="bankName != null and bankName != ''">cardbin.BANK_NAME = #{bankName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">card.PHONE_NO = #{phoneNo} and </if>
+			<if test="createTimeStart != null and createTimeEnd != null and createTimeStart != '' and createTimeEnd != ''">
+				str_to_date(trade.ACCEPT_DATE,'%Y-%m-%d %H:%i:%s') between #{createTimeStart} and #{createTimeEnd} and 
+			</if>
+			<if test="realName != null and realName != ''">card.CUSTOMER_NM = #{realName} and </if>
+			<if test="cardId != null and cardId != ''">card.CERTIF_ID = #{cardId} and </if>
+			<if test="bankNo != null and bankNo != ''">card.CARD_NO = #{bankNo} and </if>
+			<if test="status != null and status != ''">trade.STATE = #{status} and </if>
+			1=1 order by ACCEPT_DATE desc
+	</select>
+</mapper> 

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.businessDao.BindCardInfoDao">
+
+	<resultMap type="com.java1234.entity.business.BindCardInfo" id="bindCardInfo">
+		<id property="id" column="id"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="userRealName" column="USER_REAL_NAME"/>
+		<result property="cardId" column="ID_NUM"/>
+		<result property="bankNo" column="CARD_NO"/>
+		<result property="bankName" column="BANK_NAME"/>
+		<result property="cardState" column="CARD_STATE"/>
+		<result property="bindTime" column="CREATE_TIME"/>
+	</resultMap>
+	
+	<!-- -U 11/13 绑卡信息查询 pjj -->
+	<select id="BindCardSearch" resultMap="bindCardInfo">
+		   select 
+			card.user_id,
+  			`user`.USER_REAL_NAME,
+  			card.CERTIF_ID AS ID_NUM,
+			card.CARD_NO,
+			cardbin.BANK_NAME,
+  			card.CARD_STATE,
+			card.CREATE_TIME
+			from t_cashier_card card
+			join t_cust_user `user` on `user`.USER_ID = card.USER_ID
+			LEFT JOIN td_s_cardbin cardbin on LEFT(card.CARD_ID,cardbin.BIN_LEN) = cardbin.CARD_BIN
+			where 
+			<if test="bankNo != null and bankNo != ''">card.CARD_NO = #{bankNo} and </if>
+			<if test="bindTimeStart != null and bindTimeEnd != null and bindTimeEnd != '' and bindTimeStart != ''">
+				str_to_date(card.CREATE_TIME,'%Y-%m-%d %H:%i:%s') between #{bindTimeStart} and #{bindTimeEnd} and 
+			</if>
+			<if test="userRealName != null and userRealName != ''">`user`.USER_REAL_NAME = #{userRealName} and </if>
+			<if test="cardId != null and cardId != ''">card.CERTIF_ID = #{cardId} and </if>
+			<if test="userId != null and userId != ''">`USER`.USER_ID = #{userId} and </if>
+			<if test="cardState != null and cardState != ''">card.CARD_STATE = #{cardState} and </if>
+			<if test="bankName != null and bankName != ''">cardbin.BANK_NAME = #{bankName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">card.PHONE_NO = #{phoneNo} and </if>
+			1=1 order by CREATE_TIME desc limit #{startNo},#{pageSize}
+	</select>
+	
+	<select id="getBindCardInfoTotal" resultType="Integer">
+		select 
+			count(card.user_id)
+			from t_cashier_card card
+			join t_cust_user `user` on `user`.USER_ID = card.USER_ID
+			LEFT JOIN td_s_cardbin cardbin on LEFT(card.CARD_ID,cardbin.BIN_LEN) = cardbin.CARD_BIN
+			where 
+			<if test="bankNo != null and bankNo != ''">card.CARD_NO = #{bankNo} and </if>
+			<if test="bindTimeStart != null and bindTimeEnd != null and bindTimeEnd != '' and bindTimeStart != ''">
+				str_to_date(card.CREATE_TIME,'%Y-%m-%d %H:%i:%s') between #{bindTimeStart} and #{bindTimeEnd} and 
+			</if>
+			<if test="userRealName != null and userRealName != ''">`user`.USER_REAL_NAME = #{userRealName} and </if>
+			<if test="cardId != null and cardId != ''">card.CERTIF_ID = #{cardId} and </if>
+			<if test="userId != null and userId != ''">`USER`.USER_ID = #{userId} and </if>
+			<if test="cardState != null and cardState != ''">card.CARD_STATE = #{cardState} and </if>
+			<if test="bankName != null and bankName != ''">cardbin.BANK_NAME = #{bankName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">card.PHONE_NO = #{phoneNo} and </if>
+			1=1
+	</select>
+	
+	<select id="exportBindCardInfo" resultMap="bindCardInfo">
+		   select 
+			card.user_id,
+  			`user`.USER_REAL_NAME,
+  			card.CERTIF_ID AS ID_NUM,
+			card.CARD_NO,
+			cardbin.BANK_NAME,
+  			card.CARD_STATE,
+			card.CREATE_TIME
+			from t_cashier_card card
+			join t_cust_user `user` on `user`.USER_ID = card.USER_ID
+			LEFT JOIN td_s_cardbin cardbin on LEFT(card.CARD_ID,cardbin.BIN_LEN) = cardbin.CARD_BIN
+			where 
+			<if test="bankNo != null and bankNo != ''">card.CARD_NO = #{bankNo} and </if>
+			<if test="bindTimeStart != null and bindTimeEnd != null and bindTimeEnd != '' and bindTimeStart != ''">
+				str_to_date(card.CREATE_TIME,'%Y-%m-%d %H:%i:%s') between #{bindTimeStart} and #{bindTimeEnd} and 
+			</if>
+			<if test="userRealName != null and userRealName != ''">`user`.USER_REAL_NAME = #{userRealName} and </if>
+			<if test="cardId != null and cardId != ''">card.CERTIF_ID = #{cardId} and </if>
+			<if test="userId != null and userId != ''">`USER`.USER_ID = #{userId} and </if>
+			<if test="cardState != null and cardState != ''">card.CARD_STATE = #{cardState} and </if>
+			<if test="bankName != null and bankName != ''">cardbin.BANK_NAME = #{bankName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">card.PHONE_NO = #{phoneNo} and </if>
+			1=1 order by CREATE_TIME desc
+	</select>
+	
+</mapper> 

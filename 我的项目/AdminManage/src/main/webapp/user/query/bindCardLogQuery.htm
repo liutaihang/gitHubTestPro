@@ -1,0 +1,454 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <link href="../lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css"/>
+    <script src="../lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../lib/ligerUI/js/plugins/ligerComboBox.js"></script>
+    <script type=text/javascript src="../lib/ligerUI/js/plugins/ligerGrid.js"></script>
+    <link rel="stylesheet" href="../css/userTrans.css">
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    <link rel="stylesheet" href="../css/userQuery.css">
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    <link rel="stylesheet" href="../css/jurisdiction.css">
+    <!-- 分页 -->
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../layui/layui.js" type="text/javascript"></script>
+    
+    <script src="../js/date.js"></script>
+    <link rel="stylesheet" href="../layui/css/modules/layer/default/layer.css">
+    <script src="../js/jquery.mockjax.js" type="text/javascript"></script>
+    <script src="../layui/lay/modules/layer.js" type="text/javascript"></script>
+    <script src="../layui/lay/modules/laydate.js" type="text/javascript"></script>
+    <script src="../js/jurisdiction.js" type="text/javascript"></script>
+    <script src="../js/Treatment.js" type="text/javascript"></script>
+    <!--fu-->
+    <SCRIPT type=text/javascript>
+	    var bankNo = "";
+	 	var bankName = "";
+	 	var createTimeStart = "";
+	 	var createTimeEnd = "";
+	 	var realName = "";
+	 	var cardId = "";
+	 	var phoneNo = "";
+	 	var status = "";
+	 	var loginName = "";
+    	function logSearch(){
+		 	bankNo = document.getElementById("bankNo").value;
+		 	bankName = document.getElementById("bankName").value;
+		 	createTimeStart = document.getElementById("createTimeStart").value;
+		 	createTimeEnd = document.getElementById("createTimeEnd").value;
+		 	realName = document.getElementById("realName").value;
+		 	cardId = document.getElementById("cardId").value;
+		 	phoneNo = document.getElementById("phoneNo").value;
+		 	status = document.getElementById("status").value;
+		 	loginName = document.getElementById("loginName").value;
+    	}
+    	
+    	function verify(){
+    		var str = "";
+    		 // 验证身份证
+    		 if($.trim($('#cardId').val()).length == 0) { 
+    		  /* str += '身份证号码没有输入\n';ErroAlert(str);
+    		  $('#cardNo').focus(); */
+    		 } else {
+    		  if(isCardNo($.trim($('#cardId').val())) == false) {
+    		   str = '证件号不正确\n';ErroAlert(str);
+    		   $('#cardId').focus();
+    		   return true;
+    		  }
+    		 } 
+    		 
+    		// 判断手机号码
+    		 if ($.trim($('#phoneNo').val()).length == 0) { 
+    		  /* str += '手机号没有输入\n';
+    		  $('#phone').focus(); */
+    		 } else {
+    		  if(isPhoneNo($.trim($('#phoneNo').val())) == false) {
+    		   str = '手机号码不正确\n';ErroAlert(str);
+    		   $('#phoneNo').focus();
+    		   return true;
+    		  }
+    		 }
+    		
+    		// 判断手机号码
+    		 if ($.trim($('#loginName').val()).length == 0) { 
+    		  /* str += '手机号没有输入\n';
+    		  $('#phone').focus(); */
+    		 } else {
+    		  if(isPhoneNo($.trim($('#loginName').val())) == false) {
+    		   str = '手机号码不正确\n';ErroAlert(str);
+    		   $('#loginName').focus();
+    		   return true;
+    		  }
+    		 }
+    		
+    		if($("#createTimeStart").val().length != 0 && 
+    				isTime($("#createTimeStart").val()) == false){
+    			str = '开始日期格式不正确\n';ErroAlert(str);
+    			   $('#createTimeStart').focus();
+    			   return true;
+    		}
+    		
+    		if($("#createTimeEnd").val().length != 0 && 
+    				isTime($("#createTimeEnd").val()) == false){
+    			str = '截止日期格式不正确\n';ErroAlert(str);
+    			   $('#createTimeEnd').focus();
+    			   return true;
+    		}
+    		// 判断名称
+    		 /* if($.trim($('#name').val()).length == 0) {
+    		   str += '名称没有输入\n';
+    		  $('#name').focus() ;
+    		 } else {
+    		  if(isChinaName($.trim($('#name').val())) == false) {
+    		   str += '名称不合法\n';ErroAlert(str);
+    		   $('#name').focus();
+    		   return true;
+    		  }
+    		 } */
+    	}
+    	
+    	function exportBindCardLog(){
+    		if($.isBlank(allPage)){
+    			ErroAlert("请先查询数据！");
+    			return;
+    		}
+    		 logSearch();
+    		 if(verify()){
+    			 return;
+    		 }
+    		 var bean = {
+    				 "bankNo" : bankNo,
+    				 "bankName" : bankName,
+    				 "createTimeEnd" : createTimeEnd,
+    				 "createTimeStart" : createTimeStart,
+    				 "realName" : realName,
+    				 "cardId" : cardId,
+    				 "phoneNo" : phoneNo,
+    				 "status" : status,
+    				 "loginName" : loginName
+    		 	}
+    		 judgeTime(createTimeStart, createTimeEnd);
+    		 console.info(bean);
+             SuccessAlert("导出中，请稍候。。。");
+    	        $.ajax({
+    	            url: header + "bus/exportBindCardLog.do",
+    	            type: "POST",
+    	            async: true,
+    	            data: {
+	    	             "bankNo" : bankNo,
+	       				 "bankName" : bankName,
+	       				 "createTimeEnd" : createTimeEnd,
+	       				 "createTimeStart" : createTimeStart,
+	       				 "realName" : realName,
+	       				 "cardId" : cardId,
+	       				 "phoneNo" : phoneNo,
+	       				 "status" : status,
+	       				 "loginName" : loginName
+    	            },
+    	            dataType: 'json',
+    	            success: function (data, status) {
+    	            	downLoadExcel(data);
+    	            },
+        	        error:function (data){
+        	        	console.info(data);
+        	        	if(data.responseText.lastIndexOf("login_title") != -1){
+                        	alert("当前用户已在其他地方登陆或已过期！");
+                        	/* if (window != top) {
+    				            top.location.href = location.href;
+    				        } */
+    				        window.location.reload();
+                        	return;
+                        }
+        	        	ErroAlert("加载失败！");
+        	        }
+    	        });
+    	}
+    	
+    	function SysTalk(pageNum){
+    		 logSearch();
+    		 if(verify()){
+    			 return;
+    		 }
+    		 
+    		 var bean = {
+    				 "bankNo" : bankNo,
+    				 "bankName" : bankName,
+    				 "createTimeEnd" : createTimeEnd,
+    				 "createTimeStart" : createTimeStart,
+    				 "realName" : realName,
+    				 "cardId" : cardId,
+    				 "phoneNo" : phoneNo,
+    				 "status" : status,
+    				 "loginName" : loginName,
+    				 "pageNum" : pageNum
+    		 	}
+    		 judgeTime(createTimeStart, createTimeEnd);
+    		 console.info(bean);
+             SuccessAlert("查询中，请稍候。。。");
+    	        $.ajax({
+    	            url: header + "bus/BindCardLogSearch.do",
+    	            type: "POST",
+    	            async: true,
+    	            data: {
+	    	             "bankNo" : bankNo,
+	       				 "bankName" : bankName,
+	       				 "createTimeEnd" : createTimeEnd,
+	       				 "createTimeStart" : createTimeStart,
+	       				 "realName" : realName,
+	       				 "cardId" : cardId,
+	       				 "phoneNo" : phoneNo,
+	       				 "status" : status,
+	       				 "loginName" : loginName,
+	    				 "pageNum" : pageNum
+    	            },
+    	            dataType: 'json',
+    	            success: function (data, status) {
+    	                console.info(data);
+    	                if (!$.isBlank(data) && data.data.Total > 0) {
+        	                SuccessAlert("查询成功！");
+        	            } else {
+        	                ErroAlert("暂无数据！");
+        	            }
+    	                console.info(status);
+    	                allPage = data.data.Total;
+    	                f_initGrid(data.data);
+    	            },
+        	        error:function (data){
+        	        	console.info(data);
+        	        	if(data.responseText.lastIndexOf("login_title") != -1){
+                        	alert("当前用户已在其他地方登陆或已过期！");
+                        	/* if (window != top) {
+    				            top.location.href = location.href;
+    				        } */
+    				        window.location.reload();
+                        	return;
+                        }
+        	        	ErroAlert("加载失败！");
+        	        }
+    	        });
+    	}
+    
+    	function pagingData(){
+    		SysTalk(1);
+    			//分页
+   			var num = setInterval(function(){
+    				layui.use(['laypage', 'layer'], function(){
+    		   		   	  var laypage = layui.laypage
+    		   		 	  ,layer = layui.layer;
+    		   		 	//自定义首页、尾页、上一页、下一页文本
+    		   		 	  laypage.render({
+    		   		 	    elem: 'demo3'
+    		   		 	    ,count: allPage
+    		   		 	    ,layout: ['count', 'prev', 'page', 'next',  'skip']
+    		   		 	    /* ,first: '首页'
+    		   		 	    ,last: '尾页'*/
+    		   		 	    ,prev: '<em>←</em>'
+    		   		 	    ,next: '<em>→</em>' 
+    		   			    	,jump: function(obj, frist){
+       		   			    		if(!$.isBlank(allPage) && allPage > 1){
+       	                   	    		clearInterval(num);
+       	               	    		}
+    		   			    		console.info(obj.curr);
+    		   			    		if(!frist){
+    		   		   	    			SysTalk(obj.curr);
+    		   			    		}
+    		   			    	}
+    		   		 	  });
+    		   		 	});
+    			}, 500);
+    	}
+    	/* var num1;
+        var add = 1;
+
+        function setint() {
+            //SuccessAlert("查询中，请稍候。。。。");
+            num1 = setInterval("f_initGrid()", 1000);
+        } */
+        
+        var grid = null;
+        function f_initGrid (data) {
+        	if(!$.isBlank(grid)){
+        		grid.changePage('first');
+            };
+            grid = $("#maingrid4").ligerGrid({
+                columns: [
+                   /*  {
+                        display: 'ID',
+                        name: 'id',
+                        align: 'center',
+                        width: 60
+                    }, */
+                    {
+                        display: '用户编号',
+                        name: 'userId',
+                        minWidth: 120
+                    },
+                    {
+                        display: '真实姓名',
+                        name: 'userRealName',
+                        width: 70,
+                        align: 'center'
+                    },
+                    {
+                        display: '证件号码',
+                        name: 'cardId',
+                        minWidth: 160
+                    }, {
+                        display: '预留手机',
+                        name: 'phoneNo',
+                        minWidth: 100
+                    },
+                    {
+                        display: '银行名称',
+                        name: 'bankName',
+                        minWidth: 140
+                    },
+                    {
+                        display: '银行卡号',
+                        name: 'bankNo',
+                        minWidth: 160
+                    },
+                    {
+                        display: '业务状态',
+                        name: 'status',
+                        minWidth: 140,
+                        render: function (item) {
+                            if (parseInt(item.status) == 0) {
+                            	return "<span class='yellow-cell'>" + "创建成功" + "</span>";
+                            }
+                            if (parseInt(item.status) == 3) return '交易成功';
+                            if (parseInt(item.status) == 5){
+                            	return "<span class='red-cell'>" + "交易失败" + "</span>";
+                            }
+                        }
+                    },
+                    {
+                        display: '多渠道应答编码',
+                        name: 'respCode',
+                        minWidth: 140
+                    },
+                    {
+                        display: '多渠道应答描述',
+                        name: 'respDesc',
+                        minWidth: 140
+                    }, {
+                        display: '受理时间',
+                        name: 'acceptDate',
+                        minWidth: 140
+                    }, {
+                        display: '系统跟踪号',
+                        name: 'refId'
+                    }
+                ],
+                pageSize: 30,
+                where: f_getWhere(),
+                usePager: false,
+                data: $.extend(true, {}, data),
+                width: '100%',
+                rownumbers: true,
+                height: '300px',
+         //       背景颜色--交易失败
+                onAfterShowData: function () {
+                    $('.red-cell').parent().parent().parent().each(function () {
+                        $(this).find('td').css("background-color", "#f78585")
+                    });
+                    $('.yellow-cell').parent().parent().parent().each(function () {
+                        $(this).find('td').css("background-color", "#FFF68F")
+                    });
+                }
+            });
+            $("#pageloading").hide();
+        }
+        function f_search() {
+            grid.options.data = $.extend(true, {}, CustomersData);
+            grid.loadData(f_getWhere());
+        }
+        function f_getWhere() {
+            if (!grid) return null;
+            var clause = function (rowdata, rowindex) {
+                var key = $("#txtKey").val();
+                return rowdata.bianMa.indexOf(key) > -1;
+            };
+            return clause;
+        }
+    </SCRIPT>
+</head>
+<body>
+<table id="search">
+    <tr>
+        <td colspan="3">
+            &nbsp;<i class="iconfont icon-sousuo-sousuo1"></i> 搜索条件
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="bankNo">银行卡号:</label>
+            <input id="bankNo" type="text"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
+        </td>
+        <td>
+            <label for="bankName">银行名称:</label>
+            <input id="bankName" type="text">
+        </td>
+        <td>
+            <label for="createTimeStart">受理日期:</label>
+            <input id="createTimeStart" type="text" placeholder="点击选择起始日期" onclick="SetDate(this,'yyyy-MM-dd hh:mm:ss')">
+            <label for="createTimeEnd">至</label>
+            <input id="createTimeEnd" type="text" placeholder="点击选择截止日期" onclick="SetDate(this,'yyyy-MM-dd hh:mm:ss')">
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <label for="realName">真实姓名:</label>
+            <input id="realName" type="text">
+        </td>
+        <td>
+            <label for="cardId">证件号码:</label>
+            <input id="cardId" type="text" maxlength="18">
+        </td>
+        <td>
+            <label for="phoneNo">银行预留手机:</label>
+            <input id="phoneNo" type="text" maxlength="11"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="status">交易状态:</label>
+            <select id="status">
+                <option value="">全部</option>
+               <!--  <option value="0">创建成功</option> -->
+                <option value="3">交易成功</option>
+                <option value="5">交易失败</option>
+            </select>
+         <td colspan="2">
+            <label for="loginName">注册手机:</label>
+            <input id="loginName" type="text" maxlength="11"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
+        </td>  
+    </tr>
+    <tr>
+        <td colspan="3">
+            <button onclick="pagingData()">查询</button>
+            <button onclick="exportBindCardLog()">导出</button>
+        </td>
+    </tr>
+</table>
+<a id="hidden" href="" hidden="none" download="new">hidden</a>
+<div id="orderList">
+    &nbsp;银行卡列表
+</div>
+<div id="maingrid4"
+     style="padding-bottom: 0; padding-top: 0; padding-left: 0; margin: 0; padding-right: 0">
+	<p style='padding: 10px; text-align: center; color: gray;'>需要查询才有数据 </p>
+</div>
+<div id="demo3">
+</div>
+<script src="../js/laydate-start-end.js"></script>
+</body>
+</html>

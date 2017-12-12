@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.businessDao.UserTransDao">
+
+	<resultMap type="com.java1234.entity.business.UserTransInfo" id="userTransInfo">
+		<id property="id" column="id"/>
+		<result property="resId" column="RES_ID"/>
+		<result property="refId" column="REF_ID"/>
+		<result property="resName" column="res_name"/>
+		<result property="orderId" column="ORDER_ID"/>
+		<result property="txnAmt" column="TXN_AMT"/>
+		<result property="serv" column="serv"/>
+		<result property="cardId" column="CARD_ID"/>
+		<result property="payMode" column="PAY_MODE"/>
+		<result property="payType" column="PAY_TYPE"/>
+		<result property="rsrvStr1" column="RSRV_STR1"/>
+		<result property="payDate" column="PAY_DATE"/>
+		<result property="orderStatus" column="ORDER_STATUS"/>
+		<result property="bankName" column="BANK_NAME"/>
+		<result property="acceptDate" column="ACCEPT_DATE"/>
+		<result property="respCode" column="RESP_CODE"/>
+	</resultMap>
+	
+	<select id="userTransSearch" resultMap="userTransInfo">
+			SELECT
+				pay.RES_ID,
+				pay.RES_NAME,
+				pay.APP_CODE as serv,
+				-- need more work
+				carbin.BANK_NAME,
+				pay.CARD_ID,
+				pay.ORDER_ID,
+				bill.PAY_DATE,
+				pay.TXN_AMT,
+				pay.RSRV_STR1,
+				pay.PAY_MODE,
+				pay.ORDER_STATUS,
+				trade.REF_ID,
+				trade.RESP_CODE
+			FROM
+				t_cashier_trade_pay pay
+			LEFT JOIN td_s_cardbin carbin ON SUBSTRING_INDEX(pay.CARD_ID, '*', 1) = carbin.CARD_BIN
+			LEFT JOIN t_sweep_agent_bill bill ON pay.ORDER_ID = bill.TRADE_ID
+			LEFT JOIN t_cashier_trade trade ON pay.TRADE_ID = trade.TRADE_ID
+			where 
+			<if test="acceptDateStart !=null and acceptDateStart !='' and acceptDateEnd !=null and acceptDateEnd !=''">
+				str_to_date(pay.RSRV_STR1,'%Y-%m-%d %H:%i:%s') between #{acceptDateStart} and #{acceptDateEnd} and 
+			</if>
+			<if test="bankNo != null and bankNo != ''">pay.CARD_ID LIKE CONCAT('%',#{bankNo},'%' ) and </if>
+			<if test="resId !=null and resId !=''">pay.RES_ID=#{resId} and </if>
+			<!-- <if test="phoneNo !=null and phoneNo !=''">pay.RES_ID=#{phoneNo} and </if> -->
+			<if test="refId !=null and refId != ''">trade.REF_ID =#{refId} and </if>
+			<if test="serv != null and serv != ''">pay.APP_CODE = #{serv} and </if>
+			<if test="bType == 'bType'">length(pay.RES_ID) = 11 and </if>
+			<if test="bType == null or bType == ''">length(pay.RES_ID) = 8 and </if>
+			<if test="orderId != null and orderId  != ''">pay.ORDER_ID = #{orderId} and </if>
+			<if test="payMode != null and payMode != ''">PAY_MODE = #{payMode} and </if>
+			<if test="orderStatus != null and orderStatus != ''">ORDER_STATUS = #{orderStatus} and </if>
+			<if test="txnAmtStart !=null and txnAmtStart !='' and txnAmtEnd !=null and txnAmtEnd !=''">
+				cast(pay.TXN_AMT as UNSIGNED INT) between #{txnAmtStart} and #{txnAmtEnd} and 
+			</if>
+			1=1 order by pay.RSRV_STR1 desc limit #{startNo},#{pageSize}
+	</select> 
+	
+	<select id="exportExcel" resultMap="userTransInfo">
+		SELECT
+				pay.RES_ID,
+				pay.RES_NAME,
+				pay.APP_CODE as serv,
+				-- need more work
+				carbin.BANK_NAME,
+				pay.CARD_ID,
+				pay.ORDER_ID,
+				bill.PAY_DATE,
+				pay.TXN_AMT,
+				pay.RSRV_STR1,
+				pay.PAY_MODE,
+				pay.ORDER_STATUS,
+				trade.REF_ID,
+				trade.RESP_CODE
+			FROM
+				t_cashier_trade_pay pay
+			LEFT JOIN td_s_cardbin carbin ON SUBSTRING_INDEX(pay.CARD_ID, '*', 1) = carbin.CARD_BIN
+			LEFT JOIN t_sweep_agent_bill bill ON pay.ORDER_ID = bill.TRADE_ID
+			LEFT JOIN t_cashier_trade trade ON pay.TRADE_ID = trade.TRADE_ID 
+			where 
+			<if test="acceptDateStart !=null and acceptDateStart !='' and acceptDateEnd !=null and acceptDateEnd !=''">
+				str_to_date(pay.RSRV_STR1,'%Y-%m-%d %H:%i:%s') between #{acceptDateStart} and #{acceptDateEnd} and 
+			</if>
+			<if test="bankNo != null and bankNo != ''">pay.CARD_ID LIKE CONCAT('%',#{bankNo},'%' ) and </if>
+			<if test="resId !=null and resId !=''">pay.RES_ID=#{resId} and </if>
+			<!-- <if test="phoneNo !=null and phoneNo !=''">pay.RES_ID=#{phoneNo} and </if> -->
+			<if test="refId !=null and refId != ''">trade.REF_ID =#{refId} and </if>
+			<if test="serv != null and serv != ''">pay.APP_CODE = #{serv} and </if>
+			<if test="bType == 'bType'">length(pay.RES_ID) = 11 and </if>
+			<if test="bType == null or bType == ''">length(pay.RES_ID) = 8 and </if>
+			<if test="orderId != null and orderId  != ''">pay.ORDER_ID = #{orderId} and </if>
+			<if test="payMode != null and payMode != ''">PAY_MODE = #{payMode} and </if>
+			<if test="orderStatus != null and orderStatus != ''">ORDER_STATUS = #{orderStatus} and </if>
+			<if test="txnAmtStart !=null and txnAmtStart !='' and txnAmtEnd !=null and txnAmtEnd !=''">
+				cast(pay.TXN_AMT as UNSIGNED INT) between #{txnAmtStart} and #{txnAmtEnd} and 
+			</if>
+			1=1 order by pay.RSRV_STR1 desc;
+	</select>
+	<!-- 带添加 limit #{startNum},#{pageSize} -->
+	
+	<select id="getTotal" resultType="Integer">
+		SELECT
+				count(pay.TRADE_ID) as count
+			FROM
+				t_cashier_trade_pay pay
+			LEFT JOIN td_s_cardbin carbin ON SUBSTRING_INDEX(pay.CARD_ID, '*', 1) = carbin.CARD_BIN
+			LEFT JOIN t_sweep_agent_bill bill ON pay.ORDER_ID = bill.TRADE_ID
+			LEFT JOIN t_cashier_trade trade ON pay.TRADE_ID = trade.TRADE_ID
+			where 
+			<if test="acceptDateStart !=null and acceptDateStart !='' and acceptDateEnd !=null and acceptDateEnd !=''">
+				str_to_date(pay.RSRV_STR1,'%Y-%m-%d %H:%i:%s') between #{acceptDateStart} and #{acceptDateEnd} and 
+			</if>
+			<if test="bankNo != null and bankNo != ''">pay.CARD_ID LIKE CONCAT('%',#{bankNo},'%' ) and </if>
+			<if test="resId !=null and resId !=''">pay.RES_ID=#{resId} and </if>
+			<!-- <if test="phoneNo !=null and phoneNo !=''">pay.RES_ID=#{phoneNo} and </if> -->
+			<if test="refId !=null and refId != ''">trade.REF_ID =#{refId} and </if>
+			<if test="serv != null and serv != ''">pay.APP_CODE = #{serv} and </if>
+			<if test="bType == 'bType'">length(pay.RES_ID) = 11 and </if>
+			<if test="bType == null or bType == ''">length(pay.RES_ID) = 8 and </if>
+			<if test="orderId != null and orderId  != ''">pay.ORDER_ID = #{orderId} and </if>
+			<if test="payMode != null and payMode != ''">PAY_MODE = #{payMode} and </if>
+			<if test="orderStatus != null and orderStatus != ''">ORDER_STATUS = #{orderStatus} and </if>
+			<if test="txnAmtStart !=null and txnAmtStart !='' and txnAmtEnd !=null and txnAmtEnd !=''">
+				cast(pay.TXN_AMT as UNSIGNED INT) between #{txnAmtStart} and #{txnAmtEnd} and 
+			</if>
+			1=1 
+	</select>
+</mapper> 

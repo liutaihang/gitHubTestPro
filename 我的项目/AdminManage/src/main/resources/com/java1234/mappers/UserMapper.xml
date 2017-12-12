@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.authDao.UserDao">
+
+	<resultMap type="com.java1234.entity.auth.User" id="UserResult">
+		<result property="id" column="id"/>
+		<result property="userName" column="userName"/>
+		<result property="password" column="password"/>
+		<result property="nickName" column="nickName"/>
+	</resultMap>
+	
+	<select id="getByUserName" parameterType="String" resultMap="UserResult">
+		select * from t_user where userName=#{userName}
+	</select>
+	
+	<select id="getRoles" parameterType="String" resultType="String">
+		select r.roleName from t_user u,t_role r where u.roleId=r.id and u.userName=#{userName}
+	</select>
+	
+	<select id="getPermissions" parameterType="String" resultType="String">
+		select p.permissionName from t_user u,t_role r,t_permission p where u.roleId=r.id and p.roleId=r.id and u.userName=#{userName}
+	</select>
+
+	<delete id="deleteUser" parameterType="Integer">
+		delete from t_user where id in 
+		<foreach  item="item" collection="userIds" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</delete>
+	
+	<insert id="addUser" parameterType="User">
+		insert into t_user (userName, password, nickName)
+		values(#{userName},#{password},#{nickName})
+	</insert>
+	
+	<update id="updateUser" parameterType="User">
+		update t_user 
+		<set>
+			<if test="password != null and nickName != null">
+				password = #{password},
+				nickName = #{nickName}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 只修改密码 -->
+	<update id="setPwd" parameterType="User">
+		update t_user 
+		<set>
+			<if test="password != null">
+				password = #{password}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="findAll" resultMap="UserResult">
+		select * from t_user
+	</select>
+	
+	
+	<!-- Role_User mapper -->
+	<update id="updateUserRole" parameterType="UserRole">
+		update t_role_user 
+		<set>
+			<if test="roleId != null and userId != null">
+				role_id = #{roleId},
+				user_id = #{userId}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<insert id="addUserRole" parameterType="UserRole">
+		insert into t_role_user (role_id, user_id)
+		values(#{roleId}, #{userId})
+	</insert>
+	
+	<delete id="delUserRole" parameterType="Integer">
+		delete from t_role_user where id in
+		<foreach  item="item" collection="ids" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</delete>
+	
+	<delete id="delUserRoleByUserId" parameterType="Integer">
+		delete from t_role_user where user_id in
+		<foreach  item="item" collection="userIds" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</delete>
+</mapper> 

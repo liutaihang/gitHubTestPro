@@ -1,0 +1,11 @@
+#userId{
+    display:inline-block ;
+}
+#pwd{
+    display: inline-block;
+}
+#cont{
+    width:30%;
+    height: 30%;
+    border: 1px solid black;
+}

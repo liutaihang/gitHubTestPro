@@ -1,0 +1,127 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#choice {
+    width: 500px;
+    /*height: 200px;*/
+    border: 1px solid gainsboro;
+    z-index: 99;
+    position: absolute;
+    left: 30%;
+    top: 20%;
+    background: white;
+    display: none;
+}
+
+#popup {
+    width: 300px;
+    /*height: 200px;*/
+    border: 1px solid gainsboro;
+    z-index: 99;
+    position: absolute;
+    left: 30%;
+    top: 20%;
+    background: white;
+    display: none;
+}
+
+.choiceNav {
+    width: 480px;
+    height: 50px;
+    display: flex;
+    /*border-bottom: 1px solid gainsboro;*/
+}
+
+.left {
+    flex: 1;
+    margin-top: 10px;
+    font-size: 18px;
+    display: inline-block;
+    margin-left: 5%;
+    /*border: 1px solid gainsboro;*/
+}
+
+#right {
+    flex: 1;
+    margin-top: 10px;
+    font-size: 16px;
+    display: inline;
+    text-align: right;
+    margin-right: 5%;
+    cursor: pointer;
+    /*border: 1px solid gainsboro;*/
+}
+
+.jus {
+    width: 100%;
+    border-top: 1px solid gainsboro;
+}
+
+.jusName {
+    width: 100%;
+    height: 40px;
+    margin-left: 5%;
+    line-height: 40px;
+}
+
+.jusInput {
+    width: 90%;
+    height: 30px;
+    margin-left: 5%;
+    line-height: 30px;
+}
+
+.jus_1 {
+    width: 100%;
+    height: 120px;
+    border-bottom: 1px solid gainsboro;
+}
+
+.jus_3 {
+    width: 100%;
+    /*height: 120px;*/
+    /*border-bottom: 1px solid gainsboro;*/
+}
+
+.but {
+    text-align: right;
+    height: 40px;
+    line-height: 40px;
+}
+
+.close {
+    margin-right: 5%;
+    width: 80px;
+    height: 30px;
+}
+
+.submit {
+    margin-right: 5%;
+    width: 80px;
+    height: 30px;
+}
+
+#tree1 {
+    margin-top: 50px;
+}
+
+.closeSet {
+    width: 80px;
+    height: 30px;
+    margin-left: 5%;
+    margin-top: 50px;
+    margin-bottom: 60px;
+}
+
+#Status {
+    margin-top: 20px;
+    width: 100px;
+    font-size: 14px;
+}
+
+#Status_1 {
+    margin-left: 5%;
+    font-size: 16px;
+}

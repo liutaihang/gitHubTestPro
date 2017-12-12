@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="./css/welcome.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+    function changePwd() {
+        document.getElementById("changeInformation").style.display = "block";
+        document.getElementById("information").style.display = "none";
+    }
+
+    function cancel() {
+        document.getElementById("changeInformation").style.display = "none";
+        document.getElementById("information").style.display = "block";
+    }
+</script>
+<body>
+<div id="cover">
+    <div id="information">
+        <div id="top">
+            <img src="img/ts_r.png">
+
+            <div class="left">管理员</div>
+            <div class="right" onclick="changePwd()">修改密码</div>
+        </div>
+        <div class="number">账号：<span>hahah</span></div>
+        <div class="name">昵称：<span>hahah</span></div>
+    </div>
+    <div id="changeInformation">
+        <label>
+            昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称：<input type="text" placeholder="请输入昵称"><br>
+            输入密码：<input type="password" placeholder="请输入密码"><br>
+            再次输入：<input type="password" placeholder="请再次输入密码"><br>
+            <button id="sub">提交</button>
+            <button id="cancel" onclick="cancel()">取消</button>
+        </label>
+    </div>
+</div>
+</body>
+</html>

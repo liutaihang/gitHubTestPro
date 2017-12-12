@@ -1,0 +1,403 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <link href="../lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css"/>
+    <script src="../lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../lib/ligerUI/js/plugins/ligerComboBox.js"></script>
+    <SCRIPT type=text/javascript src="../lib/ligerUI/js/plugins/ligerGrid.js"></SCRIPT>
+    <link rel="stylesheet" href="../css/userTrans.css">
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    <link rel="stylesheet" href="../css/userQuery.css">
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    <link rel="stylesheet" href="../css/jurisdiction.css">
+    <link rel="stylesheet" href="../layui/css/modules/layer/default/layer.css">
+    
+    <!-- 分页 -->
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../layui/layui.js" type="text/javascript"></script>
+    
+    <script src="../js/date.js"></script>
+    <script src="../js/jquery.mockjax.js" type="text/javascript"></script>
+    <script src="../layui/lay/modules/layer.js" type="text/javascript"></script>
+    <script src="../layui/lay/modules/laydate.js" type="text/javascript"></script>
+    <script src="../js/jurisdiction.js" type="text/javascript"></script>
+    <script src="../js/Treatment.js" type="text/javascript"></script>
+    <script src="../CustomersData.js" type="text/javascript"></script>
+    <!--fu-->
+    <SCRIPT type=text/javascript>
+        var grid = null;
+        /* function SysTalk(){
+             $.ajax({
+                 url: header + "sys/Talk.do",
+                 type: "POST",
+                 async: true,
+                 data: {
+                     "select": "SELECT_TRADEPAY",
+                     "param": JSON.stringify(trade)
+                 },
+                 dataType: 'json',
+                 success: function (data, status) {
+                     console.info(data);
+                     console.info(status);
+                 }
+             });
+             setint();
+        }
+        var add = 1;
+        var num1 ;
+        function setint() {
+            //SuccessAlert("查询中，请稍候。。。。");
+            num1 = setInterval("f_initGrid()", 1000);
+        } */
+        function pagingData(){
+        	f_initGrid(1);
+        		//分页
+       		var num = setInterval(function(){
+        			layui.use(['laypage', 'layer'], function(){
+        	   		   	  var laypage = layui.laypage
+        	   		 	  ,layer = layui.layer;
+        	   		 	//自定义首页、尾页、上一页、下一页文本
+        	   		 	  laypage.render({
+        	   		 	    elem: 'demo3'
+        	   		 	    ,count: allPage
+        	   		 	    ,layout: ['count', 'prev', 'page', 'next',  'skip']
+        	   		 	    /* ,first: '首页'
+        	   		 	    ,last: '尾页'*/
+        	   		 	    ,prev: '<em>←</em>'
+        	   		 	    ,next: '<em>→</em>' 
+       	   			    	,jump: function(obj, frist){
+  		   			    		if(!$.isBlank(allPage) && allPage > 1){
+  	                   	    		clearInterval(num);
+  	               	    		}
+       	   			    		console.info(obj.curr);
+       	   			    		if(!frist){
+       	   			    			f_initGrid(obj.curr);
+       	   			    		}
+       	   			    	}
+        	   		 	  });
+        	   		 	});
+        		}, 500);
+    	}
+        
+        
+        function verify(){
+    		var str = "";
+    		// 判断手机号码
+    		 if ($.trim($('#creatPho').val()).length == 0) { 
+    		  /* str += '手机号没有输入\n';
+    		  $('#phone').focus(); */
+    		 } else {
+    		  if(isPhoneNo($.trim($('#creatPho').val())) == false) {
+    		   str = '手机号码不正确\n';ErroAlert(str);
+    		   $('#creatPho').focus();
+    		   return true;
+    		  }
+    		 }
+    		
+    		if($("#acceptDateStart").val().length != 0 && 
+    				isTime($("#acceptDateStart").val()) == false){
+    			str = '开始日期格式不正确\n';ErroAlert(str);
+    			   $('#acceptDateStart').focus();
+    			   return true;
+    		}
+    		
+    		if($("#acceptDateEnd").val().length != 0 && 
+    				isTime($("#acceptDateEnd").val()) == false){
+    			str = '截止日期格式不正确\n';ErroAlert(str);
+    			   $('#acceptDateEnd').focus();
+    			   return true;
+    		}
+    	}
+        
+        function exportBusiness(){
+        	if($.isBlank(allPage)){
+        		ErroAlert("请先查询数据！");
+        		return;
+        	}
+        	businessSearch();
+         	if(verify()){
+         		return;
+         	}
+         	var searchs = {
+         			"businessStatus" : businessStatus,
+         			"businessType" : businessType,
+         			"creatPho" : creatPho,
+         			"refId" : refId,
+         			"acceptDateEnd" : acceptDateEnd,
+         			"acceptDateStart" : acceptDateStart,
+         			"orderId" : orderId
+         	}
+         	console.info(searchs);
+            SuccessAlert("导出中，请稍候。。。");
+            $.ajax({
+                url: header + "bus/exportBusiness.do",
+                type: "POST",
+                async: true,
+                data: {
+                	"businessStatus" : businessStatus,
+         			"businessType" : businessType,
+         			"creatPho" : creatPho,
+         			"refId" : refId,
+         			"acceptDateEnd" : acceptDateEnd,
+         			"acceptDateStart" : acceptDateStart,
+         			"orderId" : orderId
+                },
+                dataType: 'json',
+                success: function (data, status) {
+                	downLoadExcel(data);
+                },
+                error: function(data){
+                	console.info(data);
+                	if(data.responseText.lastIndexOf("login_title") != -1){
+                    	alert("当前用户已在其他地方登陆或已过期！");
+                    	/* if (window != top) {
+				            top.location.href = location.href;
+				        } */
+				        window.location.reload();
+                    	return;
+                    }
+                }
+            });
+        }
+        function f_initGrid(pageNum) {
+         	businessSearch();
+         	if(verify()){
+         		return;
+         	}
+         	var searchs = {
+         			"businessStatus" : businessStatus,
+         			"businessType" : businessType,
+         			"creatPho" : creatPho,
+         			"refId" : refId,
+         			"acceptDateEnd" : acceptDateEnd,
+         			"acceptDateStart" : acceptDateStart,
+         			"orderId" : orderId
+         	}
+         	console.info(searchs);
+            SuccessAlert("查询中，请稍候。。。");
+            $.ajax({
+                url: header + "bus/businessSearch.do",
+                type: "POST",
+                async: true,
+                data: {
+                	"businessStatus" : businessStatus,
+         			"businessType" : businessType,
+         			"creatPho" : creatPho,
+         			"refId" : refId,
+         			"acceptDateEnd" : acceptDateEnd,
+         			"acceptDateStart" : acceptDateStart,
+         			"orderId" : orderId,
+         			"pageNum" : pageNum
+                },
+                dataType: 'json',
+                success: function (data, status) {
+                	console.info(status);
+                    if (!$.isBlank(data) && data.data != "没有数据") {
+                        SuccessAlert("查询成功！");
+                    } else {
+                        ErroAlert("暂无数据！");
+                    }
+                    console.info(data);
+                    allPage = data.data.Total;
+                    init(data.data);
+                },
+                error: function(data){
+                	console.info(data);
+                	if(data.responseText.lastIndexOf("login_title") != -1){
+                    	alert("当前用户已在其他地方登陆或已过期！");
+                    	/* if (window != top) {
+				            top.location.href = location.href;
+				        } */
+				        window.location.reload();
+                    	return;
+                    }
+                }
+            });
+        }
+        function init(data){
+        	if(!$.isBlank(grid)){
+        		grid.changePage('first');
+            };
+        	grid = $("#maingrid4").ligerGrid({
+                columns: [
+                    {
+                        display: '订单编号',
+                        name: 'orderId',
+                        minWidth: 140
+                    },
+                    {
+                        display: '用户编号',
+                        name: 'userId',
+                        align: 'center',
+                        width: 120
+                    },
+                    {
+                        display: '注册手机',
+                        name: 'createPho',
+                        minWidth: 60
+                    },
+                    {
+                        display: '业务类型',
+                        name: 'businessType',
+                        minWidth: 80,
+                        render: function (item) {
+                            if (item.businessType == "payOrderA") return '充值服务';
+                            if (item.businessType == "authCard") return '绑定银行卡';
+                            if (item.businessType == "realNameAuth") return '实名认证';
+                            if (item.businessType == "saveAcc") return '保存银行卡';
+                            if (item.businessType == "delCard") return '解绑银行卡';
+                        }
+                    },
+                    {
+                        display: '业务状态',
+                        name: 'businessStatus',
+                        minWidth: 80,
+                        render: function (item) {
+                                if (item.businessStatus == 0){
+                                	return "<span class='yellow-cell'>" + "创建状态" + "</span>";
+                                }
+                                if (item.businessStatus == 2) return '交易处理中';
+                                if (item.businessStatus == 3) return '交易成功';
+                                if (item.businessStatus == 5){
+                                	return "<span class='red-cell'>" + "交易失败" + "</span>";
+                                }
+                            }
+                    }, 
+                    {
+                        display: '多渠道应答编码',
+                        name: 'respCode',
+                        minWidth: 100
+                    },
+                    {
+                        display: '多渠道应答描述',
+                        name: 'respDesc',
+                        minWidth: 140
+                    },
+                    {
+                        display: '受理时间',
+                        name: 'acceptDate',
+                        minWidth: 140
+                    },
+                    {
+                        display: '完工时间',
+                        name: 'finishDate',
+                        minWidth: 140
+                    }
+                    ,
+                    {
+                        display: '系统跟踪号',
+                        name: 'refId',
+                        minWidth: 140
+                    }
+                ],
+                pageSize: 30,
+                where: f_getWhere(),
+                usePager: false,
+                rownumbers: true,
+                data: $.extend(true, {}, data),
+                width: '100%',
+                height: 400,
+//               背景颜色--交易失败
+                onAfterShowData: function () {
+                    $('.red-cell').parent().parent().parent().each(function () {
+                        $(this).find('td').css("background-color", "#f78585")
+                    });
+                    $('.yellow-cell').parent().parent().parent().each(function () {
+                        $(this).find('td').css("background-color", "#FFF68F")
+                    });
+                }
+            });
+            $("#pageloading").hide();
+        }
+        
+        function f_search() {
+            grid.options.data = $.extend(true, {}, CustomersData);
+            grid.loadData(f_getWhere());
+        }
+        function f_getWhere() {
+            if (!grid) return null;
+            var clause = function (rowdata, rowindex) {
+                var key = $("#txtKey").val();
+                return rowdata.bianMa.indexOf(key) > -1;
+            };
+            return clause;
+        }
+    </SCRIPT>
+</head>
+<body>
+<table id="search">
+    <tr>
+        <td colspan="3">
+            &nbsp;<i class="iconfont icon-sousuo-sousuo1"></i> 搜索条件
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="businessStatus">交易状态:</label>
+            <select id="businessStatus">
+                <option value="">全部</option>
+                <option value="0">创建状态</option>
+                <option value="3">交易成功</option>
+                <option value="5">交易失败</option>
+                <!-- <option value="2">交易处理中</option> -->
+            </select>
+        </td>
+        <td>
+            <label for="creatPho">注册手机号:</label>
+            <input id="creatPho" type="text" maxlength="11"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
+        </td>
+        <td>
+            <label for="orderId">订单编号:</label>
+            <input id="orderId" type="text" maxlength="18">
+        </td>
+        <!--<td>-->
+            <!--<label for="registrationDateStart">注册日期:起始</label>-->
+            <!--<input id="registrationDateStart" type="text">-->
+            <!--<label for="registrationDateEnd">至</label>-->
+            <!--<input id="registrationDateEnd" type="text">-->
+        <!--</td>-->
+    </tr>
+    <tr>
+        <td>
+            <label for="businessType">业务类型:</label>
+            <select id="businessType">
+                <option value="">全部</option>
+                <option value="payOrderA">充值服务</option>
+                <option value="authCard">绑定银行卡</option>
+                <option value="realNameAuth">实名认证</option>
+            </select>
+        </td>
+        <td>
+            <label for="refId">系统跟踪号:</label>
+            <input id="refId" type="text" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
+        </td>
+        <td>
+            <label for="acceptDateStart">受理日期:</label>
+            <input id="acceptDateStart" class="laydate-icon" type="text" placeholder="点击选择起始日期" onclick="SetDate(this,'yyyy-MM-dd hh:mm:ss')">
+            <label for="acceptDateEnd">至</label>
+            <input id="acceptDateEnd" class="laydate-icon" type="text" placeholder="点击选择截止日期" onclick="SetDate(this,'yyyy-MM-dd hh:mm:ss')">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <button onclick="pagingData()">查询</button>
+            <button onclick="exportBusiness()">导出</button>
+        </td>
+    </tr>
+</table>
+<a id="hidden" href="" hidden="none" download="new">hidden</a>
+<div id="orderList">
+    &nbsp; 订单列表
+</div>
+<div id="maingrid4"
+     style="padding-bottom: 0; padding-top: 0; padding-left: 0; margin: 0; padding-right: 0">
+	<p style='padding: 10px; text-align: center; color: gray;'>需要查询才有数据 </p>
+</div>
+<div id="demo3">   <!-- g data total ttt --> </div>
+</body>
+</html>

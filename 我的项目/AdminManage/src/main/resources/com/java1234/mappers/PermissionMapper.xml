@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.authDao.PermissionDao">
+
+	<resultMap type="PResource" id="Presource">
+		<id property="id" column="id"/>
+		<result property="url" column="url"/>
+		<result property="description" column="description"/>
+		<result property="pid" column="pid"/>
+		<result property="createName" column="name"/>
+	</resultMap>
+	
+	<select id="findByIds" parameterType="Integer" resultType="String">
+		select url from t_permission where id in
+		<foreach  item="item" collection="Pids" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</select>
+	
+	<select id="findByRoleIds" parameterType="Integer" resultType="Integer">
+		select permissionId from t_role_permission where roleId in
+		<foreach  item="item" collection="roleIds" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</select>
+	
+	<select id="findPermIdByRoleId"  parameterType="Integer" resultType="Integer">
+		select permissionId from t_role_permission where roleId = #{roleId}
+	</select>
+	
+	<!-- <select id="getPermissions" parameterType="String" resultType="String">
+		select p.permissionName from t_user u,t_role r,t_permission p where u.roleId=r.id and p.roleId=r.id and u.userName=#{userName}
+	</select> -->
+	<select id="findAll" resultMap="Presource">
+		select * from t_permission
+	</select>
+	
+	<select id="findByUserName" parameterType="String" resultMap="Presource">
+		SELECT * FROM t_permission WHERE id in(
+		SELECT permissionId FROM t_role_permission WHERE roleId in(
+		SELECT role_id FROM t_role_user WHERE user_id = (
+		SELECT id FROM t_user WHERE userName = #{userName})
+		)
+		)
+	</select>
+	
+	<insert id="addResource" useGeneratedKeys="true" keyProperty="id" parameterType="PResource">
+		insert into t_permission(url, description, remark,name, pid)
+		values(#{url,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createName,jdbcType=VARCHAR}, #{pid})
+	</insert>
+	
+	<delete id="delResource" parameterType="Integer">
+		delete from t_permission where id in 
+		<foreach  item="item" collection="ids" index="index"  open="(" separator="," close=")">#{item}</foreach>
+	</delete>
+	
+	<update id="updateResource" parameterType="PResource">
+		 update t_permission 
+	    <set >
+	      <if test="url != null" >
+	        url = #{url,jdbcType=VARCHAR},
+	      </if>
+	      <if test="description != null" >
+	        description = #{name,jdbcType=VARCHAR},
+	      </if>
+	      <if test="remark != null" >
+	        remark = #{name,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	    where id = #{id}
+	</update>
+</mapper> 

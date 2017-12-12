@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.businessDao.BusinessInfoDao">
+
+	<resultMap type="com.java1234.entity.business.BusinessInfo" id="businessInfo">
+		<id property="id" column="id"/>
+		<result property="userId" column="USER_ID"/>
+		<result property="createPho" column="LOGIN_NAME"/>
+		<result property="businessType" column="SERV"/>
+		<result property="businessStatus" column="STATE"/>
+		<result property="respCode" column="resp_code"/>
+		<result property="respDesc" column="resp_desc"/>
+		<result property="finishDate" column="FINISH_DATE"/>
+		<result property="acceptDate" column="ACCEPT_DATE"/>
+		<result property="refId" column="REF_ID"/>
+		<result property="orderId" column="SUBSCRIBE_ID"/>
+	</resultMap>
+	
+	<!-- -U pjj 11/13 业务类型等相关信息查询 -->
+	<select id="businessSearch" resultMap="businessInfo">
+		SELECT
+		trade.USER_ID,
+		`USER`.LOGIN_NAME,
+		trade.SERV,
+		trade.STATE,
+		trade.RESP_CODE,
+		trade.RESP_DESC,
+		trade.ACCEPT_DATE,
+		trade.FINISH_DATE,
+		trade.REF_ID,
+		trade.SUBSCRIBE_ID	
+		FROM
+		t_cashier_trade trade
+		LEFT JOIN t_cust_user USER ON trade.USER_ID = `USER`.USER_ID
+		where
+			<if test="businessStatus != null and businessStatus != ''">STATE = #{businessStatus} and </if>
+			<if test="acceptDateStart != null and acceptDateEnd != null and acceptDateStart != '' and acceptDateEnd != ''">
+				str_to_date(ACCEPT_DATE,'%Y-%m-%d %H:%i:%s') between #{acceptDateStart} and #{acceptDateEnd} and
+			</if>
+			<if test="refId != null and refId != ''">REF_ID = #{refId} and </if>
+			<if test="creatPho != null and creatPho != ''">`USER`.LOGIN_NAME = #{creatPho} and </if>
+			<if test="businessType != null and businessType != ''">SERV = #{businessType} and </if>
+			<if test="orderId != null and orderId != ''">SUBSCRIBE_ID = #{orderId} and </if>
+		1=1 order by ACCEPT_DATE desc limit #{startNo},#{pageSize}
+	</select>
+	
+	<select id="getBusinessTotal" resultType="Integer">
+		SELECT
+		count(trade.trade_id)
+		FROM
+		t_cashier_trade trade
+		LEFT JOIN t_cust_user USER ON trade.USER_ID = `USER`.USER_ID
+		where
+			<if test="businessStatus != null and businessStatus != ''">STATE = #{businessStatus} and </if>
+			<if test="acceptDateStart != null and acceptDateEnd != null and acceptDateStart != '' and acceptDateEnd != ''">
+				str_to_date(ACCEPT_DATE,'%Y-%m-%d %H:%i:%s') between #{acceptDateStart} and #{acceptDateEnd} and
+			</if>
+			<if test="refId != null and refId != ''">REF_ID = #{refId} and </if>
+			<if test="creatPho != null and creatPho != ''">`USER`.LOGIN_NAME = #{creatPho} and </if>
+			<if test="businessType != null and businessType != ''">SERV = #{businessType} and </if>
+			<if test="orderId != null and orderId != ''">SUBSCRIBE_ID = #{orderId} and </if>
+		1=1
+	</select>
+	
+	<!-- 导出 -->
+	<select id="exportBusiness" resultMap="businessInfo">
+		SELECT
+		trade.USER_ID,
+		`USER`.LOGIN_NAME,
+		trade.SERV,
+		trade.STATE,
+		trade.RESP_CODE,
+		trade.RESP_DESC,
+		trade.ACCEPT_DATE,
+		trade.FINISH_DATE,
+		trade.REF_ID,
+		trade.SUBSCRIBE_ID	
+		FROM
+		t_cashier_trade trade
+		LEFT JOIN t_cust_user USER ON trade.USER_ID = `USER`.USER_ID
+		where
+			<if test="businessStatus != null and businessStatus != ''">STATE = #{businessStatus} and </if>
+			<if test="acceptDateStart != null and acceptDateEnd != null and acceptDateStart != '' and acceptDateEnd != ''">
+				str_to_date(ACCEPT_DATE,'%Y-%m-%d %H:%i:%s') between #{acceptDateStart} and #{acceptDateEnd} and
+			</if>
+			<if test="refId != null and refId != ''">REF_ID = #{refId} and </if>
+			<if test="creatPho != null and creatPho != ''">`USER`.LOGIN_NAME = #{creatPho} and </if>
+			<if test="businessType != null and businessType != ''">SERV = #{businessType} and </if>
+			<if test="orderId != null and orderId != ''">SUBSCRIBE_ID = #{orderId} and </if>
+		1=1 order by ACCEPT_DATE desc
+	</select>
+</mapper> 

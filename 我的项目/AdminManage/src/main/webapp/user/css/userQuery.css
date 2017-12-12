@@ -1,0 +1,9 @@
+*{
+    font-family: "微软雅黑", "宋体", Arial, sans-serif;
+}
+#search{
+    margin-top: 0;
+}
+#search tr:nth-of-type(2),#userMobile{
+    width: 50%;
+}

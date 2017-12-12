@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+    <link href="../lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet"/>
+    <script src="../lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="../lib/json2.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="../EmployeeData.js" type="text/javascript"></script>
+    <script src="../DepartmentData.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../css/jurisdiction.css">
+    <link rel="stylesheet" href="../layui/css/modules/layer/default/layer.css">
+    <script src="../layui/lay/modules/layer.js" type="text/javascript"></script>
+    <script src="../js/jurisdiction.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    <link rel="stylesheet" href="../css/versionManagement.css">
+    <script type="text/javascript">
+        (function ($) {
+            $.isBlank = function (obj) {
+                return (!obj || $.trim(obj) === "");
+            };
+        })(jQuery);
+        var states = [{Data: 0, text: '禁用'}, {Data: 1, text: '启用'}];
+        var DepartmentList = DepartmentData.Rows;
+        var header = window.document.location.href;
+        header = header.substring(0, header.indexOf(header.split("/", 5)[4], 1));
+        window.onload = function sys() {
+            $.ajax({
+                url: header + "sys/Talk.do",
+                type: "POST",
+                async: true,
+                data: {
+                    "select": "SELECT_WHITE"
+                },
+                dataType: 'json',
+                success: function (data, status) {
+                    console.info(data);
+                    console.info(status);
+                }
+            });
+        };
+        $(setint);
+        var num;
+        var add = 1;
+
+        function setint() {
+            num = setInterval("f_initGrid()", 1000);
+        }
+
+        var manager, g;
+
+        function f_initGrid() {
+            add += 1;
+            if (add > 10) {
+                clearInterval(num);
+//                alert("获取数据超时！！");
+                $.ligerDialog.warn('获取数据超时！！')
+            }
+            $.ajax({
+                url: header + "sys/data.do",
+                type: "POST",
+                async: true,
+                data: {"whiteList": "whitePho"},
+                dataType: 'json',
+                success: function (data, status) {
+                    if (!$.isBlank(data)) {
+                        clearInterval(num);
+                    } else {
+                        ErroAlert("暂无数据！");
+                    }
+                    console.info(data);
+                    init(data.data);
+                }
+            });
+        }
+
+        function init(data) {
+            g = manager = $("#maingrid").ligerGrid({
+                columns: [
+                    {
+                        display: 'ID',
+                        name: 'id',
+                        minWidth: 60
+                    },
+                    {
+                        display: '用户编号',
+                        name: 'userId',
+                        minWidth: 70,
+                        align: 'center'
+                    },
+                    {
+                        display: '手机号',
+                        minWidth: 300,
+                        name: 'loginName',
+                        editor: {type: 'text'}
+                    },
+                    {
+                        display: '真实姓名',
+                        name: 'userRealName',
+                        editor: {type: 'text'}
+
+                    },
+                    {
+                        display: '注册名',
+                        name: 'loginName',
+                        minWidth: 80
+                    },
+                    {
+                        display: '身份证号',
+                        name: 'certifId',
+                        minWidth: 140
+                    },
+                    {
+                        display: '最后一次登录时间',
+                        name: 'lastLoginTime',
+                        minWidth: 140
+                    },
+                    {
+                        display: '注册时间',
+                        name: 'createTime',
+                        minWidth: 140
+                    }
+
+                ],
+                onSelectRow: function (rowdata, rowindex) {
+                    $("#txtrowindex").val(rowindex);
+                },
+//                enabledEdit: true,
+                isScroll: false,
+                checkbox: true,
+                rownumbers: true,
+                width: '100%',
+                data: data
+            });
+            document.getElementById("maingrid|hcell|c101").getElementsByTagName("div")[0].innerHTML = "全选";
+        }
+
+        function addNewRow() {
+            var row = manager.getSelectedRow();
+            manager.addRow({
+                DepartmentID: 3,
+                DepartmentName: '',
+                RealName: "分为" + newrowid,
+                ID: newrowid++,
+                Sex: 1,
+                Age: 25,
+                IncomeDay: new Date(1306108800000),
+                Phone: "2343434",
+                Address: "wwrere4"
+            }, row, document.getElementById("chkbefore").checked);
+        }
+
+        //        获取当前行值
+        function beginEdit(rowid) {
+            var rowData = manager.getRow(rowid);
+            console.log(manager.getRow(rowid));
+            jurisdiction_1(rowData);
+        }
+
+        function cancelEdit(rowid) {
+            manager.cancelEdit(rowid);
+        }
+
+        function endEdit(rowid) {
+            manager.endEdit(rowid);
+        }
+
+        function deleteRow(rowid) {
+            if (confirm('确定删除?')) {
+                var delData = manager.getSelecteds(rowid);
+                console.info(delData);
+                var ids = [];
+                for (i = 0; i < delData.length; i++) {
+                    ids.push(delData[i].loginName);
+                }
+                var param = {"param": JSON.stringify(ids), "select": "DISABLE_WHITE"};
+                dele(param, "sys/Talk.do");
+            }
+
+        }
+
+        function updateAll(resource) {
+
+            //更新
+            console.info(resource);
+            $.ajax({
+                url: header + "sys/Talk.do",
+                type: "POST",
+                async: true,
+                data: {
+                    "select": "ENABLE_WHITE",
+                    "param": JSON.stringify(resource)
+                },
+                dataType: 'json',
+                success: function (data, status) {
+                    window.location.reload();
+                    console.info(data);
+                },
+                error: function (data) {
+                    window.location.reload();
+                    console.info(data);
+                }
+            });
+        }
+
+        var newrowid = 100;
+
+        function addNewRow() {
+            manager.addEditRow();
+        }
+
+        function getSelected() {
+            var row = manager.getSelectedRow();
+            if (!row) {
+//                alert('请选择行');
+                $.ligerDialog.warn('请选择行');
+                return;
+            }
+            $.ligerDialog.warn(JSON.stringify(row));
+//            alert(JSON.stringify(row));
+        }
+
+        function getData() {
+            var data = manager.getData();
+//            alert(JSON.stringify(data));
+            $.ligerDialog.warn(JSON.stringify(data));
+        }
+
+        function whiteData() {
+            var loginName = $("#pho").val();
+            var datas = manager.getData();
+            console.log(datas.length);
+            for (var i = 0; i < datas.length; i++) {
+                if (loginName == datas[i].loginName) {
+//                    alert('手机号已存在当前列表中');
+
+                    $.ligerDialog.warn('手机号已存在当前列表中');
+                    return;
+                }
+            }
+//            验证手机格式
+            var phone = document.getElementById('pho').value;
+            if (!(/^1[34578]\d{9}$/.test(phone))) {
+//                alert("手机号码有误，请重填");
+
+                $.ligerDialog.warn("手机号码有误，请重填");
+                return false;
+            }
+            //var rsrvStr2 = $("#Status").find("option:selected").val();
+            //var userRealName = $("#name").val();
+            var userId = $("#userId").val();
+            var data = [loginName];
+            console.info(data);
+            var or = $("#updordel").val();
+            console.info("or:" + or);
+            $.ajax({
+                url: header + "sys/Talk.do",
+                type: "POST",
+                async: true,
+                data: {
+                    "select": "ENABLE_WHITE",
+                    "param": JSON.stringify(data)
+                },
+                dataType: 'json',
+                success: function (data, status) {
+                    console.info(data);
+//                    confirm("添加号码：" + loginName + "成功！");
+
+                    $.ligerDialog.confirm(
+                        '"添加号码：" + loginName + "成功！"',
+                        function (yes) {
+                            alert(yes);
+                        }
+                    );
+
+
+                    window.location.reload();
+                },
+                error: function (data) {
+                    console.info(data);
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript" src="../xlsx.full.min.js"></script>
+    <script type="text/javascript" src="../xlsx.core.min.js"></script>
+    <!-- Excel数据解析 -->
+    <script>
+
+        /*
+        FileReader共有4种读取方法：
+        1.readAsArrayBuffer(file)：将文件读取为ArrayBuffer。
+        2.readAsBinaryString(file)：将文件读取为二进制字符串
+        3.readAsDataURL(file)：将文件读取为Data URL
+        4.readAsText(file, [encoding])：将文件读取为文本，encoding缺省值为'UTF-8'
+                     */
+        var wb;//读取完成的数据
+        var rABS = false; //是否将文件读取为二进制字符串
+
+        function importf(obj) {//导入
+            if (!obj.files) {
+                return;
+            }
+            var f = obj.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = e.target.result;
+                if (rABS) {
+                    wb = XLSX.read(btoa(fixdata(data)), {//手动转化
+                        type: 'base64'
+                    });
+                } else {
+                    wb = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                }
+                var excelData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                console.info(wb.SheetNames[0]);
+                console.info(excelData);
+                var phos = [];
+                for (i = 0; i < excelData.length; i++) {
+                	if(excelData[i].loginName.length != 11 && !isPhoneNo(excelData[i].loginName)){
+                		$.ligerDialog.warn("电话号码格式错误，请重新导入正确号码！");
+                		return;
+                	}
+                    phos.push(excelData[i].loginName);
+                }
+                if (confirm("确认更新？")) {
+                    var res = {"Rows": excelData, "Total": excelData.length}
+                    console.info(phos);
+                    //init(res);//刷新列表的方法
+                    updateAll(phos);
+                    //document.getElementById("update").style.display = "block";
+                } else {
+                    obj.value = "";
+                }
+            };
+            if (rABS) {
+                reader.readAsArrayBuffer(f);
+            } else {
+                reader.readAsBinaryString(f);
+            }
+        }
+
+        function fixdata(data) { //文件流转BinaryString
+            var o = "",
+                l = 0,
+                w = 10240;
+            for (; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+            o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+            return o;
+        }
+    </script>
+</head>
+<body style="padding:10px">
+<div id="orderList">
+    &nbsp;白名单用户列表
+</div>
+<script type="text/javascript">
+    function cliFile() {
+        document.getElementById("file").click();
+    }
+</script>
+<div style="height: 20px"></div>
+<div id="demo"></div>
+<a class="l-button" style="width:120px;float:left; margin-left:10px;" onclick="deleteRow()">剔除白名单</a>
+<a class="l-button" style="width:100px;float:left; margin-left:10px;" onclick="jurisdiction()">添加白名单</a>
+<a class="l-button" style="width:120px;float:left; margin-left:10px;" onclick="cliFile()">
+    导入白名单<input id="file" type="file" onchange="importf(this)" accept=".xls,.xlsx"/>
+</a>
+<!-- <a class="l-button" style="width:100px;float:left; margin-left:10px;display: none" id="update" onclick="updateAll()">更新</a> -->
+<!--<a class="l-button" style="width:120px;float:left; margin-left:10px;" onclick="submit()">提交</a>-->
+
+<div class="l-clear"></div>
+<div id="maingrid" style="margin-top:20px">
+    <!--<span>全选</span>-->
+</div>
+<div style="display:none;">
+    <!-- g data total ttt -->
+</div>
+
+<div id="choice">
+
+    <div class="choiceNav">
+        <div class="left">添加白名单用户</div>
+    </div>
+    <div class="jus">
+        <p class="jusName ts">手机号</p>
+        <input type="text" placeholder="请输入手机号" class="jusInput" id="pho"
+               onkeyup="value=value.replace(/[^\d]/g,'') " ng-pattern="/[^a-zA-Z]" maxlength="11"/>
+    </div>
+    <!-- <div class="jus_3">
+        <p class="jusName">真实姓名</p>
+        <input type="text" placeholder="请输入真实姓名" class="jusInput" id="name">
+    </div> -->
+    <input type="hidden" value="" id="updordel">
+    <input type="hidden" value="" id="userId">
+
+    <div class="jus_1">
+
+        <!-- <label for="Status" id="Status_1">状态:</label>
+        <select id="Status">
+            <option value="0">禁用</option>
+            <option value="1">启用</option>
+        </select> -->
+    </div>
+
+    <div class="but">
+        <button class="close" onclick="closeChoice()">取消</button>
+        <button type="submit" class="submit" onclick="whiteData()">提交</button>
+    </div>
+</div>
+</body>
+</html>

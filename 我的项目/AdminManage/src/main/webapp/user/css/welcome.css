@@ -1,0 +1,115 @@
+
+#cover {
+    width: 100%;
+    height: 610px;
+    background: url("../img/bj.png") no-repeat center;
+}
+
+#information {
+    width: 180px;
+    height: 150px;
+    background: white;
+    border-radius: 10px;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+
+#top {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    /*text-align: center;*/
+    /*border: 1px solid black;*/
+
+}
+
+#top > img {
+    display: inline-block;
+    margin-left: 5%;
+    vertical-align: middle;
+}
+
+.left {
+    display: inline-block;
+    color: #0099CC;
+}
+
+.right {
+    display: inline-block;
+    font-size: 12px;
+    margin-left: 20%;
+    cursor: pointer;
+}
+
+#mid {
+    width: 100%;
+    height: 100%;
+}
+
+.number, .name {
+    margin-left: 5%;
+    text-align: left;
+    margin-top: 10px;
+    color: #333333;
+    cursor: pointer;
+}
+
+#changeInformation {
+    color: #333333;
+    width: 300px;
+    height: 240px;
+    position: absolute;
+    background: white;
+    text-align: center;
+    border-radius: 10px;
+    display: none;
+    top: 30px;
+    right:35%;
+}
+
+#changeInformation > table {
+    width: 90%;
+    margin: 40px auto auto auto;
+}
+
+#changeInformation table tr {
+    width: 100%;
+    height: 40px;
+}
+
+.td_1 {
+    text-align: right;
+    /*margin-top: 20px;*/
+}
+
+.inp {
+    border-style: none;
+    outline: none;
+    /*margin-top: 20px;*/
+    /*margin-left: 5%;*/
+    text-align: left;
+    background-color: transparent;
+    border-bottom: 1px solid gainsboro;
+}
+
+#sub, #cancel {
+    width: 80px;
+    height: 30px;
+    color: #0099CC;
+    outline: none;
+    margin-top: 10px;
+    margin-left: 30px;
+    border-radius: 5px;
+    background: transparent;
+}
+
+#home html {
+    width: 100%;
+    height: 100%;
+}
+.button_center{
+	position: absolute;
+	text-align: center;
+    right:30%;
+}

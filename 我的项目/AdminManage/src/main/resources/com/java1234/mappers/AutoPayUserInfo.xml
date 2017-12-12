@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.businessDao.AutoPayUserInfoDao">
+
+	<resultMap type="com.java1234.entity.business.AutoPayUserInfo" id="autoPayUserInfo">
+		<result property="id" column="id"/>
+		<result property="userId" column="user_id"/>
+		<result property="resId" column="res_id"/>
+		<result property="resName" column="res_name"/>
+		<result property="cardId" column="card_id"/>
+		<result property="bankName" column="bank_name"/>
+		<result property="dealTime" column="deal_time"/>
+		<result property="createDate" column="create_date"/>
+	</resultMap>
+	
+	<select id="autoPaySearch" resultMap="autoPayUserInfo" >
+		SELECT
+			cardbin.BANK_NAME,
+			agent.USER_ID,
+			agent.RES_ID,
+			agent.RES_NAME,
+			agent.CARD_ID,
+			agent.DEAL_TIME,
+			agent.CREATE_DATE
+		FROM
+			t_sweep_auto_agent agent
+		LEFT JOIN t_cashier_card card ON card.USER_ID = agent.USER_ID
+		LEFT JOIN td_s_cardbin cardbin ON cardbin.ACC_TYPE = card.ACC_TYPE
+		LEFT JOIN t_cust_user USER ON `USER`.USER_ID = agent.USER_ID where 
+			<if test="bankNo != null and bankNo != ''">agent.CARD_ID = #{bankNo} and </if>
+			<if test="createTimeStart != null and createTimeEnd != null and createTimeEnd != '' and createTimeStart != ''">
+				str_to_date(CREATE_DATE,'%Y-%m-%d %H:%i:%s') between #{createTimeStart} and #{createTimeEnd} and 
+			</if>
+			<if test="resName != null and resName != ''">RES_NAME = #{resName} and </if>
+			<if test="resId != null and resId != ''">RES_ID = #{resId} and </if>
+			<if test="phoneNo != null and phoneNo != ''">login_name = #{phoneNo} and </if>
+			1=1
+	</select>
+	
+</mapper> 

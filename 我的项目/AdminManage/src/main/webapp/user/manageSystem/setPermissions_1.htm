@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="../lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <link href="../lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" >
+    <script src="../lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerTree.js"></script>
+    <link rel="stylesheet" href="../css/setPermissions.css">
+    <script type="text/javascript">
+        $(function ()
+        {
+            var data = [];
+
+            data.push({ id: 1, pid: 0, text: '1' });
+            data.push({ id: 2, pid: 1, text: '1' });
+            data.push({ id: 3, pid: 1, text: '1' });
+            data.push({ id: 4, pid: 1, text: '1' });
+            data.push({ id: 5, pid: 1, text: '1' });
+            data.push({ id: 6, pid: 1, text: '1' });
+            data.push({ id: 7, pid: 1, text: '1' });
+
+            //ID可以用英文
+            data.push({ id: 'hehe', pid: 0, text: '2' });
+            data.push({ id: 9, pid: 'hehe', text: '2' });
+            data.push({ id: 10, pid: 'hehe', text: '2' });
+
+            data.push({ id: 'advice', pid: 0, text: '3' });
+            data.push({ id: 9, pid: 'advice', text: '3' });
+
+            data.push({ id: 'modifyPassword', pid: 0, text: '4' });
+            data.push({ id: 9, pid: 'modifyPassword', text: '4' });
+
+            $("#tree1").ligerTree({
+                        data:data,
+                        idFieldName :'id',
+                        parentIDFieldName :'pid'
+                    }
+            );
+        });
+    </script>
+
+
+</head>
+<body >
+<div class="title">
+    &nbsp;&nbsp;&nbsp;设置<span></span>权限
+</div>
+<div >
+    <ul id="tree1"></ul>
+</div>
+
+<div style="display:none">
+    <!--  数据统计代码 -->
+</div>
+</body>
+</html>

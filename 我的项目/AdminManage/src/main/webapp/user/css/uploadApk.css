@@ -1,0 +1,26 @@
+#upload {
+    position: absolute;
+    top: 30%;
+    left: 35%;
+    width: 500px;
+    height: 300px;
+    text-align: center;
+    border: 1px solid #A3C0E8;
+    box-shadow: 10px 10px 5px #A3C0E8;
+
+}
+
+#sub, #return {
+    width: 80px;
+    height: 30px;
+    margin-top: 80px;
+    outline: none;
+    border: 1px solid #A3C0E8;
+    background: #E0EDFF url(../img/button-bg.gif) repeat-x center;
+}
+
+#file {
+    margin-top: 50px;
+    border: 1px solid #A3C0E8;
+    outline: none;
+}

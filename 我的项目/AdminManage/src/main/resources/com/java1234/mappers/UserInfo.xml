@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java1234.dao.businessDao.UserInfoDao">
+
+	<resultMap type="com.java1234.entity.business.UserInfo" id="userInfo">
+		<result property="userId" column="USER_ID"/>
+		<result property="loginName" column="LOGIN_NAME"/>
+		<result property="userRealName" column="USER_REAL_NAME"/>
+		<result property="idNum" column="ID_NUM"/>
+		<result property="phoneNo" column="USER_MOBILE"/>
+		<result property="status" column="RSRV_STR2"/>
+		<result property="createTime" column="CREATE_TIME"/>
+		<result property="lastLoginTime" column="LAST_LOGIN_TIME"/>
+	</resultMap>
+	
+	<!-- -U pjj 用户所有信息查询  17/11/14 -->
+	<select id="userSearch" resultMap="userInfo">
+		select 
+			`USER`.USER_ID,`USER`.LOGIN_NAME,`USER`.USER_REAL_NAME,
+			CASE WHEN `USER`.ID_NUM IS NULL THEN
+			card.CERTIF_ID ELSE `USER`.ID_NUM END AS ID_NUM,
+			`USER`.USER_MOBILE,`USER`.RSRV_STR2,
+			`USER`.CREATE_TIME,`USER`.LAST_LOGIN_TIME
+		 from t_cust_user `USER` 
+		left join t_cashier_card card on card.USER_ID = `USER`.user_id 
+		where 
+			<if test="loginName != null and loginName != ''">`USER`.login_name = #{loginName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">`USER`.USER_MOBILE = #{phoneNo} and </if>
+			<if test="startTime != null and endTime != null and endTime != '' and startTime != ''">
+				str_to_date(`USER`.create_time,'%Y-%m-%d %H:%i:%s') between #{startTime} and #{endTime} and 
+			</if>
+			<if test="realName != null and realName != ''">`USER`.user_real_name = #{realName} and </if>
+			<if test="enIdNum != null and enIdNum != ''">card.CERTIF_ID = #{enIdNum} or </if>
+			<if test="cardId != null and cardId != ''">`USER`.ID_NUM = #{cardId} and </if>
+			<if test="userId != null and userId != ''">`USER`.user_id = #{userId} and </if>
+			1=1 GROUP by USER_ID  order by CREATE_TIME desc 
+			<if test="startNo != null and pageSize != null">
+				limit #{startNo},#{pageSize}
+			</if>
+	</select>
+	
+	<select id="getUserInfoTotal" resultType="Integer">
+		select 
+			COUNT(DISTINCT `USER`.CREATE_TIME)
+		 from t_cust_user `USER` 
+		left join t_cashier_card card on card.USER_ID = `USER`.user_id 
+		where 
+			<if test="loginName != null and loginName != ''">`USER`.login_name = #{loginName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">`USER`.USER_MOBILE = #{phoneNo} and </if>
+			<if test="startTime != null and endTime != null and endTime != '' and startTime != ''">
+				str_to_date(`USER`.create_time,'%Y-%m-%d %H:%i:%s') between #{startTime} and #{endTime} and 
+			</if>
+			<if test="realName != null and realName != ''">`USER`.user_real_name = #{realName} and </if>
+			<if test="enIdNum != null and enIdNum != ''">card.CERTIF_ID = #{enIdNum} or </if>
+			<if test="cardId != null and cardId != ''">`USER`.ID_NUM = #{cardId} and </if>
+			<if test="userId != null and userId != ''">`USER`.user_id = #{userId} and </if>
+		1=1 
+	</select>
+	
+	<!-- 导出 -->
+	<select id="exportUserInfo" resultMap="userInfo">
+		select 
+			`USER`.USER_ID,`USER`.LOGIN_NAME,`USER`.USER_REAL_NAME,
+			CASE WHEN `USER`.ID_NUM IS NULL THEN
+			card.CERTIF_ID ELSE `USER`.ID_NUM END AS ID_NUM,
+			`USER`.USER_MOBILE,`USER`.RSRV_STR2,
+			`USER`.CREATE_TIME,`USER`.LAST_LOGIN_TIME
+		 from t_cust_user `USER` 
+		left join t_cashier_card card on card.USER_ID = `USER`.user_id 
+		where 
+			<if test="loginName != null and loginName != ''">`USER`.login_name = #{loginName} and </if>
+			<if test="phoneNo != null and phoneNo != ''">`USER`.USER_MOBILE = #{phoneNo} and </if>
+			<if test="startTime != null and endTime != null and endTime != '' and startTime != ''">
+				str_to_date(`USER`.create_time,'%Y-%m-%d %H:%i:%s') between #{startTime} and #{endTime} and 
+			</if>
+			<if test="realName != null and realName != ''">`USER`.user_real_name = #{realName} and </if>
+			<if test="enIdNum != null and enIdNum != ''">card.CERTIF_ID = #{enIdNum} or </if>
+			<if test="cardId != null and cardId != ''">`USER`.ID_NUM = #{cardId} and </if>
+			<if test="userId != null and userId != ''">`USER`.user_id = #{userId} and </if>
+			1=1 GROUP by USER_ID  order by CREATE_TIME desc 
+	</select>
+</mapper> 

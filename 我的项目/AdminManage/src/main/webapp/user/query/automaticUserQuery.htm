@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <link href="../lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css"/>
+    <script src="../lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../lib/ligerUI/js/plugins/ligerComboBox.js"></script>
+    <SCRIPT type=text/javascript src="../lib/ligerUI/js/plugins/ligerGrid.js"></SCRIPT>
+    <link rel="stylesheet" href="../css/userTrans.css">
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    <link rel="stylesheet" href="../css/userQuery.css">
+    <link rel="stylesheet" href="../css/jurisdiction.css">
+    <link rel="stylesheet" href="../layui/css/modules/layer/default/layer.css">
+    <script src="../js/date.js"></script>
+    <script src="../js/jquery.mockjax.js" type="text/javascript"></script>
+    <script src="../layui/lay/modules/layer.js" type="text/javascript"></script>
+    <script src="../layui/lay/modules/laydate.js" type="text/javascript"></script>
+    <script src="../js/jurisdiction.js" type="text/javascript"></script>
+    <script src="../js/Treatment.js" type="text/javascript"></script>
+    <script src="../CustomersData.js" type="text/javascript"></script>
+    <!--fu-->
+    <SCRIPT type=text/javascript>
+        var grid = null;
+        /* function SysTalk(){
+          	 SuccessAlert("查询中，请稍候。。。");
+            $.ajax({
+                url: header + "sys/Talk.do",
+                type: "POST",
+                async: true,
+                data: {
+                    "select": "SELECT_TRADEPAY",
+                    "param": JSON.stringify(trade)
+                },
+                dataType: 'json',
+                success: function (data, status) {
+                    console.info(data);
+                    console.info(status);
+                }
+            });
+            setint();
+       }
+
+        var add = 1;
+        var num1 ;
+        function setint() {
+            //SuccessAlert("查询中，请稍候。。。。");
+            num1 = setInterval("f_initGrid()", 1000);
+        } */
+        function f_initGrid() {
+        	SuccessAlert("查询中，请稍候。。。");
+        	autoSearch();
+        	var bean = {
+        			"resName" : resName,
+        			"resId" : resId,
+        			"createTimeEnd" : createTimeEnd,
+        			"createTimeStart" : createTimeStart,
+        			"phoneNo" : phoneNo,
+        			"bankNo" : bankNo
+        	}
+            $.ajax({
+                url: header + "bus/AutoPaySearch.do",
+                type: "POST",
+                async: true,
+                data: {
+                	"resName" : resName,
+        			"resId" : resId,
+        			"createTimeEnd" : createTimeEnd,
+        			"createTimeStart" : createTimeStart,
+        			"phoneNo" : phoneNo,
+        			"bankNo" : bankNo
+                },
+                dataType: 'json',
+                success: function (data, status) {
+                    if (!$.isBlank(data) && data.data.Total > 0) {
+                        SuccessAlert("查询成功！");
+                    } else {
+                        ErroAlert("暂无数据！");
+                    }
+                    console.info(data);
+                    init(data.data);
+                },
+                error:function(data){
+                	console.info(data);
+                	if(data.responseText.lastIndexOf("login_title") != -1){
+                    	alert("当前用户已在其他地方登陆或已过期！");
+                    	/* if (window != top) {
+				            top.location.href = location.href;
+				        } */
+				        window.location.reload();
+                    	return;
+                    }
+                }
+            });
+        }
+        
+        function init(data){
+        	if(!$.isBlank(grid)){
+        		grid.changePage('first');
+            };
+        	grid = $("#maingrid4").ligerGrid({
+                columns: [
+                    {
+                        display: 'ID',
+                        name: 'id',
+                        align: 'center',
+                        width: 120
+                    },
+                    {
+                        display: '用户编号',
+                        name: 'userId',
+                        minWidth: 60
+                    },
+                    {
+                        display: '代办商ID',
+                        name: 'resId',
+                        width: 70,
+                        align: 'center'
+                    },
+                    {
+                        display: '代办商名称',
+                        name: 'resName',
+                        minWidth: 80
+                    }, {
+                        display: '银行卡号',
+                        name: 'cardId',
+                        minWidth: 100
+                    },
+                    {
+                        display: '银行名称',
+                        name: 'bankName',
+                        minWidth: 140
+                    },
+                    {
+                        display: '代扣时间',
+                        name: 'dealTime',
+                        minWidth: 140
+                    },
+                    {
+                        display: '设置时间',
+                        name: 'createDate',
+                        minWidth: 140
+                    }
+                ],
+                pageSize: 30,
+                where: f_getWhere(),
+                data: $.extend(true, {}, data),
+                width: '100%'
+            });
+            $("#pageloading").hide();
+        }
+        function f_search() {
+            grid.options.data = $.extend(true, {}, CustomersData);
+            grid.loadData(f_getWhere());
+        }
+
+        function f_getWhere() {
+            if (!grid) return null;
+            var clause = function (rowdata, rowindex) {
+                var key = $("#txtKey").val();
+                return rowdata.bianMa.indexOf(key) > -1;
+            };
+            return clause;
+        }
+    </SCRIPT>
+</head>
+<body>
+<table id="search">
+    <tr>
+        <td colspan="3">
+            &nbsp;<i class="iconfont icon-sousuo-sousuo1"></i> 搜索条件
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="resName">代办商名称:</label>
+            <input id="resName" type="text">
+        </td>
+        <td>
+            <label for="resId">代办商ID:</label>
+            <input id="resId" type="text"
+                   onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
+        </td>
+        <td>
+            <label for="createTimeStart">设置日期:</label>
+            <input id="createTimeStart" class="laydate-icon" type="text" placeholder="点击选择起始日期" onclick="SetDate(this,'yyyy-MM-dd hh:mm:ss')">
+            <label for="createTimeEnd">至</label>
+            <input id="createTimeEnd" class="laydate-icon" type="text" placeholder="点击选择截止日期" onclick="SetDate(this,'yyyy-MM-dd hh:mm:ss')">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <label for="phoneNo">注册手机号:</label>
+            <input id="phoneNo" type="text" maxlength="11"
+                   onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
+        </td>
+        <td colspan="2">
+            <label for="bankNo">银行卡号:</label>
+            <input id="bankNo" type="text"
+                   onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                   onblur="this.v();">
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <button onclick="f_initGrid()">查询用户</button>
+        </td>
+    </tr>
+</table>
+<div id="orderList">
+    &nbsp;用户列表
+</div>
+<div id="maingrid4"
+     style="padding-bottom: 0; padding-top: 0; padding-left: 0; margin: 0; padding-right: 0">
+	<p style='padding: 10px; text-align: center; color: gray;'>需要查询才有数据 </p>
+</div>
+<div style="display: none">   <!-- g data total ttt --> </div>
+<script src="../js/laydate-start-end.js" type="text/javascript"></script>
+</body>
+</html>

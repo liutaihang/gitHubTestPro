@@ -1,0 +1,498 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title></title>
+    <link href="../lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet"/>
+    <script src="../lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../lib/ligerUI/js/plugins/ligerComboBox.js"></script>
+    <SCRIPT type=text/javascript src="../lib/ligerUI/js/plugins/ligerGrid.js"></SCRIPT>
+    <link rel="stylesheet" href="../css/userTrans.css">
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    <link rel="stylesheet" href="../css/bindingCardQuery.css">
+    <link rel="stylesheet" href="../css/jurisdiction.css">
+    <link rel="stylesheet" href="../layui/css/modules/layer/default/layer.css">
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    
+    <!-- 分页 -->
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <script src="../layui/layui.js" type="text/javascript"></script>
+    
+    <script src="../js/date.js"></script> 
+    <script src="../js/jquery.mockjax.js" type="text/javascript"></script>
+    <script src="../layui/lay/modules/layer.js" type="text/javascript"></script>
+    <script src="../layui/lay/modules/laydate.js" type="text/javascript"></script>
+    <script type="application/javascript" src="../js/bindingCardQuery.js"></script>
+    <script src="../js/jurisdiction.js" type="text/javascript"></script>
+    <script src="../js/Treatment.js" type="text/javascript"></script>
+    <!--fu-->
+   	<script type="text/javascript">
+   		var manager,g;
+   		/* function SysTalk(){
+   			var cardNo = "";//银行卡号
+            var phoneNo = "";//电话号码
+            var certifId = "";//身份证号
+            var customerNm = "";//真实姓名
+            var createTimeStart = "";//绑卡开始时间
+            var createTimeEnd = "";//绑卡结束时间
+            var accType = "";//卡属性
+            var cardState = "";//绑卡状态
+            
+            cardNo = document.getElementById("cardNo").value;
+            cardState = document.getElementById("cardState").value;
+            phoneNo = document.getElementById("phoneNo").value;
+            certifId = document.getElementById("certifId").value;//身份证号
+            customerNm = document.getElementById("customerNm").value;//真实姓名
+            createTimeStart = document.getElementById("createTimeStart").value;
+            createTimeEnd = document.getElementById("createTimeEnd").value;
+            accType = document.getElementById("accType").value;
+            console.info("受理月份:" + cardNo);
+            console.info("订单状态:" + cardState);
+            //console.info("银行卡号码:" + cardId);
+            console.info("交易金额:" + phoneNo);
+            console.info("支付方式:" + certifId);
+            console.info("支付类型:" + customerNm);
+            console.info("订单编码:" + accType);
+            console.info("支付类型:" + createTimeStart);
+            console.info("订单编码:" + createTimeEnd);
+            
+            var trade = {
+                "cardNo": cardNo,
+                "phoneNo": cardState,
+                "phoneNo": phoneNo,
+                "certifId": certifId,
+                "customerNm": customerNm,
+                "OrdeaccTyperId": accType,
+                "createTimeStart": createTimeStart,
+                "createTimeEnd": createTimeEnd
+            };
+   			
+   			$.ajax({
+                url: header + "sys/Talk.do",
+                type: "POST",
+                async: true,
+                data: {
+                    "select": "SELECT_TRADEPAY",
+                    "param": JSON.stringify(trade)
+                },
+                dataType: 'json',
+                success: function (data, status) {
+                    console.info(data);
+                    console.info(status);
+                }
+            });
+   			SuccessAlert("查询中，请稍候。。。");
+            setint();
+   		}
+
+   		var num1;
+   		var add = 1;
+   		function setint() {
+            num1 = setInterval("initTable()", 1000);
+        } */
+        function pagingData(){
+        	initTable(1);
+    			//分页
+   			var num = setInterval(function(){
+    				layui.use(['laypage', 'layer'], function(){
+    		   		   	  var laypage = layui.laypage
+    		   		 	  ,layer = layui.layer;
+    		   		 	//自定义首页、尾页、上一页、下一页文本
+    		   		 	  laypage.render({
+    		   		 	    elem: 'demo3'
+    		   		 	    ,count: allPage
+    		   		 	    ,layout: ['count', 'prev', 'page', 'next',  'skip']
+    		   		 	    /* ,first: '首页'
+    		   		 	    ,last: '尾页'*/
+    		   		 	    ,prev: '<em>←</em>'
+    		   		 	    ,next: '<em>→</em>' 
+   		   			    	,jump: function(obj, frist){
+  		   			    		if(!$.isBlank(allPage) && allPage > 1){
+  	                   	    		clearInterval(num);
+  	               	    		}
+   		   			    		console.info(obj.curr);
+   		   			    		if(!frist){
+   		   		   	    		initTable(obj.curr);
+   		   			    		}
+   		   			    	}
+    		   		 	  });
+    		   		 	});
+    			}, 500);
+    	}
+        
+        
+        function verify(){
+    		var str = "";
+    		 // 验证身份证
+    		 if($.trim($('#cardId').val()).length == 0) { 
+    		  /* str += '身份证号码没有输入\n';ErroAlert(str);
+    		  $('#cardNo').focus(); */
+    		 } else {
+    		  if(isCardNo($.trim($('#cardId').val())) == false) {
+    		   str = '证件号不正确\n';ErroAlert(str);
+    		   $('#cardId').focus();
+    		   return true;
+    		  }
+    		 } 
+    		 
+    		// 判断手机号码
+    		 if ($.trim($('#phoneNo').val()).length == 0) { 
+    		  /* str += '手机号没有输入\n';
+    		  $('#phone').focus(); */
+    		 } else {
+    		  if(isPhoneNo($.trim($('#phoneNo').val())) == false) {
+    		   str = '手机号码不正确\n';ErroAlert(str);
+    		   $('#phoneNo').focus();
+    		   return true;
+    		  }
+    		 }
+    		
+    		if($("#bindTimeStart").val().length != 0 && 
+    				isTime($("#bindTimeStart").val()) == false){
+    			str = '开始日期格式不正确\n';ErroAlert(str);
+    			   $('#bindTimeStart').focus();
+    			   return true;
+    		}
+    		
+    		if($("#bindTimeEnd").val().length != 0 && 
+    				isTime($("#bindTimeEnd").val()) == false){
+    			str = '截止日期格式不正确\n';ErroAlert(str);
+    			   $('#bindTimeEnd').focus();
+    			   return true;
+    		}
+    		// 判断名称
+    		 /* if($.trim($('#name').val()).length == 0) {
+    		   str += '名称没有输入\n';
+    		  $('#name').focus() ;
+    		 } else {
+    		  if(isChinaName($.trim($('#name').val())) == false) {
+    		   str += '名称不合法\n';ErroAlert(str);
+    		   $('#name').focus();
+    		   return true;
+    		  }
+    		 } */
+    	}
+        
+        function exportBindCard(){
+        	if($.isBlank(allPage)){
+        		ErroAlert("请先查询数据");
+        		return;
+        	}
+        	bindSearch();
+        	if(verify()){
+        		return;
+        	}
+        	var bean = {
+        			"bankNo" : bankNo,
+        			"phoneNo" : phoneNo,
+        			"bindTimeStart" : bindTimeStart,
+        			"bindTimeEnd" : bindTimeEnd,
+        			"userRealName" : userRealName,
+        			"cardId" : cardId,
+        			"userId" : userId,
+        			"cardState" : cardState
+        	}
+        	console.info(bean);
+            SuccessAlert("导出中，请稍候。。。");
+    		$.ajax({
+    	        url: header + "bus/exportBindCard.do",
+    	        type: "POST",
+    	        async: true,
+    	        data: {
+    	        	"bankNo" : bankNo,
+        			"phoneNo" : phoneNo,
+        			"bindTimeStart" : bindTimeStart,
+        			"bindTimeEnd" : bindTimeEnd,
+        			"userRealName" : userRealName,
+        			"cardId" : cardId,
+        			"userId" : userId,
+        			"cardState" : cardState
+    	        },
+    	        dataType: 'json',
+    	        success: function (data, status) {
+    	        	downLoadExcel(data);
+    	        },
+    	        error:function (data){
+    	        	console.info(data);
+    	        	if(data.responseText.lastIndexOf("login_title") != -1){
+                    	alert("当前用户已在其他地方登陆或已过期！");
+                    	/* if (window != top) {
+				            top.location.href = location.href;
+				        } */
+				        window.location.reload();
+                    	return;
+                    }
+    	        	ErroAlert("加载失败！");
+    	        }
+    	    });
+        }
+    	function initTable(pageNum){
+        	bindSearch();
+        	if(verify()){
+        		return;
+        	}
+        	var bean = {
+        			"bankNo" : bankNo,
+        			"phoneNo" : phoneNo,
+        			"bindTimeStart" : bindTimeStart,
+        			"bindTimeEnd" : bindTimeEnd,
+        			"userRealName" : userRealName,
+        			"cardId" : cardId,
+        			"userId" : userId,
+        			"cardState" : cardState
+        	}
+        	console.info(bean);
+            SuccessAlert("查询中，请稍候。。。");
+    		$.ajax({
+    	        url: header + "bus/BindCardSearch.do",
+    	        type: "POST",
+    	        async: true,
+    	        data: {
+    	        	"bankNo" : bankNo,
+        			"phoneNo" : phoneNo,
+        			"bindTimeStart" : bindTimeStart,
+        			"bindTimeEnd" : bindTimeEnd,
+        			"userRealName" : userRealName,
+        			"cardId" : cardId,
+        			"userId" : userId,
+        			"cardState" : cardState,
+        			"pageNum" : pageNum
+    	        },
+    	        dataType: 'json',
+    	        success: function (data, status) {
+    	            if (!$.isBlank(data) && data.data.Total > 0) {
+    	                SuccessAlert("查询成功！");
+    	            } else {
+    	                ErroAlert("暂无数据！");
+    	            }
+    	            console.info(data);
+    	            allPage = data.data.Total;
+    	            init(data.data);
+    	        },
+    	        error:function (data){
+    	        	console.info(data);
+    	        	if(data.responseText.lastIndexOf("login_title") != -1){
+                    	alert("当前用户已在其他地方登陆或已过期！");
+                    	/* if (window != top) {
+				            top.location.href = location.href;
+				        } */
+				        window.location.reload();
+                    	return;
+                    }
+    	        	ErroAlert("加载失败！");
+    	        }
+    	    });
+    	}
+    	function init(data){
+    		if(!$.isBlank(manager)){
+                manager.changePage('first');
+            };
+    		add = 1;
+    		manager = g = $("#maingrid").ligerGrid({
+                    columns: [
+                        /* {
+                            display: 'ID',
+                            name: 'id',
+                            minWidth: 60
+                        }, */
+                        {
+                            display: '用户编号',
+                            name: 'userId',
+                            width: 120,
+                            align: 'center'
+                        },
+                        {
+                            display: '真实姓名',
+                            name: 'userRealName',
+                            minWidth: 80
+                        }, {
+                            display: '证件号码',
+                            name: 'cardId',
+                            minWidth: 100
+                        },
+                        {
+                            display: '银行卡号',
+                            name: 'bankNo',
+                            minWidth: 100
+                        },
+                        {
+                            display: '银行名称',
+                            name: 'bankName',
+                            minWidth: 100
+                        },
+                        {
+                            display: '状态',
+                            name: 'cardState',
+                            minWidth: 140,
+                            render: function (item) {
+                                if (parseInt(item.cardState) == 0) return '解绑';
+                                if (parseInt(item.cardState) == 1){
+                                	return "<span class='yellow-cell'>" + "待生效" + "</span>";
+                                }
+                                if (parseInt(item.cardState) == 2) return '正常';
+                                if (parseInt(item.cardState) == 3){
+                                	return "<span class='red-cell'>" + "冻结" + "</span>";
+                                }
+                            }
+                        },
+                        {
+                            display: '绑定时间',
+                            name: 'bindTime',
+                            minWidth: 140
+                        }/* ,
+                        {
+                            display: '代办商编码',
+                            name: 'bs',
+                            minWidth: 140
+                        },
+                        {
+                            display: '订单名称',
+                            name: 'ddzymc',
+                            minWidth: 140
+                        },
+                        {
+                            display: '交易日期',
+                            name: 'jyrq',
+                            minWidth: 140
+                        }
+                        , {
+                            display: '订单状态',
+                            name: 'ddzt',
+                            minWidth: 140
+                        }, {
+                            display: '交易途径',
+                            name: 'yybs'
+                        }, {
+                            display: '商户名称',
+                            name: 'yhmc'
+                        }, {
+                            display: '银行名称',
+                            name: 'bankName'
+                        } */
+                    ],
+                    pageSize: 30,
+//                    where: f_getWhere(),
+                    data: data,
+                    usePager: false,
+                    height: 400,
+                    rownumbers: true,
+  //               背景颜色--交易失败
+                    onAfterShowData: function () {
+                        $('.red-cell').parent().parent().parent().each(function () {
+                            $(this).find('td').css("background-color", "#f78585")
+                        });
+                        $('.yellow-cell').parent().parent().parent().each(function () {
+                            $(this).find('td').css("background-color", "#FFF68F")
+                        });
+                    }
+                });
+        $("#pageloading").hide();
+    	}
+        function f_search() {
+            grid.options.data = $.extend(true, {}, CustomersData);
+            grid.loadData(f_getWhere());
+        }
+        function f_getWhere() {
+            if (!grid) return null;
+            var clause = function (rowdata, rowindex) {
+                var key = $("#txtKey").val();
+                return rowdata.bianMa.indexOf(key) > -1;
+            };
+            return clause;
+        }
+        function deleteRow() {
+            g.deleteSelectedRow();
+        }
+
+    </script>
+
+
+</head>
+<body>
+    <table id="search">
+        <tr>
+            <td colspan="3">
+                &nbsp;<i class="iconfont icon-sousuo-sousuo1"></i> 搜索条件
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="bankNo">银行卡号:</label>
+                <input id="bankNo" type="text"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                       onblur="this.v();" maxlength="19">
+            </td>
+            <td>
+                <label for="phoneNo">手机号码:</label>
+                <input id="phoneNo" type="text" maxlength="11"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                       onblur="this.v();">
+            </td>
+            <td>
+                <label for="bindTimeStart">绑定日期:</label>
+                <input id="bindTimeStart" type="text" placeholder="点击选择起始日期" onclick="SetDate(this,'yyyy-MM-dd hh:mm:ss')">
+                <label for="bindTimeEnd">至</label>
+                <input id="bindTimeEnd" type="text" placeholder="点击选择截止日期" onclick="SetDate(this,'yyyy-MM-dd hh:mm:ss')">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="userRealName">真实姓名:</label>
+                <input id="userRealName" type="text">
+            </td>
+            <td>
+                <label for="cardId">证件号码:</label>
+                <input id="cardId" type="text" maxlength="18">
+            </td>
+            <td>
+                <label for="userId">用户编号:</label>
+                <input id="userId" type="text" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"
+                       onblur="this.v();" maxlength="18">
+            </td>
+           <!--  <td>
+                <label for="accType">卡属性:</label>
+                <select id="accType">
+                    <option>全部</option>
+                    <option value="DEBIT ">借记</option>
+                    <option value="CREDIT ">贷记</option>
+                    <option value="VENTURE ">赊呗</option>
+                </select>
+            </td> -->
+        </tr>
+        <tr>
+            <td colspan="3">
+                <label for="cardState">绑卡状态:</label>
+                <select id="cardState">
+                    <option value="">全部</option>
+                    <option value="0">解绑</option>
+                    <option value="1">待生效</option>
+                    <option value="2">正常</option>
+                    <option value="3">冻结</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <button id="search" onclick="pagingData()">查询</button>
+                <button id="export" onclick="exportBindCard()">导出</button>
+            </td>
+        </tr>
+    </table>
+    <table class="sunPe">
+        <tr>
+            <td>
+                &nbsp; 用户列表
+            </td>
+            <td>
+                <!--总用户数 25985-->
+            </td>
+        </tr>
+    </table>
+<a id="hidden" href="" hidden="none" download="new">hidden</a>
+<div id="maingrid"
+     style="padding-bottom: 0; padding-top: 0; padding-left: 0; margin: 0; padding-right: 0">
+	<p style='padding: 10px; text-align: center; color: gray;'>需要查询才有数据 </p>
+</div>
+<div id="demo3" >   <!-- g data total ttt --> </div>
+<script src="../js/laydate-start-end.js"></script>
+</body>
+</html>

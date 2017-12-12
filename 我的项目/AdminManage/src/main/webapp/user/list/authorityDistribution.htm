@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+    <link href="../lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet"/>
+    <script src="../lib/jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <script src="../lib/json2.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerTextBox.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerCheckBox.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerComboBox.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerGrid.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerDateEditor.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerSpinner.js" type="text/javascript"></script>
+    <script src="../lib/ligerUI/js/plugins/ligerTree.js"></script>
+    <script src="../EmployeeData.js" type="text/javascript"></script>
+    <script src="../DepartmentData.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../icon/iconfont.css">
+    <script src="../js/jurisdiction.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="../css/versionManagement.css">
+    <link rel="stylesheet" href="../css/jurisdiction.css">
+    <link href="../css/welcome.css" rel="stylesheet">
+    <script type="text/javascript">
+        var userId;
+        (function ($) {
+            $.isBlank = function (obj) {
+                return (!obj || $.trim(obj) === "");
+            };
+        })(jQuery);
+        var DepartmentList = DepartmentData.Rows;
+        $(f_initGrid);
+        var manager, g;
+        var header = window.document.location.href;
+        console.info(header.indexOf("/", 4));
+        header = header.substring(0, header.indexOf(header.split("/", 5)[4], 1));
+
+        function f_initGrid() {
+            $.ajax({
+                url: header + "user/findAll.do",
+                type: "GET",
+                async: true,
+                data: {},
+                dataType: 'json',
+                success: function (data, status) {
+                    console.info(data.data);
+                    init(data.data);
+                }
+            });
+            $("#maingrid").find("table tr:nth-of-type(1) td:nth-of-type(1)").html("全选");
+        }
+
+        function init(data) {
+            g = manager = $("#maingrid").ligerGrid({
+                //toolbar: {},
+                //title : 'gg',
+                columns: [
+                    {
+                        display: '序列号',
+                        name: 'id',
+                        editor: {type: 'text'}
+                    },
+                    {
+                        display: '用户昵称',
+                        name: 'nickName',
+                        editor: {type: 'text'}
+                    },
+                    {
+                        display: '账号',
+                        name: 'userName',
+                        editor: {type: 'text'}
+
+                    },
+                    {
+                        display: '拥有角色',
+                        name: 'role',
+                        editor: {type: 'text'}
+                    }
+                ],
+                onSelectRow: function (rowdata, rowindex) {
+                    $("#txtrowindex").val(rowindex);
+                    console.info("选中项数据");
+                    tempUserInfo =  manager.getSelected();
+                    userId = manager.getSelected().id;
+                    console.info("userId:" + userId);
+                    console.info(manager.getSelected());
+                },
+                enabledEdit: false,
+                clickToEdit: false,
+                checkbox: true,
+                onReload: reloadData,
+                isScroll: false,
+                data: data,
+                rownumbers: true,
+                width: '100%'
+
+            });
+            document.getElementById("maingrid|hcell|c101").getElementsByTagName("div")[0].innerHTML = "全选";
+        }
+
+        //        function addNewRow() {
+        //            var row = manager.getSelectedRow();
+        //            manager.addRow({
+        //                DepartmentID: 3,
+        //                DepartmentName: '销售部',
+        //                RealName: "分为" + newrowid,
+        //                ID: newrowid++,
+        //                Sex: 1,
+        //                Age: 25,
+        //                IncomeDay: new Date(1306108800000),
+        //                Phone: "2343434",
+        //                Address: "wwrere4"
+        //            }, row, document.getElementById("chkbefore").checked);
+        //        }
+        function reloadData() {
+            window.location.reload();
+        }
+
+        function beginEdit(rowid) {
+        	console.info();
+            manager.beginEdit(rowid);
+        }
+
+        function cancelEdit(rowid) {
+            manager.cancelEdit(rowid);
+        }
+
+        function endEdit(rowid) {
+            manager.endEdit(rowid);
+        }
+
+        function getSelecteds(rowid) {
+            var data = manager.getSelecteds(rowid);
+            var ids = [];
+            if (!($.isBlank(data)) && data.length > 0) {
+                for (i = 0; i < data.length; i++) {
+                    if ("root" == data[i].userName) {
+//                        alert("超级管理员不能删除！");
+                        $.ligerDialog.warn('超级管理员不能删除');
+                        return;
+                    }
+                    ids.push(data[i].id);
+                }
+            } else {
+//                alert("请选择行！");
+                $.ligerDialog.warn('请选择行!');
+                return;
+            }
+            if (confirm('确定删除?')) {
+                del(ids, "user/del.do");
+            }
+        }
+
+        var newrowid = 100;
+
+        function addNewRow() {
+            manager.addEditRow();
+        }
+
+        function getSelected() {
+            var row = manager.getSelectedRow();
+            if (!row) {
+//                alert('请选择行');
+                $.ligerDialog.warn('请选择行!');
+                return;
+            }
+            alert(JSON.stringify(row));
+        }
+
+        function getData() {
+            var data = manager.getData();
+//            alert(JSON.stringify(data));
+            $.ligerDialog.warn(JSON.stringify(data));
+        }
+
+        function getTree(rowid) {
+            var treeManager = $("#tree1").ligerGetTreeManager();
+            var treeData = treeManager.getChecked();
+            var userInfo = manager.getSelected();
+            console.info(treeData);
+            if (!$.isBlank(userInfo) && "root" == userInfo.userName) {
+                if ($.isBlank(treeData) || treeData.length < 1) {
+//                    alert("请选择角色！");
+                    $.ligerDialog.warn("请选择角色！");
+                    return;
+                }
+            }
+
+            var ids = [];
+            if (treeData.length > 0) {
+                for (i = 0; i < treeData.length; i++) {
+                    ids.push(treeData[i].data.id);
+                }
+            } else {
+                ids = [-1]
+            }
+            console.info(ids);
+            console.info("userId:" + userId);
+            $.ajax({
+                url: header + "user/addUserRole.do",
+                type: "POST",
+                async: true,
+                data: {
+                    "userId": userId,
+                    "roleIds": ids
+                },
+                dataType: 'json',
+                success: function (result, status) {
+                    console.info(result);
+                    closeSet();
+                    window.location.reload();
+                },
+                error: function (data) {
+                    console.info(data);
+                    closeSet();
+                }
+            });
+        }
+		
+        function checkRows(rowid){
+			var checkNum = manager.getSelecteds(rowid);
+            if (checkNum.length > 1) {
+//                confirm("只能选择一条数据！");
+                $.ligerDialog.confirm(
+                    '只能选择一条数据',
+                    function (yes) {
+                        alert(yes);
+                    }
+                );
+                return false;
+            }
+            return true;
+		}
+        
+        function setUp(rowid) {
+            var checkNum = manager.getSelecteds(rowid);
+            if (checkNum.length > 1) {
+//                confirm("只能选择一条数据！");
+                $.ligerDialog.confirm(
+                    '只能选择一条数据',
+                    function (yes) {
+                        console.info(yes);
+                    }
+                );
+                return;
+            }
+
+            if ($.isBlank(manager.getSelected())) {
+//                alert("请选择用户");
+
+                $.ligerDialog.warn("请选择用户");
+                return;
+            }
+            userId = manager.getSelected().id;
+            initTree();
+            document.getElementById("popup").style.display = "block";
+        }
+    </script>
+
+    <!-- 弹出框 -->
+    <script type="text/javascript">
+        function initTree() {
+            /*  var data = [];
+
+             data.push({id: 1, pid: 0, text: '综合查询'});
+             data.push({id: 2, pid: 1, text: '交易查询'});
+             data.push({id: 3, pid: 1, text: '用户查询'});
+             data.push({id: 4, pid: 1, text: '绑卡查询'});
+             data.push({id: 5, pid: 1, text: '业务查询'});
+             data.push({id: 6, pid: 1, text: '自动代扣用户查询'});
+             data.push({id: 7, pid: 1, text: '绑卡日志查询'});
+
+             //ID可以用英文
+             data.push({id: 'hehe', pid: 0, text: '系统管理'});
+             data.push({id: 9, pid: 'hehe', text: '系统管理员查询'});
+             data.push({id: 10, pid: 'hehe', text: '用户查询'});
+
+             data.push({id: 'advice', pid: 0, text: '意见反馈'});
+             data.push({id: 9, pid: 'advice', text: '意见反馈'});
+
+             data.push({id: 'modifyPassword', pid: 0, text: '修改密码'});
+             data.push({id: 9, pid: 'modifyPassword', text: '修改密码'}); */
+            $.ajax({
+                url: header + "user/Tree.do",
+                type: "POST",
+                async: true,
+                data: {"userId": userId},
+                dataType: 'json',
+                success: function (result, status) {
+                    console.info(result.data);
+                    var tree = $("#tree1").ligerTree({
+                    	nodeWidth: 120,
+                        data: result.data.vos,
+                        idFieldName: 'id',
+                        parentIDFieldName: 'pid'
+                    });
+                    f_selectNode(result.data.roleIds, tree);
+                    console.info("roleIds:" + result.data.roleIds);
+                }
+            });
+        }
+
+        function f_selectNode(str, tree) {
+            var select = "";
+            console.info("str:" + str);
+            for (i = 0; i < str.length; i++) {
+                tree.selectNode(str[i]);
+            }
+            console.log(select);
+        }
+
+    </script>
+</head>
+<body style="padding:10px">
+<div id="orderList">
+    &nbsp;用户列表
+</div>
+<div style="height: 20px"></div>
+<!--<a class="l-button" style="width:120px;float:left; margin-left:10px;" onclick="importFile()">导入文件</a>-->
+<a class="l-button" style="width:120px;float:left; margin-left:10px;" onclick="getSelecteds()">删除用户</a>
+<a class="l-button" style="width:100px;float:left; margin-left:10px;" onclick="jurisdiction()">添加用户</a>
+<button class="l-button" style="width:100px;float:left; margin-left:10px;" onclick='setUp()'>设置角色</button>
+<!-- <a class="l-button" style="width:120px;float:left; margin-left:10px;" onclick="getSelected()">提交</a> -->
+<button class="l-button" style="width:120px;float:left; margin-left:10px;" onclick='showDiv()'>修改用户密码</button>
+
+<div class="l-clear"></div>
+<div id="maingrid" style="margin-top:20px"></div>
+<div style="display:none;">
+    <!-- g data total ttt -->
+</div>
+
+<div id="choice">
+
+    <div class="choiceNav">
+        <div class="left">添加用户</div>
+        <div id="right" onclick="closeChoice()">×</div>
+    </div>
+    l
+    <div class="jus">
+        <p class="jusName ts">用户昵称</p>
+        <input type="text" placeholder="请输入用户昵称" class="jusInput" name="nickname">
+    </div>
+    <div class="jus_1">
+        <p class="jusName">账号</p>
+        <input type="text" placeholder="请输入账号" class="jusInput" name="account">
+    </div>
+    <div class="but">
+        <button class="close" onclick="closeChoice()">取消</button>
+        <input type="button" onclick="authSubmit()" class="submit" value="提交"/>
+    </div>
+</div>
+
+<div id="popup">
+    <div class="title">
+        &nbsp;&nbsp;&nbsp;设置<span></span>角色
+    </div>
+    <div>
+        <ul id="tree1"></ul>
+    </div>
+
+    <div style="display:none">
+        <!--  数据统计代码 -->
+    </div>
+    <button class="closeSet" onclick="closeSet()">取消</button>
+    <button class="closeSet" onclick="getTree()">确认</button>
+</div>
+
+<div id="changeInformation" style="display: none; background: #E0E4E2;">
+	<h3 style="margin-top: 20px;">用户密码修改</h3>
+	<fieldset></fieldset>
+	<table>
+		<tr>
+			<td class="td_1">旧密码：</td>
+			<td><input id="oldPwd" type="text" class="inp" readonly="readonly"/></td>
+		</tr>
+		<tr>
+			<td class="td_1">新密码：</td>
+			<td><input onblur="verifyPwd()" id="first" type="text" class="inp"/></td>
+		</tr>
+		<tr>
+			<td class="td_1">确认密码：</td>
+			<td><input id="second" type="text" class="inp"/></td>
+		</tr>
+		<tr>
+			<td class="button_center">
+				<button onclick="updatePwd()" type="button" id="makeSure" style="margin-right: 40px;">确定</button>
+				<button type="button" onclick="closeDiv()">取消</button>
+			</td>
+		</tr>
+	</table>
+</div>
+</body>
+</html>
