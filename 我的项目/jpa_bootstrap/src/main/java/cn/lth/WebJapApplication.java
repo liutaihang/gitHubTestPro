@@ -1,0 +1,26 @@
+package cn.lth;
+
+import cn.lth.base.DemoInterceptor;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+@SpringBootApplication
+public class WebJapApplication extends WebMvcConfigurationSupport {
+	@Bean
+	public DemoInterceptor demoInterceptor(){
+		return new DemoInterceptor();
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+		super.addResourceHandlers(registry);
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(WebJapApplication.class, args);
+	}
+}
