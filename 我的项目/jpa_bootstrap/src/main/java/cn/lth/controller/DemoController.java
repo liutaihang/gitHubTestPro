@@ -4,6 +4,9 @@ import cn.lth.base.BaseController;
 import cn.lth.dao.DemoDao;
 import cn.lth.dto.DemoDto;
 //import net.minidev.json.JSONArray;
+import cn.lth.service.DemoService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +27,7 @@ import java.util.List;
 public class DemoController extends BaseController {
 
     @Autowired
-    private DemoDao demoDao;
+    private DemoService demoService;
 
     @RequestMapping("/")
     public String index(){
@@ -34,14 +37,16 @@ public class DemoController extends BaseController {
     @PostMapping("/demo")
     public void demo(DemoDto demoDto, HttpServletResponse response) throws IOException {
         //传入前段
-        print(response, demoDao.save(demoDto));
+        print(response, demoService.save(demoDto));
     }
 
     @GetMapping("/viewData")
     public void viewData(HttpServletResponse response) throws IOException {
-        List<DemoDto> demoDtos = demoDao.findAll();
+        List<DemoDto> demoDtos = demoService.findAll();
 //        System.out.println(JSONArray.toJSONString(demoDtos));
-//        print(response, JSONArray.toJSONString(demoDtos));
+        Gson gson = new GsonBuilder().create();
+        String demoJson = gson.toJson(demoDtos);
+        print(response, demoJson);
     }
 
 }

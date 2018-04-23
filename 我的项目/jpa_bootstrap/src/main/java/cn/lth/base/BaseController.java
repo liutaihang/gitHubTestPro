@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 public class BaseController {
 
     public void print(HttpServletResponse response, Object object) throws IOException {
+        response.setCharacterEncoding("utf-8");
         PrintWriter out = response.getWriter();
         out.print(object);
     }

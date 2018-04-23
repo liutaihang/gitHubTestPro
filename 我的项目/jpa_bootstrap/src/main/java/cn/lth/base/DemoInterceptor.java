@@ -2,7 +2,9 @@ package cn.lth.base;
 
 import cn.lth.util.VerifyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,17 +18,30 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class DemoInterceptor implements HandlerInterceptor{
 
+    @Autowired
+    private VerifyUtil VerifyUtil;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         boolean result = false;
         log.info("当前访问地址 >> {}", request.getRequestURI());
-        System.err.println(request.getRequestURI());
         if(!VerifyUtil.verifyURI(request.getRequestURI())){
+            response.setCharacterEncoding("utf-8");
             response.getWriter().print("还没添加url权限");
         }else{
             result = true;
         }
         return result;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+
     }
 }

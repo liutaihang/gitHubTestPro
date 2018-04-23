@@ -16,9 +16,9 @@ import java.util.stream.Stream;
 public class VerifyUtil {
 
     @Value("${visit.path}")
-    private static String [] visitPaths;
+    private String [] visitPaths;
 
-    public static boolean verifyURI(String currentURI){
+    public boolean verifyURI(String currentURI){
         AntPathMatcher andMatcher = new AntPathMatcher();
         boolean result = false;
         for (String uri : visitPaths) {
