@@ -76,4 +76,8 @@ public class DemoService {
 
         return null;
     }
+
+    public Long findAllNumber(){
+        return demoDao.count();
+    }
 }
