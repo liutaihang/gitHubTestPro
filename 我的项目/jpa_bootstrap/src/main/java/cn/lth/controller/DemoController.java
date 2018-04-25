@@ -11,12 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import javax.validation.Validation;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +46,13 @@ public class DemoController extends BaseController {
     }
 
     @PostMapping("/demo")
-    public void demo(DemoDto demoDto, HttpServletResponse response) throws IOException {
+    public void demo(@Valid DemoDto demoDto, HttpServletResponse response, BindingResult bindingResult) throws IOException {
+        if(bindingResult.hasErrors()){
+            for(ObjectError objectError : bindingResult.getAllErrors()){
+                print(response, objectError.getDefaultMessage());
+                throw new RuntimeException(objectError.getDefaultMessage());
+            }
+        }
         //传入前段
         print(response, demoService.save(demoDto));
     }

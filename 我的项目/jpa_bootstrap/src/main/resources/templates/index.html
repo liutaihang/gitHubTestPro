@@ -270,7 +270,7 @@
 	 */
 	function totalPage(num){
 		var temp = num / 10;
-		if(num % 10 != 0){
+		if(num % 10 != 0 && temp > 1){
 			temp += 1
 		}
 		return temp;

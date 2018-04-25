@@ -38,7 +38,7 @@ public class DemoService {
         boolean con = !StringUtils.hasText(demoDto.getContent().trim());
         boolean name = !StringUtils.hasText(demoDto.getName().trim());
         boolean some = !StringUtils.hasText(demoDto.getSomething().trim());
-        if(con && name && some){
+        if(con || name || some){
             throw new RuntimeException("demoDto.property.null.error");
         }
         DemoDto demoDto1 = demoDao.save(demoDto);
