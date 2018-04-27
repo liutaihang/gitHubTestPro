@@ -163,6 +163,7 @@
 			</div>
         </div>
     </div>
+<input type="hidden" id="hidden" value="1">
 </body>
 <script type="application/javascript">
 	/**
@@ -185,7 +186,7 @@
             },
             success: function (data) {
                 console.info(data);
-                viewData();
+                pagination(document.getElementById("hidden"));
 				$("#name").val("");
 				$("#content").val("");
 				$("#something").val("");
@@ -235,6 +236,16 @@
 		if(element){
 			page = element.innerText - 1;
 			console.info(element.innerText);
+			if(element.innerText == "first"){
+			    page = 0;
+            }
+
+            if(element.innerText == "end"){
+                page = parseInt($("#hidden").val()) - 1;
+            }
+            if(page < 0){
+			    page = 0;
+            }
 		}
 		var url = "/page/" + page + "/" + 10 
 		$.ajax({
@@ -252,10 +263,12 @@
                 }
                 table.html(tempStr);
 				var totalsize = totalPage(temp.size);
-				var tempPage = "";
+				var tempPage = "<li><a href='#' onclick='pagination(this)'>first</a></li>";
 				for(i = 0; i < totalsize; i++){
 					tempPage += "<li><a href='#' onclick='pagination(this)'>" + (i + 1) + "</a></li>";
 				}
+				tempPage += "<li><a href='#' onclick='pagination(this)'>end</a></li>";
+				$("#hidden").val(totalsize);
 				pageElemnt.html(tempPage);
 			},
 			error:function success(data){
@@ -270,10 +283,10 @@
 	 */
 	function totalPage(num){
 		var temp = num / 10;
-		if(num % 10 != 0 && temp > 1){
+		if(num % 10 != 0){
 			temp += 1
 		}
-		return temp;
+		return parseInt(temp);
 	}
 </script>
 

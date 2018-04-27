@@ -1,15 +1,14 @@
 package cn.lth.controller;
 
 import cn.lth.base.BaseController;
-import cn.lth.dao.DemoDao;
 import cn.lth.dto.DemoDto;
-//import net.minidev.json.JSONArray;
 import cn.lth.service.DemoService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -20,11 +19,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.Validation;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+//import net.minidev.json.JSONArray;
 
 /**
  * @author liutaihang
@@ -67,8 +67,8 @@ public class DemoController extends BaseController {
     }
 
     @GetMapping("/page/{page}/{size}")
-    public void paginationData(HttpServletResponse response, @PathVariable Integer page,@PathVariable Integer size) throws IOException {
-        Pageable pageable = new PageRequest(page, size);
+    public void paginationData(HttpServletResponse response,@PathVariable Integer page,@PathVariable Integer size) throws IOException {
+        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "id"));
         List<DemoDto> demoDtos = demoService.paginationList(pageable);
         Map<String, Object> data = new HashMap<>();
         data.put("data",demoDtos);
