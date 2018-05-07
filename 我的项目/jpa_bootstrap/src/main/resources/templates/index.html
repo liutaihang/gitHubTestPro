@@ -197,7 +197,7 @@
             <!--</tr>-->
         <!--</table>-->
     <!--</div>-->
-    <div id="show">
+   <!-- <div id="show">
         <a href="#" style="float: right;" onclick="">&times;</a>
         <table class="table table-hover">
             <tr>
@@ -214,8 +214,49 @@
             </tr>
         </table>
     </div>
-    <div id="bg"></div>
+    <div id="bg"></div>-->
     <input type="hidden" id="hidden" value="1">
+
+
+    <!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#my">
+        Launch demo modal
+    </button>-->
+    <div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>id:</th>
+                            <th><input readonly type="text"  id="id"/></th>
+                        </tr>
+                        <tr>
+                            <th>name:</th>
+                            <th><input  type="text" style="border-radius: 4px" id="nam"></th>
+                        </tr>
+                        <tr>
+                            <th>content:</th>
+                            <th><input  type="text" style="border-radius: 4px" id="ctt"></th>
+                        </tr>
+                        <tr>
+                            <th>something:</th>
+                            <th><input  type="text" style="border-radius: 4px" id="smt"></th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script type="application/javascript">
 	/**
@@ -311,7 +352,8 @@
                 var tempStr = "";
                 for (i = 0; i < list.length; i++) {
                     tempStr += "<tr><td>" + list[i].id + "</td>" + "<td>" + list[i].content + "</td>" + "<td>" +
-                        list[i].name + "</td>" + "<td>" + list[i].something + "</td><td><button onclick='del(this)' class='btn-danger badge'>删除</button></td></tr>";
+                        list[i].name + "</td>" + "<td>" + list[i].something + "</td><td><button onclick='del(this)' class='btn-danger badge'>删除</button>&nbsp;" +
+                        "<button onclick='update(this)' class='btn-danger badge' data-toggle='modal' data-target='#my'>修改</button></td></tr>";
                 }
                 table.html(tempStr);
 				var totalsize = totalPage(temp.size);
@@ -350,9 +392,39 @@
 
     function update(data) {
         var data = data.parentNode.parentNode.childNodes;
-        for(i = 0; i < data.length; i++){
+        var temp = [$("#id"), $("#nam"), $("#ctt"), $("#smt")];
+        console.info(temp);
+        for(var i = 0; i < data.length; i++){
+            if(temp.length > i){
+                temp[i].val(data[i].innerText);
+            }
             console.info(data[i].innerText);
         }
+    }
+    
+    function makeUpdate() {
+        var tempName = $("#nam");
+        var tempContent = $("#ctt");
+        var tempSomething = $("#smt");
+        var uri = "update";
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: {
+                name : tempName.innerText,
+                content : tempContent.innerText,
+                something : tempSomething.innerText
+            },
+            success: function (data) {
+                console.info(data);
+                alert(data.msg);
+            },
+            error : function (data) {
+                if(JSON.parse(data.responseText).message == "demoDto.property.null.error"){
+                    alert("修改数据不能为空");
+                }
+            }
+        });
     }
     
     function closeDIV(data) {

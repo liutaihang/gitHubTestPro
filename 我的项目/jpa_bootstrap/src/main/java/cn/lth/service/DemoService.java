@@ -9,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author liutaihang
@@ -78,5 +80,36 @@ public class DemoService {
 
     public Long findAllNumber(){
         return demoDao.count();
+    }
+
+    /**
+     * 查询
+     *
+     * @param id
+     * @return
+     */
+    public DemoDto findById(Integer id){
+        Optional<DemoDto> byId = demoDao.findById(id);
+        return  byId.get();
+    }
+
+    /**
+     * 修改
+     *
+     * @param DemoDto
+     * @return
+     */
+    @Transactional
+    public DemoDto updateDemo(DemoDto DemoDto){
+        return demoDao.saveAndFlush(demoDao);
+    }
+
+    /**
+     * 删除
+     *
+     * @param id
+     */
+    public void delDemo(Integer id){
+        demoDao.deleteById(id);
     }
 }

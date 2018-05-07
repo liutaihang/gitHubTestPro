@@ -47,12 +47,7 @@ public class DemoController extends BaseController {
 
     @PostMapping("/demo")
     public void demo(@Valid DemoDto demoDto, HttpServletResponse response, BindingResult bindingResult) throws IOException {
-        if(bindingResult.hasErrors()){
-            for(ObjectError objectError : bindingResult.getAllErrors()){
-                print(response, objectError.getDefaultMessage());
-                throw new RuntimeException(objectError.getDefaultMessage());
-            }
-        }
+        verifyBind(bindingResult, response);
         //传入前段
         print(response, demoService.save(demoDto));
     }
@@ -76,4 +71,22 @@ public class DemoController extends BaseController {
         print(response, gson.toJson(data));
     }
 
+    @PostMapping("update")
+    public void updateDemo(HttpServletResponse response, DemoDto demoDto, BindingResult bindingResult) throws IOException {
+        verifyBind(bindingResult, response);
+        demoService.updateDemo(demoDto);
+        Map<String, Object> map = new HashMap<String, Object>(){
+            {put("msg", "修改成功!");put("data", demoDto);}
+        };
+        print(response, gson.toJson(map));
+    }
+
+    @PostMapping("del")
+    public void del(Integer id, HttpServletResponse response) throws IOException {
+        demoService.delDemo(id);
+        Map<String, Object> map = new HashMap<String, Object>(){
+            {put("msg", "删除成功!");}
+        };
+        print(response, gson.toJson(map));
+    }
 }

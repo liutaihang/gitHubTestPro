@@ -1,5 +1,8 @@
 package cn.lth.base;
 
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,5 +19,14 @@ public class BaseController {
         response.setCharacterEncoding("utf-8");
         PrintWriter out = response.getWriter();
         out.print(object);
+    }
+
+    public void verifyBind(BindingResult bindingResult, HttpServletResponse response) throws IOException {
+        if(bindingResult.hasErrors()){
+            for(ObjectError objectError : bindingResult.getAllErrors()){
+                print(response, objectError.getDefaultMessage());
+                throw new RuntimeException(objectError.getDefaultMessage());
+            }
+        }
     }
 }
