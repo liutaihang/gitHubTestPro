@@ -47,52 +47,44 @@ public class DemoController extends BaseController {
 
     @PostMapping("/demo")
 
-    public ResponseEntity<DemoDto> demo(@Valid DemoDto demoDto, HttpServletResponse response, BindingResult bindingResult) throws IOException {
-        verifyBind(bindingResult, response);
+    public ResponseEntity<DemoDto> demo(@Valid DemoDto demoDto, BindingResult bindingResult){
+        verifyBind(bindingResult);
         //传入前段
         return  new ResponseEntity<>(demoService.save(demoDto), HttpStatus.OK);
-//        print(response, demoService.save(demoDto));
     }
 
     @GetMapping("/viewData")
-    public ResponseEntity<List<DemoDto>> viewData(HttpServletResponse response) throws IOException {
+    public ResponseEntity<List<DemoDto>> viewData(){
         List<DemoDto> demoDtos = demoService.findAll();
-//        System.out.println(JSONArray.toJSONString(demoDtos));
-        Gson gson = new GsonBuilder().create();
-        String demoJson = gson.toJson(demoDtos);
         return new ResponseEntity<>(demoDtos, HttpStatus.OK);
-//        print(response, demoJson);
     }
 
     @GetMapping("/page/{page}/{size}")
-    public ResponseEntity<Map<String, Object>> paginationData(HttpServletResponse response,@PathVariable Integer page,@PathVariable Integer size) throws IOException {
+    public ResponseEntity<Map<String, Object>> paginationData(@PathVariable Integer page,@PathVariable Integer size){
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "id"));
         List<DemoDto> demoDtos = demoService.paginationList(pageable);
         Map<String, Object> data = new HashMap<String, Object>(){
             {put("data",demoDtos);put("size", demoService.findAllNumber().toString());}
         };
         return new ResponseEntity<>(data, HttpStatus.OK);
-//        print(response, gson.toJson(data));
     }
 
     @PostMapping("update")
-    public ResponseEntity<Map<String, Object>> updateDemo(HttpServletResponse response, DemoDto demoDto, BindingResult bindingResult) throws IOException {
-        verifyBind(bindingResult, response);
+    public ResponseEntity<Map<String, Object>> updateDemo(DemoDto demoDto, BindingResult bindingResult) {
+        verifyBind(bindingResult);
         demoService.updateDemo(demoDto);
         Map<String, Object> map = new HashMap<String, Object>(){
             {put("msg", "修改成功!");put("data", demoDto);}
         };
         return  new ResponseEntity<>(map, HttpStatus.OK);
-//        print(response, gson.toJson(map));
     }
 
     @PostMapping("del/{id}")
-    public ResponseEntity< Map<String, Object>> del(@PathVariable Integer id, HttpServletResponse response) throws IOException {
+    public ResponseEntity< Map<String, Object>> del(@PathVariable Integer id){
         demoService.delDemo(id);
         Map<String, Object> map = new HashMap<String, Object>(){
             {put("msg", "删除成功!");}
         };
         return new ResponseEntity<>(map, HttpStatus.OK);
-//        print(response, gson.toJson(map));
     }
 }

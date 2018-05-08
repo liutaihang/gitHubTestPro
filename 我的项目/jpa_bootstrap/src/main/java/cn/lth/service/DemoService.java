@@ -32,7 +32,6 @@ public class DemoService {
      * @return
      */
     public DemoDto save(DemoDto demoDto){
-//        JsonObject jsonObject = new JsonObject();
         if(demoDto == null){
             throw new RuntimeException("demoDto.null.error");
         }
@@ -43,7 +42,6 @@ public class DemoService {
             throw new RuntimeException("demoDto.property.null.error");
         }
         DemoDto demoDto1 = demoDao.save(demoDto);
-//        jsonObject.addProperty("result", demoDto1.toString());
         return  demoDto1;
     }
 

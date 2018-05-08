@@ -287,7 +287,7 @@
             },
             error: function (data) {
 				console.info(data);
-				console.log(data.responseJSON)
+				console.log(data.responseURL)
                 console.info(JSON.parse(data.responseText).message);
 				if(JSON.parse(data.responseText).message == "demoDto.property.null.error"){
 					alert("添加数据不能为空");

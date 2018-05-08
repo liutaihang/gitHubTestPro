@@ -21,10 +21,9 @@ public class BaseController {
         out.print(object);
     }
 
-    public void verifyBind(BindingResult bindingResult, HttpServletResponse response) throws IOException {
+    public void verifyBind(BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             for(ObjectError objectError : bindingResult.getAllErrors()){
-                print(response, objectError.getDefaultMessage());
                 throw new RuntimeException(objectError.getDefaultMessage());
             }
         }
