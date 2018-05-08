@@ -5,17 +5,17 @@ import cn.lth.dto.DemoDto;
 import cn.lth.service.DemoService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -46,47 +46,53 @@ public class DemoController extends BaseController {
     }
 
     @PostMapping("/demo")
-    public void demo(@Valid DemoDto demoDto, HttpServletResponse response, BindingResult bindingResult) throws IOException {
+
+    public ResponseEntity<DemoDto> demo(@Valid DemoDto demoDto, HttpServletResponse response, BindingResult bindingResult) throws IOException {
         verifyBind(bindingResult, response);
         //传入前段
-        print(response, demoService.save(demoDto));
+        return  new ResponseEntity<>(demoService.save(demoDto), HttpStatus.OK);
+//        print(response, demoService.save(demoDto));
     }
 
     @GetMapping("/viewData")
-    public void viewData(HttpServletResponse response) throws IOException {
+    public ResponseEntity<List<DemoDto>> viewData(HttpServletResponse response) throws IOException {
         List<DemoDto> demoDtos = demoService.findAll();
 //        System.out.println(JSONArray.toJSONString(demoDtos));
         Gson gson = new GsonBuilder().create();
         String demoJson = gson.toJson(demoDtos);
-        print(response, demoJson);
+        return new ResponseEntity<>(demoDtos, HttpStatus.OK);
+//        print(response, demoJson);
     }
 
     @GetMapping("/page/{page}/{size}")
-    public void paginationData(HttpServletResponse response,@PathVariable Integer page,@PathVariable Integer size) throws IOException {
+    public ResponseEntity<Map<String, Object>> paginationData(HttpServletResponse response,@PathVariable Integer page,@PathVariable Integer size) throws IOException {
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "id"));
         List<DemoDto> demoDtos = demoService.paginationList(pageable);
-        Map<String, Object> data = new HashMap<>();
-        data.put("data",demoDtos);
-        data.put("size", demoService.findAllNumber().toString());
-        print(response, gson.toJson(data));
+        Map<String, Object> data = new HashMap<String, Object>(){
+            {put("data",demoDtos);put("size", demoService.findAllNumber().toString());}
+        };
+        return new ResponseEntity<>(data, HttpStatus.OK);
+//        print(response, gson.toJson(data));
     }
 
     @PostMapping("update")
-    public void updateDemo(HttpServletResponse response, DemoDto demoDto, BindingResult bindingResult) throws IOException {
+    public ResponseEntity<Map<String, Object>> updateDemo(HttpServletResponse response, DemoDto demoDto, BindingResult bindingResult) throws IOException {
         verifyBind(bindingResult, response);
         demoService.updateDemo(demoDto);
         Map<String, Object> map = new HashMap<String, Object>(){
             {put("msg", "修改成功!");put("data", demoDto);}
         };
-        print(response, gson.toJson(map));
+        return  new ResponseEntity<>(map, HttpStatus.OK);
+//        print(response, gson.toJson(map));
     }
 
-    @PostMapping("del")
-    public void del(Integer id, HttpServletResponse response) throws IOException {
+    @PostMapping("del/{id}")
+    public ResponseEntity< Map<String, Object>> del(@PathVariable Integer id, HttpServletResponse response) throws IOException {
         demoService.delDemo(id);
         Map<String, Object> map = new HashMap<String, Object>(){
             {put("msg", "删除成功!");}
         };
-        print(response, gson.toJson(map));
+        return new ResponseEntity<>(map, HttpStatus.OK);
+//        print(response, gson.toJson(map));
     }
 }

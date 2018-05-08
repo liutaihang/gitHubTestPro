@@ -306,14 +306,15 @@
             url: "/viewData",
             data: {},
             success: function (data) {
-                console.info(JSON.parse(data));
-                var temp = JSON.parse(data);
-                var tempStr = "";
-                for (i = 0; i < temp.length; i++) {
-                    tempStr += "<tr><td>" + temp[i].id + "</td>" + "<td>" + temp[i].content + "</td>" + "<td>" +
-                        temp[i].name + "</td>" + "<td>" + temp[i].something + "</td></tr>";
-                }
-                table.html(tempStr);
+                alert(data[0].content);
+                console.info(data);
+                // var temp = JSON.parse(data);
+                // var tempStr = "";
+                // for (i = 0; i < temp.length; i++) {
+                //     tempStr += "<tr><td>" + temp[i].id + "</td>" + "<td>" + temp[i].content + "</td>" + "<td>" +
+                //         temp[i].name + "</td>" + "<td>" + temp[i].something + "</td></tr>";
+                // }
+                // table.html(tempStr);
             }
         });
     }
@@ -346,9 +347,9 @@
 			type:"GET",
 			data:{},
 			success:function(data){
-                var temp = JSON.parse(data);
-				console.info(temp);
-				var list = temp.data;
+
+				console.info(data);
+				var list = data.data;
                 var tempStr = "";
                 for (i = 0; i < list.length; i++) {
                     tempStr += "<tr><td>" + list[i].id + "</td>" + "<td>" + list[i].content + "</td>" + "<td>" +
@@ -356,7 +357,7 @@
                         "<button onclick='update(this)' class='btn-danger badge' data-toggle='modal' data-target='#my'>修改</button></td></tr>";
                 }
                 table.html(tempStr);
-				var totalsize = totalPage(temp.size);
+				var totalsize = totalPage(data.size);
 				var tempPage = "<li><a href='#' onclick='pagination(this)'>first</a></li>";
 				for(i = 0; i < totalsize; i++){
 					tempPage += "<li><a href='#' onclick='pagination(this)'>" + (i + 1) + "</a></li>";
