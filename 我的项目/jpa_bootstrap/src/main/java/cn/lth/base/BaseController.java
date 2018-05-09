@@ -32,7 +32,7 @@ public class BaseController {
     public void verifyBind(BindingResult bindingResult) throws DemoException {
         if(bindingResult.hasErrors()){
             for(ObjectError objectError : bindingResult.getAllErrors()){
-                throw new DemoException(String.valueOf(message_.get(objectError.getDefaultMessage())));
+                throw new DemoException(message_.get(objectError.getDefaultMessage()));
             }
         }
     }

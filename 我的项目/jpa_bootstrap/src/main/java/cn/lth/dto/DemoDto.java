@@ -26,7 +26,7 @@ public class DemoDto implements Serializable {
     private Integer id;
 
     @Column(name = "name")
-    @Pattern(regexp = "[\\u4e00-\\u9fa5]{2,4}", message = "name.null.error")
+    @Pattern(regexp = "^[\\u4e00-\\u9fa5]{2,4}$", message = "name.null.error")
     private String name;
 
     @Column(name = "something")

@@ -2,6 +2,8 @@ package cn.lth.service;
 
 import cn.lth.dao.DemoDao;
 import cn.lth.dto.DemoDto;
+import cn.lth.util.DemoException;
+import cn.lth.util.Message_;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,24 +27,25 @@ public class DemoService {
     @Autowired
     private DemoDao demoDao;
 
+    @Autowired
+    private Message_ message_;
     /**
      * save
      *
      * @param demoDto
      * @return
      */
-    public DemoDto save(DemoDto demoDto){
+    public DemoDto save(DemoDto demoDto) throws DemoException {
         if(demoDto == null){
-            throw new RuntimeException("demoDto.null.error");
+            throw new DemoException(message_.get("demoDto.null.error"));
         }
         boolean con = !StringUtils.hasText(demoDto.getContent().trim());
         boolean name = !StringUtils.hasText(demoDto.getName().trim());
         boolean some = !StringUtils.hasText(demoDto.getSomething().trim());
         if(con || name || some){
-            throw new RuntimeException("demoDto.property.null.error");
+            throw new DemoException(message_.get("demoDto.null.error"));
         }
-        DemoDto demoDto1 = demoDao.save(demoDto);
-        return  demoDto1;
+        return  demoDao.save(demoDto);
     }
 
     /**

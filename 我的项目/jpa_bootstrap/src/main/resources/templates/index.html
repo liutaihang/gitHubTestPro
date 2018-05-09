@@ -266,9 +266,6 @@
         var name = $("#name").val();
         var content = $("#content").val();
         var something = $("#something").val();
-        if(!name && content && something){
-            alert("数据为空！");
-        }
         $.ajax({
             type: "POST",
             url: "/demo",
@@ -289,13 +286,20 @@
 				console.info(data);
 				console.log(data.responseURL)
                 console.info(JSON.parse(data.responseText).message);
-				if(JSON.parse(data.responseText).message == "demoDto.property.null.error"){
-					alert("添加数据不能为空");
+				if(isBlank(data.responseText)){
+					alert(JSON.parse(data.responseText).message);
 				}
             }
         });
     }
 
+
+    var isBlank = function (args) {
+        if(args == null || args == undefined || args == ""){
+            return false;
+        }
+        return true;
+    }
 		/**
 		 * table
 		 */

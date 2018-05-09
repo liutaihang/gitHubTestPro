@@ -11,13 +11,12 @@ public class Message_ {
     private Properties properties;
 
     public Message_() throws IOException {
-        File file = new File("message.properties");
         InputStream stream = Message_.class.getClassLoader().getResourceAsStream("message.properties");
         properties = new Properties();
         properties.load(stream);
     }
 
-    public Object get(String code){
-        return  properties.get(code);
+    public String get(String code){
+        return  String.valueOf(properties.get(code));
     }
 }
