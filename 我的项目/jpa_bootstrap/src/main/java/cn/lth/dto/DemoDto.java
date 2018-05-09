@@ -4,7 +4,9 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 /**
@@ -24,14 +26,14 @@ public class DemoDto implements Serializable {
     private Integer id;
 
     @Column(name = "name")
-    @NotNull(message = "name.null.error")
+    @Pattern(regexp = "[\\u4e00-\\u9fa5]{2,4}", message = "name.null.error")
     private String name;
 
     @Column(name = "something")
-    @NotNull(message = "something.null.error")
+    @NotBlank(message = "something.null.error")
     private String something;
 
     @Column(name = "content")
-    @NotNull(message = "content.null.error")
+    @NotBlank(message = "content.null.error")
     private String content;
 }

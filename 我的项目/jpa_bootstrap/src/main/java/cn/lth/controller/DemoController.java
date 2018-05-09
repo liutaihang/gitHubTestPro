@@ -3,6 +3,7 @@ package cn.lth.controller;
 import cn.lth.base.BaseController;
 import cn.lth.dto.DemoDto;
 import cn.lth.service.DemoService;
+import cn.lth.util.DemoException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -46,8 +47,7 @@ public class DemoController extends BaseController {
     }
 
     @PostMapping("/demo")
-
-    public ResponseEntity<DemoDto> demo(@Valid DemoDto demoDto, BindingResult bindingResult){
+    public ResponseEntity<DemoDto> demo(@Valid DemoDto demoDto, BindingResult bindingResult) throws DemoException {
         verifyBind(bindingResult);
         //传入前段
         return  new ResponseEntity<>(demoService.save(demoDto), HttpStatus.OK);
@@ -70,7 +70,7 @@ public class DemoController extends BaseController {
     }
 
     @PostMapping("update")
-    public ResponseEntity<Map<String, Object>> updateDemo(DemoDto demoDto, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> updateDemo(DemoDto demoDto, BindingResult bindingResult) throws DemoException {
         verifyBind(bindingResult);
         demoService.updateDemo(demoDto);
         Map<String, Object> map = new HashMap<String, Object>(){
