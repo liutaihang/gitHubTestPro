@@ -36,4 +36,11 @@ public class DemoDto implements Serializable {
     @Column(name = "content")
     @NotBlank(message = "content.null.error")
     private String content;
+
+    public DemoDto(){super();}
+    public DemoDto(String name, String something, String content){
+        this.name = name;
+        this.something = something;
+        this.content = content;
+    }
 }

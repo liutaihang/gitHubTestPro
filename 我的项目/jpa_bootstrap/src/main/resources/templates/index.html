@@ -20,6 +20,9 @@
                top:40%;
                margin:-100px 0 0 -150px
             }
+        td:active{
+            background-color: #2aabd2;
+        }
 
         #bg{ display: block;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: black;  z-index:1001;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}
         #show{display: block;  position: absolute;  top: 25%;  left: 18%;  width: 63%;  height: 49%;  padding: 8px;  border: 8px solid #E8E9F7;  background-color: white;  z-index:1002;  overflow: auto;}
@@ -113,6 +116,7 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
+
     <div class="container-fluid">
         <div class="row" style="background: #eeeeee;">
 			<!--add-->
@@ -286,7 +290,7 @@
 				console.info(data);
 				console.log(data.responseURL)
                 console.info(JSON.parse(data.responseText).message);
-				if(isBlank(data.responseText)){
+				if(isNotBlank(data.responseText)){
 					alert(JSON.parse(data.responseText).message);
 				}
             }
@@ -294,7 +298,7 @@
     }
 
 
-    var isBlank = function (args) {
+    var isNotBlank = function (args) {
         if(args == null || args == undefined || args == ""){
             return false;
         }
@@ -337,7 +341,6 @@
 			if(element.innerText == "first"){
 			    page = 0;
             }
-
             if(element.innerText == "end"){
                 page = parseInt($("#hidden").val()) - 1;
             }
@@ -390,9 +393,25 @@
 
 	function del(data){
 	    var data = data.parentNode.parentNode.childNodes;
-	    for(i = 0; i < data.length; i++){
-	        console.info(data[i].innerText);
-        }
+	    console.log(data[0].innerText);
+	    var url = 'del/' + data[0].innerText;
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: {},
+            success: function (data) {
+                console.info(data);
+                if(isNotBlank(data.msg)){
+                    pagination();
+                    alert(data.msg);
+                }
+            },
+            error : function (data) {
+                if(isNotBlank(JSON.parse(data.responseText).message)){
+                    alert(JSON.parse(data.responseText).message);
+                }
+            }
+        });
     }
 
     function update(data) {

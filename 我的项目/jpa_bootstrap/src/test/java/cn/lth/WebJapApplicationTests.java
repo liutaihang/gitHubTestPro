@@ -15,10 +15,7 @@ public class WebJapApplicationTests {
     private DemoService demoService;
     @Test
 	public void contextLoads() {
-        System.out.println(demoService.findAll().size());
-        new Thread(() -> System.out.println(demoService.findAll().size())).start();
-        new Thread(() -> System.out.println(demoService.findAll().size())).start();
-        new Thread(() -> System.out.println(demoService.findAll().size())).start();
+        new Thread(new Ables(demoService)).start();
 
 	}
 
@@ -27,5 +24,15 @@ public class WebJapApplicationTests {
 
         }).start();
 	}
-
+ class Ables implements Runnable{
+     private DemoService demoServices;
+     Ables(DemoService demoService){
+         this.demoServices = demoService;
+     }
+     @Override
+     public void run() {
+         System.err.println("ssss");
+         System.err.println(demoServices.findAll().size());
+     }
+ }
 }

@@ -7,6 +7,7 @@ import cn.lth.util.DemoException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,7 @@ import java.util.Map;
  * @Date : Create in 10:08 2018/4/11
  * @Description : ${TODO}
  */
+@Slf4j
 @Controller
 public class DemoController extends BaseController {
 
@@ -41,9 +43,19 @@ public class DemoController extends BaseController {
 
     private Gson gson = new GsonBuilder().create();
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String index(){
         return "index";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
+    @GetMapping("/webs")
+    public String webSocket(){
+        return "webSocket";
     }
 
     @PostMapping("/demo")
@@ -54,7 +66,8 @@ public class DemoController extends BaseController {
     }
 
     @GetMapping("/viewData")
-    public ResponseEntity<List<DemoDto>> viewData(){
+    public ResponseEntity<List<DemoDto>> viewData(String data){
+        log.error(data);
         List<DemoDto> demoDtos = demoService.findAll();
         return new ResponseEntity<>(demoDtos, HttpStatus.OK);
     }

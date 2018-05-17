@@ -20,10 +20,15 @@ public class VerifyUtil {
 
     public boolean verifyURI(String currentURI){
         AntPathMatcher andMatcher = new AntPathMatcher();
-        boolean result = false;
-        for (String uri : visitPaths) {
-            result = andMatcher.match(uri, currentURI);
-        }
+//        boolean result = true;
+//        for (String uri : visitPaths)
+//            if (!andMatcher.match(uri, currentURI)) {
+//                result = false;
+//                break;
+//            }
+//
+//        return result;
+        if("/error".equals(currentURI)) return false;
         return Stream.of(visitPaths).anyMatch(url -> andMatcher.match(url, currentURI));
     }
 }

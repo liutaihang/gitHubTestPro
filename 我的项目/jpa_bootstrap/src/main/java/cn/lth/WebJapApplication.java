@@ -7,12 +7,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 @SpringBootApplication
 public class WebJapApplication extends WebMvcConfigurationSupport {
 	@Bean
 	public DemoInterceptor demoInterceptor(){
 		return new DemoInterceptor();
+	}
+
+	@Bean
+	public ServerEndpointExporter serverEndpointExporter(){
+		return new ServerEndpointExporter();
 	}
 
 	@Override
