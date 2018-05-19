@@ -1,271 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{header}">
 <head>
-    <script type="application/javascript" src="static/js/jquery-2.1.1.min.js"></script>
-    <script type="application/javascript" src="static/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="../static/css/bootstrap.css">
-    <link rel="stylesheet" href="static/css/bootstrap-grid.css" />
+    <link rel="icon" th:href="@{/img/icon.jpg}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-grid.css}"/>
     <meta charset="UTF-8">
-	<link rel="icon" href="../static/img/icon.jpg" type="image/x-icon"/>
     <title>demo</title>
     <style>
-        .mydiv{
+        .mydiv {
             -webkit-border-radius: 8px;
             -moz-border-radius: 8px;
             border-radius: 8px;
-               width:300px;
-               height:200px;
-               position:absolute;
-               left:50%;
-               top:40%;
-               margin:-100px 0 0 -150px
-            }
-        td:active{
+            width: 300px;
+            height: 200px;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            margin: -100px 0 0 -150px
+        }
+
+        td:active {
             background-color: #2aabd2;
         }
 
-        #bg{ display: block;  position: absolute;  top: 0%;  left: 0%;  width: 100%;  height: 100%;  background-color: black;  z-index:1001;  -moz-opacity: 0.7;  opacity:.70;  filter: alpha(opacity=70);}
-        #show{display: block;  position: absolute;  top: 25%;  left: 18%;  width: 63%;  height: 49%;  padding: 8px;  border: 8px solid #E8E9F7;  background-color: white;  z-index:1002;  overflow: auto;}
+        #bg {
+            display: block;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.7;
+            opacity: .70;
+            filter: alpha(opacity=70);
+        }
+
+        #show {
+            display: block;
+            position: absolute;
+            top: 25%;
+            left: 18%;
+            width: 63%;
+            height: 49%;
+            padding: 8px;
+            border: 8px solid #E8E9F7;
+            background-color: white;
+            z-index: 1002;
+            overflow: auto;
+        }
     </style>
 </head>
-
 <body>
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
-                    aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+<div layout:fragment="content"></div>
+<div th:include="header :: content"></div>
+<div class="container-fluid">
+    <div class="row" style="background: #eeeeee;">
+        <!--add-->
+        <div class="col-md-4">
+            <div class="text-center article-title">
+                <h3 style="font-family: 新宋体; font-size: xx-large">数据添加</h3>
+            </div>
+            <br/>
+
+            <table class="table table-hover">
+                <tr>
+                    <th></th>
+                    <th>name :</th>
+                    <th>
+                        <input class="input-group-lg" type="text" id="name" style="border-radius: 4px;">
+                    </th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>content :</th>
+                    <th>
+                        <input class="input-group-lg" type="text" id="content" style="border-radius: 4px;">
+                    </th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>something :</th>
+                    <th>
+                        <input class="input-group-lg" type="text" id="something" style="border-radius: 4px;">
+                    </th>
+                </tr>
+            </table>
+            <button class="btn btn-primary" style="float: right;" onclick="demo()">添加</button>
+        </div>
+        <!--table-->
+        <div class="col-md-6">
+            <table class="table table-hover" id="view">
+                <tr>
+                    <th>
+                        number
+                    </th>
+                    <th>
+                        content
+                    </th>
+                    <th>
+                        name
+                    </th>
+                    <th>
+                        something
+                    </th>
+                    <th>
+                        operation
+                    </th>
+                </tr>
+                <tr>
+                    <tbody class="text-primary" id="t2"></tbody>
+                </tr>
+            </table>
+            <ul class="pagination active" id="page">
+                <li><a>首页</a></li>
+                <li><a href="#view">&laquo;</a></li>
+                <li><a href="#" onclick="pagination(this)">1</a></li>
+                <li><a href="#" onclick="pagination(this)">2</a></li>
+                <li><a href="#">&raquo;</a></li>
+                <li><a>尾页</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--<div class="mydiv" style="background: #cfcfcf;">-->
+<!--<a href="#"><pre style="float: right; background: #2aabd2;">&times;</pre></a>-->
+<!--<table class="table table-hover">-->
+<!--<tr>-->
+<!--<th>name:</th>-->
+<!--<th><input></th>-->
+<!--</tr>-->
+<!--<tr>-->
+<!--<th>content:</th>-->
+<!--</tr>-->
+<!--<tr>-->
+<!--<th>something:</th>-->
+<!--</tr>-->
+<!--</table>-->
+<!--</div>-->
+<!-- <div id="show">
+     <a href="#" style="float: right;" onclick="">&times;</a>
+     <table class="table table-hover">
+         <tr>
+             <th>name:</th>
+             <th><textarea style="border-radius: 4px" readonly></textarea></th>
+         </tr>
+         <tr>
+             <th>content:</th>
+             <th><textarea style="border-radius: 4px"></textarea></th>
+         </tr>
+         <tr>
+             <th>something:</th>
+             <th><textarea style="border-radius: 4px"></textarea></th>
+         </tr>
+     </table>
+ </div>
+ <div id="bg"></div>-->
+<input type="hidden" id="hidden" value="1">
+
+<div class="container" ></div>
+
+<!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#my">
+    Launch demo modal
+</button>-->
+<div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
                 </button>
-                <a class="navbar-brand" href="#">Brand</a>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
             </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="#">Link
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">Link</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#">Action</a>
-                            </li>
-                            <li>
-                                <a href="#">Another action</a>
-                            </li>
-                            <li>
-                                <a href="#">Something else here</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="#">Separated link</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="#">One more separated link</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <form class="navbar-form navbar-left">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search">
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="#">Link</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="#">Action</a>
-                            </li>
-                            <li>
-                                <a href="#">Another action</a>
-                            </li>
-                            <li>
-                                <a href="#">Something else here</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="#">Separated link</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <tr>
+                        <th>id:</th>
+                        <th><input readonly type="text" id="id"/></th>
+                    </tr>
+                    <tr>
+                        <th>name:</th>
+                        <th><input type="text" style="border-radius: 4px" id="nam"></th>
+                    </tr>
+                    <tr>
+                        <th>content:</th>
+                        <th><input type="text" style="border-radius: 4px" id="ctt"></th>
+                    </tr>
+                    <tr>
+                        <th>something:</th>
+                        <th><input type="text" style="border-radius: 4px" id="smt"></th>
+                    </tr>
+                </table>
             </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-    </nav>
-
-    <div class="container-fluid">
-        <div class="row" style="background: #eeeeee;">
-			<!--add-->
-            <div class="col-md-4">
-				<div class="text-center article-title">
-					<h3 style="font-family: 新宋体; font-size: xx-large">数据添加</h3>
-				</div>
-				<br/>
-				
-				<table class="table table-hover">
-					<tr>
-                        <th></th>
-						<th>name : </th>
-						<th>
-							<input class="input-group-lg" type="text" id="name" style="border-radius: 4px;">
-						</th>
-					</tr>
-					<tr>
-                        <th></th>
-						<th>content : </th>
-						<th>
-							<input class="input-group-lg" type="text" id="content" style="border-radius: 4px;">
-						</th>
-					</tr>
-					<tr>
-                        <th></th>
-						<th>something : </th>
-						<th>
-							<input class="input-group-lg" type="text" id="something" style="border-radius: 4px;">
-						</th>
-					</tr>
-				</table>
-                <button class="btn btn-primary" style="float: right;" onclick="demo()">添加</button>
-			</div>
-			<!--table-->
-            <div class="col-md-6">
-				<table class="table table-hover" id="view">
-					<tr>
-						<th>
-							number
-						</th>
-						<th>
-							content
-						</th>
-						<th>
-							name
-						</th>
-						<th>
-							something
-						</th>
-                        <th>
-                            operation
-                        </th>
-					</tr>
-					<tr>
-						<tbody class="text-primary" id="t2"></tbody>
-					</tr>
-				</table>
-				<ul class="pagination" class="active" id="page">
-                    <li><a>首页</a></li>
-					<li><a href="#view">&laquo;</a></li>
-					<li><a href="#" onclick="pagination(this)">1</a></li>
-					<li><a href="#" onclick="pagination(this)">2</a></li>
-					<li><a href="#">&raquo;</a></li>
-                    <li><a>尾页</a></li>
-				</ul>
-			</div>
-        </div>
-    </div>
-    <!--<div class="mydiv" style="background: #cfcfcf;">-->
-        <!--<a href="#"><pre style="float: right; background: #2aabd2;">&times;</pre></a>-->
-        <!--<table class="table table-hover">-->
-            <!--<tr>-->
-                <!--<th>name:</th>-->
-                <!--<th><input></th>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<th>content:</th>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<th>something:</th>-->
-            <!--</tr>-->
-        <!--</table>-->
-    <!--</div>-->
-   <!-- <div id="show">
-        <a href="#" style="float: right;" onclick="">&times;</a>
-        <table class="table table-hover">
-            <tr>
-                <th>name:</th>
-                <th><textarea style="border-radius: 4px" readonly></textarea></th>
-            </tr>
-            <tr>
-                <th>content:</th>
-                <th><textarea style="border-radius: 4px"></textarea></th>
-            </tr>
-            <tr>
-                <th>something:</th>
-                <th><textarea style="border-radius: 4px"></textarea></th>
-            </tr>
-        </table>
-    </div>
-    <div id="bg"></div>-->
-    <input type="hidden" id="hidden" value="1">
-
-
-    <!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#my">
-        Launch demo modal
-    </button>-->
-    <div class="modal fade" id="my" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-hover">
-                        <tr>
-                            <th>id:</th>
-                            <th><input readonly type="text"  id="id"/></th>
-                        </tr>
-                        <tr>
-                            <th>name:</th>
-                            <th><input  type="text" style="border-radius: 4px" id="nam"></th>
-                        </tr>
-                        <tr>
-                            <th>content:</th>
-                            <th><input  type="text" style="border-radius: 4px" id="ctt"></th>
-                        </tr>
-                        <tr>
-                            <th>something:</th>
-                            <th><input  type="text" style="border-radius: 4px" id="smt"></th>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
+</div>
 </body>
+
+<script type="application/javascript" th:src="@{/js/jquery-2.1.1.min.js}"></script>
+<script type="application/javascript" th:src="@{/js/bootstrap.js}"></script>
+<div layout:fragment="scripts"></div>
 <script type="application/javascript">
-	/**
-	 * add
-	 */
+    /**
+     * add
+     */
     function demo() {
         var name = $("#name").val();
         var content = $("#content").val();
@@ -281,34 +224,35 @@
             success: function (data) {
                 console.info(data);
                 pagination(document.getElementById("hidden"));
-				$("#name").val("");
-				$("#content").val("");
-				$("#something").val("");
-				alert("添加成功!");
+                $("#name").val("");
+                $("#content").val("");
+                $("#something").val("");
+                alert("添加成功!");
             },
             error: function (data) {
-				console.info(data);
-				console.log(data.responseURL)
+                console.info(data);
+                console.log(data.responseURL)
                 console.info(JSON.parse(data.responseText).message);
-				if(isNotBlank(data.responseText)){
-					alert(JSON.parse(data.responseText).message);
-				}
+                if (isNotBlank(data.responseText)) {
+                    alert(JSON.parse(data.responseText).message);
+                }
             }
         });
     }
 
 
     var isNotBlank = function (args) {
-        if(args == null || args == undefined || args == ""){
+        if (args == null || args == undefined || args == "") {
             return false;
         }
         return true;
     }
-		/**
-		 * table
-		 */
+
+    /**
+     * table
+     */
     function viewData() {
-    var table = $("#t2");
+        var table = $("#t2");
         $.ajax({
             type: "GET",
             url: "/viewData",
@@ -326,37 +270,38 @@
             }
         });
     }
+
     // viewData();
-	
-	/**
-	 * pagination
-	 */
-	function pagination(element){
-		var table = $("#t2");
-		var pageElemnt = $("#page");
-		var page = 0;
-		if(element){
-			page = element.innerText - 1;
-			console.info(element.innerText);
-			if(element.innerText == "first"){
-			    page = 0;
+
+    /**
+     * pagination
+     */
+    function pagination(element) {
+        var table = $("#t2");
+        var pageElemnt = $("#page");
+        var page = 0;
+        if (element) {
+            page = element.innerText - 1;
+            console.info(element.innerText);
+            if (element.innerText == "first") {
+                page = 0;
             }
-            if(element.innerText == "end"){
+            if (element.innerText == "end") {
                 page = parseInt($("#hidden").val()) - 1;
             }
-            if(page < 0){
-			    page = 0;
+            if (page < 0) {
+                page = 0;
             }
-		}
-		var url = "/page/" + page + "/" + 10 
-		$.ajax({
-			url:url,
-			type:"GET",
-			data:{},
-			success:function(data){
+        }
+        var url = "/page/" + page + "/" + 10
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: {},
+            success: function (data) {
 
-				console.info(data);
-				var list = data.data;
+                console.info(data);
+                var list = data.data;
                 var tempStr = "";
                 for (i = 0; i < list.length; i++) {
                     tempStr += "<tr><td>" + list[i].id + "</td>" + "<td>" + list[i].content + "</td>" + "<td>" +
@@ -364,50 +309,51 @@
                         "<button onclick='update(this)' class='btn-danger badge' data-toggle='modal' data-target='#my'>修改</button></td></tr>";
                 }
                 table.html(tempStr);
-				var totalsize = totalPage(data.size);
-				var tempPage = "<li><a href='#' onclick='pagination(this)'>first</a></li>";
-				for(i = 0; i < totalsize; i++){
-					tempPage += "<li><a href='#' onclick='pagination(this)'>" + (i + 1) + "</a></li>";
-				}
-				tempPage += "<li><a href='#' onclick='pagination(this)'>end</a></li>";
-				$("#hidden").val(totalsize);
-				pageElemnt.html(tempPage);
-			},
-			error:function success(data){
-				console.info(data);
-			}
-		});
-	}
-	pagination();
-	
-	/**
-	 * 计算总页数
-	 */
-	function totalPage(num){
-		var temp = num / 10;
-		if(num % 10 != 0){
-			temp += 1
-		}
-		return parseInt(temp);
-	}
+                var totalsize = totalPage(data.size);
+                var tempPage = "<li><a href='#' onclick='pagination(this)'>first</a></li>";
+                for (i = 0; i < totalsize; i++) {
+                    tempPage += "<li><a href='#' onclick='pagination(this)'>" + (i + 1) + "</a></li>";
+                }
+                tempPage += "<li><a href='#' onclick='pagination(this)'>end</a></li>";
+                $("#hidden").val(totalsize);
+                pageElemnt.html(tempPage);
+            },
+            error: function success(data) {
+                console.info(data);
+            }
+        });
+    }
 
-	function del(data){
-	    var data = data.parentNode.parentNode.childNodes;
-	    console.log(data[0].innerText);
-	    var url = 'del/' + data[0].innerText;
+    pagination();
+
+    /**
+     * 计算总页数
+     */
+    function totalPage(num) {
+        var temp = num / 10;
+        if (num % 10 != 0) {
+            temp += 1
+        }
+        return parseInt(temp);
+    }
+
+    function del(data) {
+        var data = data.parentNode.parentNode.childNodes;
+        console.log(data[0].innerText);
+        var url = 'del/' + data[0].innerText;
         $.ajax({
             url: url,
             type: "POST",
             data: {},
             success: function (data) {
                 console.info(data);
-                if(isNotBlank(data.msg)){
+                if (isNotBlank(data.msg)) {
                     pagination();
                     alert(data.msg);
                 }
             },
-            error : function (data) {
-                if(isNotBlank(JSON.parse(data.responseText).message)){
+            error: function (data) {
+                if (isNotBlank(JSON.parse(data.responseText).message)) {
                     alert(JSON.parse(data.responseText).message);
                 }
             }
@@ -418,14 +364,14 @@
         var data = data.parentNode.parentNode.childNodes;
         var temp = [$("#id"), $("#nam"), $("#ctt"), $("#smt")];
         console.info(temp);
-        for(var i = 0; i < data.length; i++){
-            if(temp.length > i){
+        for (var i = 0; i < data.length; i++) {
+            if (temp.length > i) {
                 temp[i].val(data[i].innerText);
             }
             console.info(data[i].innerText);
         }
     }
-    
+
     function makeUpdate() {
         var tempName = $("#nam");
         var tempContent = $("#ctt");
@@ -435,24 +381,24 @@
             url: url,
             type: "GET",
             data: {
-                name : tempName.innerText,
-                content : tempContent.innerText,
-                something : tempSomething.innerText
+                name: tempName.innerText,
+                content: tempContent.innerText,
+                something: tempSomething.innerText
             },
             success: function (data) {
                 console.info(data);
                 alert(data.msg);
             },
-            error : function (data) {
-                if(JSON.parse(data.responseText).message == "demoDto.property.null.error"){
+            error: function (data) {
+                if (JSON.parse(data.responseText).message == "demoDto.property.null.error") {
                     alert("修改数据不能为空");
                 }
             }
         });
     }
-    
+
     function closeDIV(data) {
-        document.getElementById("").setAttribute("display","none");
+        document.getElementById("").setAttribute("display", "none");
     }
 </script>
 

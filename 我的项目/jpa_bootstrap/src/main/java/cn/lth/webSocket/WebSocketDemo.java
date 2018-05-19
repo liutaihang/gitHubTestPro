@@ -5,31 +5,44 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 
 @ServerEndpoint(value = "/websocket")
 @Component
 public class WebSocketDemo {
-    private static int onlineCount = 0;
+    private static int onlineCount;
 
-    private static CopyOnWriteArraySet<WebSocketDemo> webSocketDemos = new CopyOnWriteArraySet<>();
+    private static CopyOnWriteArraySet<WebSocketDemo> webSocketDemos;
+    private static ThreadLocal<Session> sessions;
+    private static Map<String, Session> sessionMap;
     private Session session;
 
+    static {
+        onlineCount = 0;
+        webSocketDemos = new CopyOnWriteArraySet<>();
+        sessions = new ThreadLocal<>();
+        sessionMap = new ConcurrentHashMap<>();
+    }
 
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
         webSocketDemos.add(this);
+        sessions.set(session);
+        sessionMap.put(session.getId(), session);
         addOnlineCount();
+        sendMessage(session, "服务器连接成功！");
         System.err.println("当前在线人数为：" + getOnlineCount());
     }
 
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
+    public void onMessage(String message, Session session) {
         System.err.println("客户端【" + session.getId() + "】消息 ：" + message);
         for (WebSocketDemo demo : webSocketDemos) {
-            demo.sendMessage(this.session, "服务端消息：hello world");
+            demo.sendMessage(this.session, session.getId());
         }
     }
 
