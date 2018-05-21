@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>header</title>
 </head>
-<body>
-<nav class="navbar navbar-inverse" th:fragment="content">
+<body th:fragment="content">
+<nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -74,13 +74,13 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="#">Action</a>
+                            <a href="javascrpt:changeStyle('navbar')">navbar</a>
                         </li>
                         <li>
-                            <a href="#">Another action</a>
+                            <a href="javascrpt:changeStyle('navbar navbar-inverse')">navbar navbar-inverse</a>
                         </li>
                         <li>
-                            <a href="#">Something else here</a>
+                            <a href="javascrpt:changeStyle('')">Something else here</a>
                         </li>
                         <li role="separator" class="divider"></li>
                         <li>
@@ -93,6 +93,13 @@
         <!-- /.navbar-collapse -->
     </div>
     <!-- /.container-fluid -->
+
+    <script>
+        function changeStyle(className){
+            $("nav").removeClass();
+            $.addClass(className);
+        }
+    </script>
 </nav>
 </body>
 </html>
