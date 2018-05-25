@@ -20,9 +20,6 @@ public class WebJapApplicationTests {
 	}
 
 	public static void main(String[] args) {
-        new Thread(() -> {
-
-        }).start();
 	}
  class Ables implements Runnable{
      private DemoService demoServices;
@@ -35,4 +32,5 @@ public class WebJapApplicationTests {
          System.err.println(demoServices.findAll().size());
      }
  }
+
 }

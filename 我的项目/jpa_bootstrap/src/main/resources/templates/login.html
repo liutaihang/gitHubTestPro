@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="icon" th:href="@{/img/icon.jpg}">
-    <link href="formValidator1/style/validator.css" rel="stylesheet" type="text/css"/><!--表单验证样式表-->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
+    <link href="https://cdn.bootcss.com/bootstrap-validator/0.5.3/css/bootstrapValidator.css" rel="stylesheet"
+          type="text/css"/><!--表单验证样式表-->
     <meta charset="UTF-8">
     <title>login</title>
 
@@ -63,43 +64,56 @@
 </head>
 <body>
 <div class="container">
-    <form th:action="@{/login}" action="POST">
-
-    </form>
-    <div id="demo" class="form row">
-        <div class="form-horizontal col-md-offset-3" id="login_form">
-            <h3 class="form-title">LOGIN</h3>
-            <div class="col-md-9">
-                <div class="form-group">
-                    <i class="fa fa-user fa-lg"></i>
-                    <input class="form-control" type="text" placeholder="Username" id="username" name="username"
-                           autofocus="autofocus" maxlength="20"/>
-                </div>
-                <div class="form-group">
-                    <i class="fa fa-lock fa-lg"></i>
-                    <input class="form-control" type="password" placeholder="Password" id="password" name="password"
-                           maxlength="8"/>
-                </div>
-                <div class="form-group">
-                    <label class="checkbox">
-                        <input type="checkbox" name="remember" value="1"/>记住我
-                    </label>
-                </div>
-                <div class="form-group col-md-offset-9">
-                    <button type="submit" class="btn btn-success pull-right" name="submit">登录</button>
+    <form th:action="@{/login}" method="POST">
+        <div id="demo" class="form row">
+            <div class="form-horizontal col-md-offset-3" id="login_form">
+                <h3 class="form-title">LOGIN</h3>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <i class="fa fa-user fa-lg"></i>
+                        <input class="form-control" type="text" placeholder="Username" id="username" name="username"
+                               autofocus="autofocus" maxlength="20"/>
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock fa-lg"></i>
+                        <input class="form-control" type="password" placeholder="Password" id="password" name="passwd"
+                               maxlength="8"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="remember" value="1"/>记住我
+                        </label>
+                    </div>
+                    <div class="form-group col-md-offset-9">
+                        <button type="submit" class="btn btn-success pull-right" name="submit">登录</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 </body>
-<script type="application/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+<script th:src="@{/js/jquery-3.3.1.min.js}"></script>
 <script type="application/javascript" th:src="@{/js/bootstrap.min.js}"></script>
 <script type="application/javascript" src="https://cdn.bootcss.com/jquery-validate/1.17.0/jquery.validate.js"></script>
 <script>
-    $("#username").blur(
+
+    var username = $("#username");
+    var passwd = $("#password");
+    username.blur(
         function (ev) {
-            document.getElementById("username").setCustomValidity("demo")
+            if(!username.val()){
+                username.attr("placeholder", "用户不能为空！")
+                username.focus();
+            }
+        }
+    );
+    passwd.blur(
+        function (ev) {
+            if(!passwd.val()){
+                passwd.attr("placeholder", "密码不能为空！");
+                passwd.focus();
+            }
         }
     );
 </script>

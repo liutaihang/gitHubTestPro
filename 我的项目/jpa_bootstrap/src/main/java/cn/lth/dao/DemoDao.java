@@ -1,5 +1,6 @@
 package cn.lth.dao;
 
+import cn.lth.base.BaseRepository;
 import cn.lth.dto.DemoDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @Date : Create in 10:08 2018/4/11
  * @Description : ${TODO}
  */
-public interface DemoDao extends JpaRepository<DemoDto, Integer>{
+public interface DemoDao extends BaseRepository<DemoDto> {
 
-    DemoDto saveAndFlush(DemoDao demoDto);
+    DemoDto saveAndFlush(DemoDto demoDto);
 }

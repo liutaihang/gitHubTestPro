@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>header</title>
 </head>
-<body th:fragment="content">
+<header class="main-header" th:fragment="header">
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -84,7 +84,7 @@
                         </li>
                         <li role="separator" class="divider"></li>
                         <li>
-                            <a href="#">Separated link</a>
+                            <a th:href="@{/loginout}">退出</a>
                         </li>
                     </ul>
                 </li>
@@ -101,5 +101,5 @@
         }
     </script>
 </nav>
-</body>
+</header>
 </html>

@@ -89,7 +89,7 @@ public class DemoService {
      * @param id
      * @return
      */
-    public DemoDto findById(Integer id){
+    public DemoDto findById(long id){
         Optional<DemoDto> byId = demoDao.findById(id);
         return  byId.get();
     }
@@ -97,12 +97,12 @@ public class DemoService {
     /**
      * 修改
      *
-     * @param DemoDto
+     * @param demoDto
      * @return
      */
     @Transactional
-    public DemoDto updateDemo(DemoDto DemoDto){
-        return demoDao.saveAndFlush(demoDao);
+    public DemoDto updateDemo(DemoDto demoDto){
+        return demoDao.saveAndFlush(demoDto);
     }
 
     /**
@@ -110,7 +110,7 @@ public class DemoService {
      *
      * @param id
      */
-    public void delDemo(Integer id){
+    public void delDemo(long id){
         demoDao.deleteById(id);
     }
 }

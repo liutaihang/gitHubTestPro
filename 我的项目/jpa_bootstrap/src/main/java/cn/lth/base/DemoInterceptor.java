@@ -34,11 +34,11 @@ public class DemoInterceptor implements HandlerInterceptor{
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         boolean result = false;
         log.info("当前访问地址 >> {}", request.getRequestURI());
-        if(VerifyUtil.verifyURI(request.getRequestURI())){
-            result = true;
+        if(VerifyUtil.turnLogin(request, request.getRequestURI())){
+            response.sendRedirect("/login");
+            return false;
         }
 
         //访问出错处理
@@ -61,9 +61,7 @@ public class DemoInterceptor implements HandlerInterceptor{
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-
-}
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {}
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {

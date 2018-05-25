@@ -53,8 +53,7 @@
     </style>
 </head>
 <body>
-<div layout:fragment="content"></div>
-<div th:include="header :: content"></div>
+<div th:replace="header :: header"></div>
 <div class="container-fluid">
     <div class="row" style="background: #eeeeee;">
         <!--add-->
@@ -158,8 +157,9 @@
  </div>
  <div id="bg"></div>-->
 <input type="hidden" id="hidden" value="1">
-
-<div class="container" th:replace="webSocket :: webSocket"></div>
+<div class="content-wrapper">
+    <div layout:fragment="content">this is cotent</div>
+</div>
 
 <!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#my">
     Launch demo modal

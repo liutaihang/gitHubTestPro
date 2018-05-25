@@ -2,6 +2,7 @@ package cn.lth.controller;
 
 import cn.lth.base.BaseController;
 import cn.lth.dto.DemoDto;
+import cn.lth.dto.UserDemo;
 import cn.lth.service.DemoService;
 import cn.lth.util.DemoException;
 import com.google.gson.Gson;
@@ -15,11 +16,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
@@ -45,11 +49,27 @@ public class DemoController extends BaseController {
 
     @GetMapping("/")
     public String index(){
-        return "index";
+        return "main";
     }
 
     @GetMapping("/login")
     public String login(){
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String validateLogin(UserDemo userDemo, HttpServletRequest request){
+        if(!ObjectUtils.isEmpty(userDemo)){
+            saveSesseionAtr(request, userDemo);
+            return "redirect:/";
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/loginout")
+    public String loginOut(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.invalidate();
         return "login";
     }
 
