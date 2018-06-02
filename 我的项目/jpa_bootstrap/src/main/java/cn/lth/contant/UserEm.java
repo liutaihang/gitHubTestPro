@@ -3,7 +3,7 @@ package cn.lth.contant;
 /**
  * 枚举类
  */
-public enum userEm {
+public enum UserEm {
     USER_INFO
 
 }

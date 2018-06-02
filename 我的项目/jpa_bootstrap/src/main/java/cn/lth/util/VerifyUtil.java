@@ -1,13 +1,12 @@
 package cn.lth.util;
 
-import cn.lth.contant.userEm;
+import cn.lth.contant.UserEm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.stream.Stream;
 
@@ -39,7 +38,7 @@ public class VerifyUtil {
 
     public boolean hasLogin(HttpServletRequest request){
         HttpSession session = request.getSession();
-        Object attribute = session.getAttribute(userEm.USER_INFO.name());
+        Object attribute = session.getAttribute(UserEm.USER_INFO.name());
         return ObjectUtils.isEmpty(attribute);
     }
 

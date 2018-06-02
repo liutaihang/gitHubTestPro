@@ -1,12 +1,11 @@
 package cn.lth.base;
 
-import cn.lth.contant.userEm;
+import cn.lth.contant.UserEm;
 import cn.lth.dto.UserDemo;
 import cn.lth.util.DemoException;
 import cn.lth.util.Message_;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
@@ -44,6 +43,6 @@ public class BaseController {
 
     public void saveSesseionAtr(HttpServletRequest request, UserDemo userinfo) {
         HttpSession session = request.getSession();
-        session.setAttribute(userEm.USER_INFO.name(), userinfo);
+        session.setAttribute(UserEm.USER_INFO.name(), userinfo);
     }
 }
