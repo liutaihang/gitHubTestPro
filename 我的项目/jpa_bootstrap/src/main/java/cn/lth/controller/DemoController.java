@@ -49,7 +49,7 @@ public class DemoController extends BaseController {
 
     @GetMapping("/")
     public String index(){
-        return "main";
+        return "content";
     }
 
     @GetMapping("/login")
