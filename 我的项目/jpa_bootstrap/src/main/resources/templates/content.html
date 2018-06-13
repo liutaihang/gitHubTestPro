@@ -1,13 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/main}">
+      layout:decorate="~{fragments/main}">
 <head>
     <meta charset="UTF-8">
     <title>content</title>
 </head>
 <body>
 <th:block layout:fragment="content">
+        <div class="row" style="background: #eeeeee;">
+            <!--add-->
+            <div class="col-md-4">
+                <div class="text-center article-title">
+                    <h3 style="font-family: 新宋体; font-size: xx-large">数据添加</h3>
+                </div>
 
+                <div class="box box-solid box-p"></div>
+                <br/>
+
+                <table class="table table-hover">
+                    <tr>
+                        <th></th>
+                        <th>name :</th>
+                        <th>
+                            <input class="input-group-lg" type="text" id="name" style="border-radius: 4px;">
+                        </th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>content :</th>
+                        <th>
+                            <input class="input-group-lg" type="text" id="content" style="border-radius: 4px;">
+                        </th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>something :</th>
+                        <th>
+                            <input class="input-group-lg" type="text" id="something" style="border-radius: 4px;">
+                        </th>
+                    </tr>
+                </table>
+                <button class="btn btn-primary" style="float: right;" onclick="demo()">添加</button>
+            </div>
+            <!--table-->
+            <div class="col-md-6">
+                <table class="table table-hover" id="view">
+                    <tr>
+                        <th>
+                            number
+                        </th>
+                        <th>
+                            content
+                        </th>
+                        <th>
+                            name
+                        </th>
+                        <th>
+                            something
+                        </th>
+                        <th>
+                            operation
+                        </th>
+                    </tr>
+                    <tr>
+                        <tbody class="text-primary" id="t2"></tbody>
+                    </tr>
+                </table>
+                <ul class="pagination active" id="page">
+                    <li><a>首页</a></li>
+                    <li><a href="#view">&laquo;</a></li>
+                    <li><a href="#" onclick="pagination(this)">1</a></li>
+                    <li><a href="#" onclick="pagination(this)">2</a></li>
+                    <li><a href="#">&raquo;</a></li>
+                    <li><a>尾页</a></li>
+                </ul>
+            </div>
+        </div>
+
+    <!--弹框-->
 </th:block>
 
 </body>
