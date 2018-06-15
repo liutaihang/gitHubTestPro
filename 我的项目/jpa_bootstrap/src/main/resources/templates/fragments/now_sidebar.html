@@ -5,8 +5,7 @@
     <title>sidebar</title>
 </head>
 <body>
-<div class="wrapper" th:fragment="now_sidebar">
-    <aside class="main-sidebar">
+    <aside class="main-sidebar" th:fragment="now_sidebar">
         <section class="sidebar">
             <div class="user-panel">
                 <div class="pull-left image">
@@ -21,13 +20,13 @@
             <ul class="sidebar-menu">
                 <li class="header">主导航</li>
                 <li class="treeview">
-                    <a href="#">
-                        <i class="fa fa-dashboard"></i> <span>仪表盘</span>
+                    <a th:href="@{/}">
+                        <i class="fa fa-dashboard"></i> <span>主页</span>
                         <span class="pull-right-container">
                               <i class="fa fa-angle-left pull-right"></i>
                             </span>
                     </a>
-
+                </li>
                 <li class="treeview">
                     <a th:href="@{/webs}">
                         <i class="fa fa-share"></i> <span>測試demo</span>
@@ -73,6 +72,5 @@
             </ul>
         </section>
     </aside>
-</div>
 </body>
 </html>

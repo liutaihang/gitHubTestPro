@@ -58,17 +58,20 @@
         }
     </style>
 </head>
-<body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
-<div th:replace="fragments/header :: header"></div>
-<div th:replace="fragments/now_sidebar :: now_sidebar"></div>
-<input type="hidden" id="hidden" value="1">
-<div class="container-fluid">
-    <div layout:fragment="content">this is cotent</div>
-</div>
-<div th:replace="fragments/footer :: footer"></div>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header th:replace="fragments/header :: header"></header>
 
-<button class="btn btn-primary">sidebar control</button>
-<div th:replace="pages :: template"></div>
+        <div th:replace="fragments/now_sidebar :: now_sidebar"></div>
+
+        <div class="content-wrapper">
+            <div layout:fragment="content"></div>
+        </div>
+
+        <input type="hidden" id="hidden" value="1">
+        <div th:replace="pages :: template"></div>
+        <div th:replace="fragments/footer :: footer"></div>
+    </div>
 </body>
 <!-- jQuery 2.2.3 -->
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -79,6 +82,5 @@
 <script type="application/javascript" th:src="@{/js/bootstrap.js}"></script>
 <script type="application/javascript" th:src="@{/js/app.min.js}"></script>
 <script type="application/javascript" th:src="@{/js/demo.js}"></script>
-<script type="application/javascript" th:src="@{/js/myJs/myJs.js}"></script>
 <div layout:fragment="scripts"></div>
 </html>

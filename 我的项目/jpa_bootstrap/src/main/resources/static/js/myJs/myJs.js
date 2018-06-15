@@ -23,10 +23,10 @@ function demo() {
         },
         error: function (data) {
             console.info(data);
-            console.log(data.responseURL)
-            console.info(JSON.parse(data.responseText).message);
+            console.log("URL --> [" + data.responseURL + "] TEXT --> [" + data.responseText + "] JSON --> [" + data.responseJSON + "]")
+            console.info(data.responseText);
             if (isNotBlank(data.responseText)) {
-                alert(JSON.parse(data.responseText).message);
+                alert(data.responseText);
             }
         }
     });
@@ -91,7 +91,6 @@ function pagination(element) {
         type: "GET",
         data: {},
         success: function (data) {
-
             console.info(data);
             var list = data.data;
             var tempStr = "";

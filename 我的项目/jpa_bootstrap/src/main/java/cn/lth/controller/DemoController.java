@@ -5,6 +5,7 @@ import cn.lth.dto.DemoDto;
 import cn.lth.dto.UserDemo;
 import cn.lth.service.DemoService;
 import cn.lth.util.DemoException;
+import cn.lth.util.DemoLog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -80,9 +81,10 @@ public class DemoController extends BaseController {
 
     @PostMapping("/demo")
     public ResponseEntity<DemoDto> demo(@Valid DemoDto demoDto, BindingResult bindingResult) throws DemoException {
-        verifyBind(bindingResult);
+        throw new RuntimeException("");
+//        verifyBind(bindingResult);
         //传入前段
-        return  new ResponseEntity<>(demoService.save(demoDto), HttpStatus.OK);
+//        return  new ResponseEntity<>(demoService.save(demoDto), HttpStatus.OK);
     }
 
     @GetMapping("/viewData")
@@ -97,7 +99,7 @@ public class DemoController extends BaseController {
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "id"));
         List<DemoDto> demoDtos = demoService.paginationList(pageable);
         Map<String, Object> data = new HashMap<String, Object>(){
-            {put("data",demoDtos);put("size", demoService.findAllNumber().toString());}
+            {put("data",demoDtos);put("size", demoService.findAllNumber());}
         };
         return new ResponseEntity<>(data, HttpStatus.OK);
     }

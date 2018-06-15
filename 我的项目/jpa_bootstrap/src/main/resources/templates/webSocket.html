@@ -9,19 +9,21 @@
 </head>
 <body>
 <th:block layout:fragment="content">
-    <section>
-        <h5>websocket</h5>
-        <label for="text">输入框</label>
-        <input id="text" type="text" class="input-sm" placeholder="text">
-        <a class="btn btn-warning" href="javascript:send()">send</a>
-        <p class="text-primary">连接状态：<label id="sta" class="text-warning">DEFAULT</label></p>
-        <button class="btn btn-danger" onclick="javascript:close()">Close</button>
-        <button class="btn btn-primary" onclick="opendChannel()">OpenChannel</button>
-        <br><br>
-        <button class="btn-group-lg btn-danger" onclick="danger()">danger</button>
-        <button class="btn-group-lg btn-warning" onclick="defult()">defult</button>
-        <button class="btn-group-lg btn-primary" onclick="normal()">normal</button>
-    </section>
+    <div class="content-wrapper">
+        <section class="content">
+            <h5>websocket</h5>
+            <label for="text">输入框</label>
+            <input id="text" type="text" class="input-sm" placeholder="text">
+            <a class="btn btn-warning" href="javascript:send()">send</a>
+            <p class="text-primary">连接状态：<label id="sta" class="text-warning">DEFAULT</label></p>
+            <button class="btn btn-danger" onclick="javascript:close()">Close</button>
+            <button class="btn btn-primary" onclick="opendChannel()">OpenChannel</button>
+            <br><br>
+            <button class="btn-group-lg btn-danger" onclick="danger()">danger</button>
+            <button class="btn-group-lg btn-warning" onclick="defult()">defult</button>
+            <button class="btn-group-lg btn-primary" onclick="normal()">normal</button>
+        </section>
+    </div>
 </th:block>
 <th:block layout:fragment="scripts">
     <script type="application/javascript" th:src="@{/js/myJs/webSocket.js}"></script>
