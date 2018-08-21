@@ -16,10 +16,10 @@ public class WebJapApplication extends WebMvcConfigurationSupport {
 		return new DemoInterceptor();
 	}
 
-	@Bean
-	public ServerEndpointExporter serverEndpointExporter(){
-		return new ServerEndpointExporter();
-	}
+//	@Bean
+//	public ServerEndpointExporter serverEndpointExporter(){
+//		return new ServerEndpointExporter();
+//	}
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {

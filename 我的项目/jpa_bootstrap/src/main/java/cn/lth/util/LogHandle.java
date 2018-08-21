@@ -4,8 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.Arrays;
 
 /**
@@ -39,8 +42,31 @@ public class LogHandle {
     }
 
     @Before("cut()")
-    public void inBefore(JoinPoint joinPoint){
+    public void inBefore(JoinPoint joinPoint) throws ClassNotFoundException, NoSuchMethodException {
 //        Object[] args = joinPoint.getArgs();
 //        System.out.println(Arrays.toString(args));
+
+        String methodName = joinPoint.getSignature().getName();
+        String ClassName = joinPoint.getTarget().getClass().getName();
+        Object[] parameterType = joinPoint.getArgs();
+        Class[] clazzs = new Class[parameterType.length];
+        for (int i = 0; i < parameterType.length; i++) {
+            clazzs[i] = parameterType[i].getClass();
+        }
+        Class clazz = Class.forName(ClassName);
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+        for (Method m : declaredMethods) {
+            if(m.getName().equals(methodName)) {
+                Class[] Types = m.getParameterTypes();
+                if(Types.length == clazzs.length){
+                    DemoLog annotation = m.getAnnotation(DemoLog.class);
+                    String name = annotation.name();
+                    String value = annotation.value();
+                    String type = annotation.logType().getName();
+                    System.out.println(name + " -[" + value + "]- " + type);
+                }
+            }
+
+        }
     }
 }

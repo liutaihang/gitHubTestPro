@@ -3,6 +3,7 @@ package cn.lth.service;
 import cn.lth.dao.DemoDao;
 import cn.lth.dto.DemoDto;
 import cn.lth.util.DemoException;
+import cn.lth.util.DemoLog;
 import cn.lth.util.Message_;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class DemoService {
      *
      * @return
      */
+    @DemoLog(name = "sbss", value = "nnd", logType = DemoLog.Type.SPECI)
     public List<DemoDto> findAll(){
         return  demoDao.findAll();
     }

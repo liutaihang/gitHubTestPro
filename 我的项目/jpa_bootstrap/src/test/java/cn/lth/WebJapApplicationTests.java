@@ -15,7 +15,7 @@ public class WebJapApplicationTests {
     private DemoService demoService;
     @Test
 	public void contextLoads() {
-        new Thread(new Ables(demoService)).start();
+        demoService.findAll();
 
 	}
 
