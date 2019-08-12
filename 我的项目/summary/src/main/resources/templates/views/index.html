@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="head :: common_head('mypage',_)"></head>
+<body>
+    <div th:include="header :: header"></div>
+    <input type="text" id="demo"/>
+
+    <label for="autocomplete">autocomplete</label>
+    <input id="autocomplete" type="text"/>
+
+    <div th:include="footer :: footer"></div>
+</body>
+</html>
