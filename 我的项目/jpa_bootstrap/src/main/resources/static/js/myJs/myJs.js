@@ -191,3 +191,36 @@ function makeUpdate() {
 function closeDIV(data) {
     document.getElementById("").setAttribute("display", "none");
 }
+
+$("#sub").click(function () {
+    sub();
+});
+
+function sub() {
+    var formData = new FormData();
+    var url = "/testd";
+    let file = $("#upload")[0].files[0];
+    if(file){
+        formData.append("file", file);
+    }else{
+        alert("文件为空")
+    }
+    formData.append("ces", "测试");
+    formData.append("ll", "l来了");
+    fileUpload(formData, url);
+}
+
+function fileUpload(fromData, url) {
+    $.ajax({
+        url:url,
+        type:"post",
+        data:fromData,
+        contentType:false,
+        processData:false,
+        dataType:"json",
+        mimeType:"multipart/form-data",
+        success:function (data) {
+            console.info(data);
+        }
+    });
+}

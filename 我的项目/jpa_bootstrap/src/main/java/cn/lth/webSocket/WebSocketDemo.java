@@ -1,5 +1,6 @@
 package cn.lth.webSocket;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -10,8 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 
-@ServerEndpoint(value = "/websocket")
-@Component
+//@ServerEndpoint(value = "/websocket")
+//@Configuration
 public class WebSocketDemo {
     private static int onlineCount;
 

@@ -56,6 +56,18 @@
             z-index: 1002;
             overflow: auto;
         }
+        .input-group{
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            -ms-flex-align: stretch;
+            align-items: stretch;
+            width: 100%;
+        }
+        .btn{
+            padding: 4px 12px;
+        }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -70,6 +82,7 @@
 
         <input type="hidden" id="hidden" value="1">
         <div th:replace="pages :: template"></div>
+        <div th:replace="pages :: detail"></div>
         <div th:replace="fragments/footer :: footer"></div>
     </div>
 </body>

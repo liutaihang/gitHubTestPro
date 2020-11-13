@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DemoLog {
+public @interface ProLog {
     enum Type{
         DEFAULT("默认"), SPECI("特殊"), NORMAL("一般");
 

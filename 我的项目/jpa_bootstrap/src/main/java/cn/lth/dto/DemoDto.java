@@ -5,7 +5,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
@@ -23,7 +22,7 @@ public class DemoDto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     @Column(name = "name")
     @Pattern(regexp = "^[\\u4e00-\\u9fa5]{2,4}$", message = "name.null.error")

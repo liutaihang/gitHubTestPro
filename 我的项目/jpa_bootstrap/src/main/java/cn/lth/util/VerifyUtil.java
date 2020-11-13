@@ -37,12 +37,17 @@ public class VerifyUtil {
     }
 
     public boolean hasLogin(HttpServletRequest request){
-        HttpSession session = request.getSession();
-        Object attribute = session.getAttribute(UserEm.USER_INFO.name());
+        HttpSession session = request.getSession(false);
+        if(session == null ){
+            return true;
+        }
+        String s = session.getId();
+        Object attribute = session.getAttribute(UserEm.USER_INFO.name() + "-" + s);
         return ObjectUtils.isEmpty(attribute);
     }
 
     public boolean turnLogin(HttpServletRequest request, String currentURI){
-        return hasLogin(request) && !verifyURI(currentURI);
+        return (!hasLogin(request) || verifyURI(currentURI));
+//        && !verifyURI(currentURI)
     }
 }

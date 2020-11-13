@@ -1,25 +1,22 @@
 package cn.lth;
 
-import cn.lth.base.DemoInterceptor;
+import cn.lth.interceptor.LoginInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler;
 
 @SpringBootApplication
+@EnableJpaRepositories(basePackages = "cn.lth.dao")
 public class WebJapApplication extends WebMvcConfigurationSupport {
 	@Bean
-	public DemoInterceptor demoInterceptor(){
-		return new DemoInterceptor();
+	public LoginInterceptor demoInterceptor(){
+		return new LoginInterceptor();
 	}
-
-//	@Bean
-//	public ServerEndpointExporter serverEndpointExporter(){
-//		return new ServerEndpointExporter();
-//	}
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -31,6 +28,11 @@ public class WebJapApplication extends WebMvcConfigurationSupport {
 	protected void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(demoInterceptor());
 		super.addInterceptors(registry);
+	}
+
+	@Bean
+	public DefaultServletHttpRequestHandler handler(){
+		return new DefaultServletHttpRequestHandler();
 	}
 
 	public static void main(String[] args) {

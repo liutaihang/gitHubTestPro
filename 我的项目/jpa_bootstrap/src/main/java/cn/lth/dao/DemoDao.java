@@ -2,7 +2,6 @@ package cn.lth.dao;
 
 import cn.lth.base.BaseRepository;
 import cn.lth.dto.DemoDto;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * @author liutaihang

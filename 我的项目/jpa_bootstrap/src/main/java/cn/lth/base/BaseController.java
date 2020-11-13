@@ -1,9 +1,10 @@
 package cn.lth.base;
 
 import cn.lth.contant.UserEm;
-import cn.lth.dto.UserDemo;
+import cn.lth.dto.SysUser;
 import cn.lth.util.DemoException;
-import cn.lth.util.Message_;
+import cn.lth.util.PropertiesUtils;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -23,9 +24,7 @@ import java.io.PrintWriter;
  */
 @Slf4j
 public class BaseController {
-
-    @Autowired
-    private Message_ message_;
+    private PropertiesUtils propertiesUtils = PropertiesUtils.getInstance();
 
     public void print(HttpServletResponse response, Object object) throws IOException {
         response.setCharacterEncoding("utf-8");
@@ -36,13 +35,26 @@ public class BaseController {
     public void verifyBind(BindingResult bindingResult) throws DemoException {
         if (bindingResult.hasErrors()) {
             for (ObjectError objectError : bindingResult.getAllErrors()) {
-                throw new DemoException(message_.get(objectError.getDefaultMessage()));
+                throw new DemoException(propertiesUtils.get(objectError.getDefaultMessage()));
             }
         }
     }
 
-    public void saveSesseionAtr(HttpServletRequest request, UserDemo userinfo) {
+    public void saveSesseionAtr(HttpServletRequest request, SysUser userinfo) {
         HttpSession session = request.getSession();
-        session.setAttribute(UserEm.USER_INFO.name(), userinfo);
+        session.setAttribute(UserEm.USER_INFO.name() + "-" + userinfo.getUserUuid(), userinfo);
+    }
+
+    public void renderObj(HttpServletResponse response, Object data){
+        PrintWriter writer = null;
+        try {
+            writer = response.getWriter();
+            writer.write(new Gson().toJson(data));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            writer.flush();
+            writer.close();
+        }
     }
 }

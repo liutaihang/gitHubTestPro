@@ -4,12 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Arrays;
 
 /**
  * @author liutaihang
@@ -23,7 +20,7 @@ import java.util.Arrays;
 @Slf4j
 public class LogHandle {
 
-    @Pointcut("@annotation(cn.lth.util.DemoLog)")
+    @Pointcut("@annotation(cn.lth.util.ProLog)")
     private void cut(){}
 
     @Before("cut()")
@@ -59,7 +56,7 @@ public class LogHandle {
             if(m.getName().equals(methodName)) {
                 Class[] Types = m.getParameterTypes();
                 if(Types.length == clazzs.length){
-                    DemoLog annotation = m.getAnnotation(DemoLog.class);
+                    ProLog annotation = m.getAnnotation(ProLog.class);
                     String name = annotation.name();
                     String value = annotation.value();
                     String type = annotation.logType().getName();

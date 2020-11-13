@@ -3,9 +3,8 @@ package cn.lth.service;
 import cn.lth.dao.DemoDao;
 import cn.lth.dto.DemoDto;
 import cn.lth.util.DemoException;
-import cn.lth.util.DemoLog;
-import cn.lth.util.Message_;
-import com.google.gson.JsonObject;
+import cn.lth.util.ProLog;
+import cn.lth.util.PropertiesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +23,11 @@ import java.util.Optional;
  */
 @Service
 public class DemoService {
+    private static PropertiesUtils propertiesUtils = PropertiesUtils.getInstance();
 
     @Autowired
     private DemoDao demoDao;
 
-    @Autowired
-    private Message_ message_;
     /**
      * save
      *
@@ -38,13 +36,13 @@ public class DemoService {
      */
     public DemoDto save(DemoDto demoDto) throws DemoException {
         if(demoDto == null){
-            throw new DemoException(message_.get("demoDto.null.error"));
+            throw new DemoException(propertiesUtils.get("demoDto.null.error"));
         }
         boolean con = !StringUtils.hasText(demoDto.getContent().trim());
         boolean name = !StringUtils.hasText(demoDto.getName().trim());
         boolean some = !StringUtils.hasText(demoDto.getSomething().trim());
         if(con || name || some){
-            throw new DemoException(message_.get("demoDto.null.error"));
+            throw new DemoException(propertiesUtils.get("demoDto.null.error"));
         }
         return  demoDao.save(demoDto);
     }
@@ -54,7 +52,7 @@ public class DemoService {
      *
      * @return
      */
-    @DemoLog(name = "sbss", value = "nnd", logType = DemoLog.Type.SPECI)
+    @ProLog(name = "sbss", value = "nnd", logType = ProLog.Type.SPECI)
     public List<DemoDto> findAll(){
         return  demoDao.findAll();
     }
@@ -91,7 +89,7 @@ public class DemoService {
      * @param id
      * @return
      */
-    public DemoDto findById(long id){
+    public DemoDto findById(String id){
         Optional<DemoDto> byId = demoDao.findById(id);
         return  byId.get();
     }
@@ -112,7 +110,7 @@ public class DemoService {
      *
      * @param id
      */
-    public void delDemo(long id){
+    public void delDemo(String id){
         demoDao.deleteById(id);
     }
 }
